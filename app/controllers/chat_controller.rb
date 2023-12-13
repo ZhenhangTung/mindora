@@ -11,7 +11,7 @@ class ChatController < ApplicationController
   end
 
   def set_persistent_user_id
-    cookies.permanent[:user_id] ||= SecureRandom.uuid
-    @user_id = cookies[:user_id]
+    cookies.permanent[:anonymous_user_id] ||= SecureRandom.uuid
+    @user_id = cookies[:anonymous_user_id]
   end
 end
