@@ -78,5 +78,5 @@ end
 
 gem "ruby-openai"
 gem 'dotenv-rails', groups: [:development, :test]
-gem "langchainrb_rails", "~> 0.1.5"
+# gem "langchainrb_rails", "~> 0.1.5"
 gem 'securerandom'
