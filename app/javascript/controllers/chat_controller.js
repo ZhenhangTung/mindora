@@ -2,14 +2,12 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   connect() {
-    this.scrollToBottom();
+    this.scrollToBottom()
   }
 
   scrollToBottom() {
-    this.element.scrollTop = this.element.scrollHeight;
-  }
-
-  turboStreamRendered() {
-    this.scrollToBottom();
+    const element = this.element
+    element.scrollTop = element.scrollHeight
   }
 }
+
