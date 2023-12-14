@@ -41,13 +41,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_13_004613) do
     t.index ["assistant_id"], name: "index_chat_sessions_on_assistant_id"
   end
 
-  create_table "userconversations", primary_key: "messageid", id: { type: :serial, comment: "MessageID 是每条消息的唯一标识符，为自增主键。" }, comment: "UserConversations 表用于存储用户间的对话记录。", force: :cascade do |t|
-    t.string "userid", limit: 255, null: false, comment: "UserID 代表发送消息的用户的唯一标识，通常是用户名或用户ID。"
-    t.text "messagecontent", null: false, comment: "MessageContent 包含用户发送的实际消息文本。"
-    t.datetime "timestamp", precision: nil, null: false, comment: "Timestamp 记录消息发送的具体时间。"
-    t.jsonb "additionalinfo", comment: "AdditionalInfo 以 JSONB 格式存储与消息相关的附加信息，如设备类型、位置信息等。"
-  end
-
   add_foreign_key "chat_messages", "chat_sessions"
   add_foreign_key "chat_sessions", "assistants"
 end

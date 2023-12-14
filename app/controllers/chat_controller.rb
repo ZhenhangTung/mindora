@@ -2,6 +2,7 @@ class ChatController < ApplicationController
   before_action :set_persistent_user_id
 
   def index
+    @assistant = Assistant.first
     # Prepare a new chat message instance for the form
     @chat_message = ChatMessage.new
   end
@@ -11,7 +12,7 @@ class ChatController < ApplicationController
   end
 
   def create
-    @chat_session = ChatSession.find_or_initialize_by(anonymous_user_id: cookies[:anonymous_user_id])
+    @chat_session = ChatSession.find_or_initialize_by(anonymous_user_id: cookies[:anonymous_user_id], assistant_id: chat_session_params[:assistant_id])
 
     if @chat_session.new_record? && !@chat_session.save
       # Handle the case where the chat session cannot be saved
@@ -46,5 +47,9 @@ class ChatController < ApplicationController
 
   def chat_message_params
     params.require(:chat_message).permit(:message_text, :sender_role).merge(sender_role: 'user')
+  end
+
+  def chat_session_params
+    params.require(:chat_message).permit(:assistant_id)
   end
 end
