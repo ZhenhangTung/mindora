@@ -56,4 +56,23 @@ class ChatController < ApplicationController
   def chat_session_params
     params.require(:chat_message).permit(:assistant_id)
   end
+
+  def send_message_to_ai_assistant(assistant_id, message)
+    client = OpenAI::Client.new
+    assistant = client.assistants.retrieve(id: assistant_id)
+
+    response = client.threads.create
+    # thread_id = response["id"]
+    #
+    # # Add initial message from user (see https://platform.openai.com/docs/api-reference/messages/createMessage)
+    # message_id = client.messages.create(
+    #   thread_id: thread_id,
+    #   parameters: {
+    #     role: "user", # Required for manually created messages
+    #     content: message
+    #   })["id"]
+    # message = client.messages.retrieve(thread_id: thread_id, id: message_id)
+    # messages = client.messages.list(thread_id: thread_id)
+  end
+
 end

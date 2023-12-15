@@ -76,7 +76,7 @@ group :test do
   gem "webdrivers"
 end
 
-gem "ruby-openai"
+gem "ruby-openai", git: 'https://github.com/alexrudall/ruby-openai.git', ref: 'f9046a3'
 gem 'dotenv-rails', groups: [:development, :test]
 # gem "langchainrb_rails", "~> 0.1.5"
 gem 'securerandom'
