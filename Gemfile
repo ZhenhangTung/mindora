@@ -60,6 +60,8 @@ group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 
+  gem "hotwire-livereload"
+
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
 
@@ -73,3 +75,9 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
 end
+
+gem "ruby-openai", git: 'https://github.com/alexrudall/ruby-openai.git', ref: 'f9046a3'
+gem 'dotenv-rails', groups: [:development, :test]
+# gem "langchainrb_rails", "~> 0.1.5"
+gem 'securerandom'
+gem "good_job", "~> 3.21"
