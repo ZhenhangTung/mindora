@@ -80,3 +80,4 @@ gem "ruby-openai", git: 'https://github.com/alexrudall/ruby-openai.git', ref: 'f
 gem 'dotenv-rails', groups: [:development, :test]
 # gem "langchainrb_rails", "~> 0.1.5"
 gem 'securerandom'
+gem "good_job", "~> 3.21"

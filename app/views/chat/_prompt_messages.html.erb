@@ -18,18 +18,23 @@
 <!--    </div>-->
 <!--    <div class="chat-bubble">Not leave it in Darkness</div>-->
 <!--  </div>-->
+
   <% if @chat_messages.empty? %>
     <div id="start_conversation" class="flex justify-center items-center h-full">
       <p class="text-center text-lg font-semibold">我可以如何帮助你？</p>
     </div>
-  <% else %>
-    <% @chat_messages.each do |message| %>
-      <%= render 'chat/message', message: message %>
-    <% end %>
   <% end %>
 
   <div id="messages" data-controller="chat">
-    <!-- Messages will be appended here -->
+    <%= turbo_stream_from "chat_session_#{@chat_session.anonymous_user_id}" %>
+
+    <!-- Existing messages will be loaded here -->
+    <% unless @chat_messages.empty? %>
+      <% @chat_messages.each do |message| %>
+        <%= render 'chat/message', message: message %>
+      <% end %>
+    <% end %>
+    <!-- New messages from Turbo Stream will be appended here -->
   </div>
 
 </div>

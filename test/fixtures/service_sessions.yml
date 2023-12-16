@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  external_id: MyString
+  service_name: MyString
+  metadata: 
+  chat_session: one
+
+two:
+  external_id: MyString
+  service_name: MyString
+  metadata: 
+  chat_session: two

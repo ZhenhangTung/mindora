@@ -2,7 +2,7 @@ class ChatController < ApplicationController
   before_action :set_persistent_user_id
 
   def index
-    @chat_session = ChatSession.find_or_initialize_by(anonymous_user_id: cookies[:anonymous_user_id])
+    @chat_session = ChatSession.find_or_initialize_by(anonymous_user_id: @anonymous_user_id)
     @chat_messages = []
     @chat_messages = @chat_session.chat_messages.order(created_at: :asc) if @chat_session.persisted?
     @assistant = Assistant.first
@@ -27,7 +27,7 @@ class ChatController < ApplicationController
     # Build the chat message associated with the chat session
     @chat_message = @chat_session.chat_messages.build(chat_message_params)
     if @chat_message.save
-
+      AssistantResponseJob.perform_later(@chat_message)
       respond_to do |format|
         format.turbo_stream
         format.html { redirect_to chat_path }
@@ -50,29 +50,11 @@ class ChatController < ApplicationController
   end
 
   def chat_message_params
-    params.require(:chat_message).permit(:message_text, :sender_role).merge(sender_role: 'user')
+    params.require(:chat_message).permit(:message_text, :sender_role).merge(sender_role: ChatMessage::SENDER_ROLE_USER)
   end
 
   def chat_session_params
     params.require(:chat_message).permit(:assistant_id)
-  end
-
-  def send_message_to_ai_assistant(assistant_id, message)
-    client = OpenAI::Client.new
-    assistant = client.assistants.retrieve(id: assistant_id)
-
-    response = client.threads.create
-    # thread_id = response["id"]
-    #
-    # # Add initial message from user (see https://platform.openai.com/docs/api-reference/messages/createMessage)
-    # message_id = client.messages.create(
-    #   thread_id: thread_id,
-    #   parameters: {
-    #     role: "user", # Required for manually created messages
-    #     content: message
-    #   })["id"]
-    # message = client.messages.retrieve(thread_id: thread_id, id: message_id)
-    # messages = client.messages.list(thread_id: thread_id)
   end
 
 end
