@@ -59,4 +59,5 @@ Rails.application.configure do
   # config.action_view.annotate_rendered_view_with_filenames = true
 
   config.active_job.queue_adapter = :good_job
+  config.good_job.execution_mode = :inline
 end
