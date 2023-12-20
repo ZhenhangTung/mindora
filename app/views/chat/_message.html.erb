@@ -1,9 +1,10 @@
 <% css_class = message.sender_role == 'assistant' ? 'flex chat chat-start' : 'chat chat-end' %>
+<% avatar = message.sender_role == 'assistant' ? 'https://files.olavibe.com/image/DALL%C2%B7E%202023-12-20%2007.31.52%20-%20A%20digital%20portrait%20of%20a%20person%20with%20a%20neutral%20expression%2C%20illuminated%20by%20soft%20blue%20lighting%20on%20one%20side%20of%20the%20face%20and%20warm%20pink%20lighting%20on%20the%20othe.png' : 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg' %>
 
 <div class="<%= css_class %>">
   <div class="chat-image avatar">
     <div class="w-10 rounded-full">
-      <img alt="Tailwind CSS chat bubble component" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+      <img alt="Tailwind CSS chat bubble component" src="<%= avatar %>" />
     </div>
   </div>
   <div class="chat-bubble" id="<%= dom_id(message) %>">
