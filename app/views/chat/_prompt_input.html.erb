@@ -1,4 +1,4 @@
-<%= form_with class: "mt-8", model: @chat_message, url: chat_index_path, method: :post, data: { action: "submit->chat#submit" } do |form| %>
+<%= form_with class: "mt-8", model: @chat_message, url: chat_index_path, method: :post, data: { action: "submit->chat#submit", chat_target: "form" } do |form| %>
   <label for="chat-input" class="sr-only">Enter your prompt</label>
   <%= form.hidden_field :assistant_id, value: @assistant.id %>
   <div class="relative">
