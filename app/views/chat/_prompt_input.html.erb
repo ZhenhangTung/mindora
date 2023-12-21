@@ -1,8 +1,8 @@
-<%= form_with class: "mt-8", model: @chat_message, url: chat_index_path, method: :post, data: { controller: "chat" } do |form| %>
+<%= form_with class: "mt-8", model: @chat_message, url: chat_index_path, method: :post, data: { action: "submit->chat#submit", chat_target: "form" } do |form| %>
   <label for="chat-input" class="sr-only">Enter your prompt</label>
   <%= form.hidden_field :assistant_id, value: @assistant.id %>
   <div class="relative">
-    <%= form.text_area :message_text, placeholder: "欢迎你问我产品经理相关的问题", data: { "chat-target": "message" }, required: true, rows: "1", class: "block w-full resize-none rounded-xl border-none bg-slate-200 p-4 pr-16 text-sm text-slate-900 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-400 dark:focus:ring-blue-500 sm:text-base" %>
+    <%= form.text_area :message_text, placeholder: "欢迎你问我产品经理相关的问题", data: { "chat-target": "messageTextArea" }, required: true, rows: "1", class: "block w-full resize-none rounded-xl border-none bg-slate-200 p-4 pr-16 text-sm text-slate-900 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-400 dark:focus:ring-blue-500 sm:text-base" %>
     <%= button_tag(type: 'submit', data: { chat_target: "message" }, class: 'absolute bottom-2 right-2.5 rounded-lg bg-blue-700 p-2 text-sm font-medium text-slate-200 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:text-base') do %>
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" aria-hidden="true" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>

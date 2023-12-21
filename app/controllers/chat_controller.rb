@@ -27,11 +27,11 @@ class ChatController < ApplicationController
     # Build the chat message associated with the chat session
     @chat_message = @chat_session.chat_messages.build(chat_message_params)
     if @chat_message.save
+      # respond_to do |format|
+      #   format.turbo_stream
+      #   format.html { redirect_to chat_path }
+      # end
       AssistantResponseJob.perform_later(@chat_message)
-      respond_to do |format|
-        format.turbo_stream
-        format.html { redirect_to chat_path }
-      end
     else
       p 'failed to save message'
       # render turbo_stream: turbo_stream.replace('new_message', partial: 'chat/form', locals: { message: @chat_message })
