@@ -1,25 +1,24 @@
-<div data-controller="chat">
-  <div
-    class="flex-1 space-y-6 h-[75vh] overflow-y-auto rounded-xl bg-slate-200 p-4 text-sm leading-6 text-slate-900 shadow-sm dark:bg-slate-900 dark:text-slate-300 sm:text-base sm:leading-7"
-    data-chat-target="messagesContainer"
-  >
-    <% if @chat_messages.empty? %>
-      <div id="start_conversation" class="flex justify-center items-center h-full">
-        <p class="text-center text-lg font-semibold">我可以如何帮助你？</p>
-      </div>
-    <% end %>
+<div
+  class="flex-1 space-y-6 h-[75vh] overflow-y-auto rounded-xl bg-slate-200 p-4 text-sm leading-6 text-slate-900 shadow-sm dark:bg-slate-900 dark:text-slate-300 sm:text-base sm:leading-7"
+  data-chat-target="messagesContainer"
+>
+<!--  TODO: Add this message later-->
+  <%# if @chat_messages.empty? %>
+<!--    <div id="start_conversation" class="flex justify-center items-center h-full">-->
+<!--      <p class="text-center text-lg font-semibold">我可以如何帮助你？</p>-->
+<!--    </div>-->
+  <%# end %>
 
-    <div id="messages">
-      <%= turbo_stream_from "chat_session_#{@chat_session.anonymous_user_id}" %>
+  <div id="messages" data-chat-target="messages">
+    <%= turbo_stream_from "chat_session_#{@chat_session.anonymous_user_id}" %>
 
-      <!-- Existing messages will be loaded here -->
-      <% unless @chat_messages.empty? %>
-        <% @chat_messages.each do |message| %>
-          <%= render 'chat/message', message: message %>
-        <% end %>
+    <!-- Existing messages will be loaded here -->
+    <% unless @chat_messages.empty? %>
+      <% @chat_messages.each do |message| %>
+        <%= render 'chat/message', message: message %>
       <% end %>
-      <!-- New messages from Turbo Stream will be appended here -->
-    </div>
-
+    <% end %>
+    <!-- New messages from Turbo Stream will be appended here -->
   </div>
+
 </div>
