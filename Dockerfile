@@ -24,7 +24,7 @@ FROM base as build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libpq-dev
+    apt-get install --no-install-recommends -y build-essential git libpq-dev nodejs npm
 
 # Install application gems
 COPY --link Gemfile Gemfile.lock ./
@@ -64,7 +64,7 @@ USER 1000:1000
 ENV RAILS_LOG_TO_STDOUT="1" \
     RAILS_SERVE_STATIC_FILES="true"
 
-# Entrypoint prepares the database.
+# Entrypoint sets up the container.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Start the server by default, this can be overwritten at runtime
