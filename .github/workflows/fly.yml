@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - test
 jobs:
   deploy:
     name: Deploy app
@@ -10,6 +11,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --remote-only
+
+      - name: Deploy to Test
+        if: github.ref == 'refs/heads/test'
+        run: flyctl deploy -c fly.test.toml --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TEST_ENV_TOKEN }}
+
+      - name: Deploy to Production
+        if: github.ref == 'refs/heads/main'
+        run: flyctl deploy -c fly.production.toml --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_PRODUCTION_ENV_TOKEN }}
