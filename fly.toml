@@ -20,11 +20,6 @@ console_command = "/rails/bin/rails console"
   min_machines_running = 1
   processes = ["app"]
 
-[[vm]]
-  cpu_kind = "shared"
-  cpus = 1
-  memory_mb = 512
-
 [[statics]]
   guest_path = "/rails/public"
   url_prefix = "/"
