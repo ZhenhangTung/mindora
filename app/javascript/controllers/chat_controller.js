@@ -5,7 +5,7 @@ export default class extends Controller {
   static targets = ["messagesContainer", "messageTextArea", "messages", "form"]
 
   connect() {
-    this.element.addEventListener('turbo:submit-end', () => this.clearMessage()) // clear message after submit
+    this.element.addEventListener('turbo:submit-start', () => this.clearMessage()) // clear message after submit
 
     this.scrollToBottom()
   }
