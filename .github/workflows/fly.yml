@@ -20,6 +20,6 @@ jobs:
 
       - name: Deploy to Production
         if: github.ref == 'refs/heads/main'
-        run: flyctl deploy -c fly.production.toml --remote-only
+        run: flyctl deploy -c fly.toml --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_PRODUCTION_ENV_TOKEN }}
