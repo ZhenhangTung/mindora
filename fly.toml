@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for mindora on 2023-12-22T18:27:28+08:00
+# fly.toml app configuration file generated for mindora-green-mountain on 2023-12-22T18:46:54+08:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "mindora"
+app = "mindora-green-mountain"
 primary_region = "sin"
 console_command = "/rails/bin/rails console"
 
@@ -11,9 +11,6 @@ console_command = "/rails/bin/rails console"
 
 [deploy]
   release_command = "./bin/rails db:prepare"
-
-[env]
-  RAILS_ENV = "production"
 
 [http_service]
   internal_port = 3000
@@ -31,3 +28,6 @@ console_command = "/rails/bin/rails console"
 [[statics]]
   guest_path = "/rails/public"
   url_prefix = "/"
+
+[env]
+RAILS_ENV = "production"
