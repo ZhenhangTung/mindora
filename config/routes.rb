@@ -4,4 +4,8 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "chat#index"
   resources :chat, only: [:index, :create]
+
+  namespace :api do
+    post '/chatgpt/discussions', to: 'chat_gpt#discuss'
+  end
 end
