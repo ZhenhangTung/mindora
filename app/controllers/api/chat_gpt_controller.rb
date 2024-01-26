@@ -1,7 +1,14 @@
 class Api::ChatGptController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  def discuss
+
+  def messages
+    p params
+    ActionCable.server.broadcast 'pmdoggy', "hello world!!!"
+    render json: { message: "ok" }
+  end
+
+  def inspirations
     unless params[:message].present?
       return render json: { error: "Message parameter is missing" }, status: :bad_request
     end

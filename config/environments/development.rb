@@ -69,4 +69,7 @@ Rails.application.configure do
   # config.action_cable.disable_request_forgery_protection = true
   # config.active_job.queue_adapter = :good_job
   # config.good_job.execution_mode = :async
+
+  # Action Cable endpoint configuration
+  config.action_cable.allowed_request_origins = [/http:\/\/*/, /https:\/\/*/]
 end

@@ -60,4 +60,7 @@ Rails.application.configure do
 
   # config.active_job.queue_adapter = :good_job
   # config.good_job.execution_mode = :inline
+
+  # Action Cable endpoint configuration
+  config.action_cable.allowed_request_origins = [/http:\/\/*/, /https:\/\/*/]
 end
