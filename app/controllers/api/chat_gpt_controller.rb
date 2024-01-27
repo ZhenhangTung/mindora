@@ -1,11 +1,21 @@
+
+CHANNEL_ID = "pmdoggy"
+
 class Api::ChatGptController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-
   def messages
+    unless params[:message].present?
+      return render json: { error: "Message parameter is missing" }, status: :bad_request
+    end
+
+    resp = {
+      message: params[:message],
+    }
+
     p params
-    ActionCable.server.broadcast 'pmdoggy', "hello world!!!"
-    render json: { message: "ok" }
+    ActionCable.server.broadcast(CHANNEL_ID, {response: resp})
+    render json: { response: resp }
   end
 
   def inspirations
@@ -40,6 +50,7 @@ class Api::ChatGptController < ApplicationController
     resp = {
       message: content,
     }
+    ActionCable.server.broadcast(CHANNEL_ID, {response: resp})
     render json: { response: resp }
   rescue => e
     render json: { error: e.message }, status: :internal_server_error
