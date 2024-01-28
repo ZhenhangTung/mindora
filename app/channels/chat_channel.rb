@@ -1,6 +1,8 @@
 class ChatChannel < ApplicationCable::Channel
   def subscribed
-    stream_from "pmdoggy"
+    # Use the provided user_id from the subscription request
+    user_id = params[:user_id]
+    stream_from "chat_channel_#{user_id}"
   end
 
   def unsubscribed
