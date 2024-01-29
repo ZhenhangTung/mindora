@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     post '/chatgpt/inspirations', to: 'chat_gpt#inspirations'
-    post '/chatgpt/messages', to: 'chat_gpt#messages'
+    get '/chatgpt/messages', to: 'chat_gpt#index'
+    post '/chatgpt/messages', to: 'chat_gpt#create'
   end
 end

@@ -1,61 +1,41 @@
 class Api::ChatGptController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  def messages
-    @assistant = Assistant.find_by_name('产品汪汪')
-    unless @assistant.present?
-      return render json: { error: "Assistant not found" }, status: :not_found
-    end
+  def index
+    user_identifier = fetch_user_identifier
+    return if performed?
 
-    user_identifier = request.headers['X-User-Identifier']
-    unless user_identifier.present?
-      return render json: { error: "User identifier header is missing" }, status: :bad_request
+    chat_session = ChatSession.find_by(anonymous_user_id: user_identifier)
+    if chat_session
+      render json: chat_session.chat_messages.order(created_at: :asc)
+    else
+      render json: []
     end
+  end
+  def create
+    @assistant = fetch_assistant
+    return if performed?
 
-    unless params[:message_text].present?
+    user_identifier = fetch_user_identifier
+    return if performed?
+
+    message_text = params[:message_text]
+    unless message_text.present?
       return render json: { error: "Message parameter is missing" }, status: :bad_request
     end
 
-    @chat_session = ChatSession.find_or_initialize_by(anonymous_user_id: user_identifier, assistant_id: @assistant.id)
-    if @chat_session.new_record? && !@chat_session.save
-      # Handle the case where the chat session cannot be saved
-      # This could be due to validation errors or other issues
-      # You should respond appropriately, maybe rendering an error message
-      return render json: { error: "Failed to save chat session" }, status: :internal_server_error
-    end
+    @chat_session = find_or_create_chat_session(user_identifier)
+    return if performed?
 
-    # Build the chat message associated with the chat session
-    @chat_message = @chat_session.chat_messages.build({message_text: params[:message_text], sender_role: ChatMessage::SENDER_ROLE_USER})
-    if @chat_message.save
-      system_message = { role: "system", content: @assistant.instructions }
+    openai_response_message = create_chat_message(message_text)
+    return if performed? || openai_response_message.nil?
 
-      chat_history = @chat_session.chat_messages.order(created_at: :asc)
-
-      messages_for_api = [system_message] + chat_history.map do |message|
-        { role: message.sender_role, content: message.message_text }
-      end
-      messages_for_api << { role: "user", content: params[:message_text] }
-
-      client = OpenAI::Client.new
-      response = client.chat(
-        parameters: {
-          model: "gpt-3.5-turbo", # Required.
-          messages: messages_for_api, # Required.
-          temperature: 0.7,
-        })
-      content =  response.dig("choices", 0, "message", "content")
-      @chat_session.chat_messages.create(message_text: content, sender_role: ChatMessage::SENDER_ROLE_ASSISTANT)
-    else
-      return render json: { error: "Failed to save message" }, status: :internal_server_error
-    end
-
-    resp = {
-      message: content,
-    }
+    resp = { message_text: openai_response_message.message_text, sender_role: openai_response_message.sender_role }
     ActionCable.server.broadcast("chat_channel_#{user_identifier}", {response: resp})
     render json: { response: resp }
   end
 
+  # TODO: implement me
   def inspirations
     unless params[:message_text].present?
       return render json: { error: "Message parameter is missing" }, status: :bad_request
@@ -94,4 +74,67 @@ class Api::ChatGptController < ApplicationController
   rescue => e
     render json: { error: e.message }, status: :internal_server_error
   end
+end
+
+
+private
+
+def fetch_assistant
+  assistant = Assistant.find_by_name('产品汪汪')
+  render json: { error: "Assistant not found" }, status: :not_found unless assistant.present?
+  assistant
+end
+
+def fetch_user_identifier
+  user_identifier = request.headers['X-User-Identifier']
+  render json: { error: "User identifier header is missing" }, status: :bad_request unless user_identifier.present?
+  user_identifier
+end
+
+def find_or_create_chat_session(user_identifier)
+  chat_session = ChatSession.find_or_initialize_by(anonymous_user_id: user_identifier, assistant_id: @assistant.id)
+  unless chat_session.save
+    render json: { error: "Failed to save chat session" }, status: :internal_server_error
+  end
+  chat_session
+end
+
+def create_chat_message(message_text)
+  chat_message = @chat_session.chat_messages.build(message_text: message_text, sender_role: ChatMessage::SENDER_ROLE_USER)
+  unless chat_message.save
+    render json: { error: "Failed to save message" }, status: :internal_server_error
+    return
+  end
+  # Get OpenAI's response
+  openai_response = handle_openai_interaction
+
+  # Check if response is obtained and save it
+  if openai_response
+    assistant_message = @chat_session.chat_messages.create(
+      message_text: openai_response,
+      sender_role: ChatMessage::SENDER_ROLE_ASSISTANT
+    )
+    return assistant_message
+  else
+    render json: { error: "Failed to obtain response from OpenAI" }, status: :internal_server_error
+    return nil
+  end
+end
+
+def handle_openai_interaction
+  system_message = { role: "system", content: @assistant.instructions }
+  chat_history = @chat_session.chat_messages.order(created_at: :asc).map do |message|
+    { role: message.sender_role, content: message.message_text }
+  end
+  messages_for_api = [system_message] + chat_history
+
+  client = OpenAI::Client.new
+  response = client.chat(
+    parameters: {
+      model: @assistant.model,
+      messages: messages_for_api,
+      temperature: 0.7,
+    })
+
+  response.dig("choices", 0, "message", "content")
 end
