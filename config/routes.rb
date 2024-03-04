@@ -1,9 +1,12 @@
 Rails.application.routes.draw do
+  get 'resumes/new'
+  get 'resumes/create'
+  get 'resumes/show'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   mount ActionCable.server => '/cable'
 
   # Defines the root path route ("/")
-  root "chat#index"
+  root "resumes#new"
   resources :chat, only: [:index, :create]
 
   namespace :api do
