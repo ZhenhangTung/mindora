@@ -87,4 +87,6 @@ gem "sentry-ruby", "~> 5.15"
 gem "sentry-rails", "~> 5.15"
 gem "rack-cors"
 gem "aws-sdk-s3", require: false
-gem 'active_storage_validations'
+gem "active_storage_validations"
+gem "pdf-reader"
+gem "docx"
