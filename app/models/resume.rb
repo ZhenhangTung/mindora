@@ -1,5 +1,7 @@
 class Resume < ApplicationRecord
-
+  has_many :work_experiences, dependent: :destroy
+  has_many :educations, dependent: :destroy
+  
   has_one_attached :original_file
   has_one_attached :enhanced_resume
 
