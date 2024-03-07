@@ -169,31 +169,34 @@
       <p class="mt-1 text-sm leading-6 text-gray-600">汪汪很努力地阅读简历了，如果有不准确的地方麻麻可以教汪汪修改，汪汪会像对待三文鱼一样认真学习喔！</p>
     </div>
 
-    <form class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+    <%= form_with model: @resume, local: true, class: "bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" do |form| %>
       <div class="px-4 py-6 sm:p-8">
         <!-- personal info -->
         <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+<!--          <div class="sm:col-span-3">-->
+<!--            <label for="full-name" class="block text-sm font-medium leading-6 text-gray-900">姓名</label>-->
+<!--            <div class="mt-2">-->
+<!--              <input type="text" name="full-name" id="full-name" autocomplete="full-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">-->
+<!--            </div>-->
+<!--          </div>-->
           <div class="sm:col-span-3">
-            <label for="full-name" class="block text-sm font-medium leading-6 text-gray-900">姓名</label>
+            <%= form.label :name, "姓名", class: "block text-sm font-medium leading-6 text-gray-900" %>
             <div class="mt-2">
-              <input type="text" name="full-name" id="full-name" autocomplete="full-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+              <%= form.text_field :name, autocomplete: "full-name", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
             </div>
           </div>
 
           <div class="sm:col-span-3">
-            <label for="gender" class="block text-sm font-medium leading-6 text-gray-900">性别</label>
+            <%= form.label :gender, "性别", class: "block text-sm font-medium leading-6 text-gray-900" %>
             <div class="mt-2">
-              <select id="gender" name="gender" autocomplete="gender" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-                <option>女</option>
-                <option>男</option>
-              </select>
+              <%= form.select :gender, ['女', '男'], {}, { autocomplete: "gender", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" } %>
             </div>
           </div>
 
           <div class="sm:col-span-3">
-            <label for="email" class="block text-sm font-medium leading-6 text-gray-900">邮箱</label>
+            <%= form.label :email, "邮箱", class: "block text-sm font-medium leading-6 text-gray-900" %>
             <div class="mt-2">
-              <input id="email" name="email" type="email" autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+              <%= form.email_field :email, autocomplete: "email", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
             </div>
           </div>
         </div>
@@ -268,7 +271,7 @@
       <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
         <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">保存</button>
       </div>
-    </form>
+    <% end %>
   </div>
 
   <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">

@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "resumes#new"
-  resources :resumes, only: [:new, :create, :show]
+  resources :resumes, only: [:new, :create, :show, :update]
   resources :chat, only: [:index, :create]
 
   namespace :api do
