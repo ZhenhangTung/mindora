@@ -1,4 +1,6 @@
 class ResumesController < ApplicationController
+  before_action :set_resume, only: [:show, :update]
+
   # extract_resume_content_prompt = Langchain::Prompt::PromptTemplate.new(
   #   template: "Tell me a {adjective} joke about {content}.",
   #   input_variables: ["adjective", "content"]
@@ -13,8 +15,8 @@ class ResumesController < ApplicationController
     if @resume.save
       file_content = read_uploaded_file_content(@resume.original_file)
       json_data = extract_resume_from_file(file_content)
-      pp '-------json_data------'
-      pp json_data
+      # pp '-------json_data------'
+      # pp json_data
 
       # Call the model method to update the resume with extracted data
       @resume.update_with_extracted_data(json_data)
@@ -42,11 +44,15 @@ class ResumesController < ApplicationController
   end
 
   def update
-
+    if @resume.update(resume_params)
+      redirect_to @resume, notice: 'Resume was successfully updated.'
+    else
+      # render :edit, status: :unprocessable_entity
+    end
   end
 
   def show
-    @resume = Resume.find(params[:id])
+
   end
 
   def extract_resume_from_file(file_content)
@@ -172,8 +178,35 @@ Document: #{file_content}",
 
   private
 
+  def set_resume
+    @resume = Resume.find(params[:id])
+  end
+
   def resume_params
-    params.require(:resume).permit(:original_file)
+    params.require(:resume).permit(
+      :original_file,
+      :name,
+      :email,
+      :phone_number,
+      :gender,
+      work_experiences_attributes: [
+        :id,
+        :company,
+        :position,
+        :start_date,
+        :end_date,
+        :project_experience,
+        :_destroy
+      ],
+      educations_attributes: [
+        :id,
+        :university,
+        :major,
+        :start_date,
+        :end_date,
+        :_destroy
+      ]
+    )
   end
 
   def read_docx_content(attachment)

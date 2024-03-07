@@ -171,14 +171,11 @@
 
     <%= form_with model: @resume, local: true, class: "bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" do |form| %>
       <div class="px-4 py-6 sm:p-8">
+        <div class="border-b border-gray-200 pb-5 my-4">
+          <h3 class="text-base font-semibold leading-6 text-gray-900">基本信息</h3>
+        </div>
         <!-- personal info -->
         <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-<!--          <div class="sm:col-span-3">-->
-<!--            <label for="full-name" class="block text-sm font-medium leading-6 text-gray-900">姓名</label>-->
-<!--            <div class="mt-2">-->
-<!--              <input type="text" name="full-name" id="full-name" autocomplete="full-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">-->
-<!--            </div>-->
-<!--          </div>-->
           <div class="sm:col-span-3">
             <%= form.label :name, "姓名", class: "block text-sm font-medium leading-6 text-gray-900" %>
             <div class="mt-2">
@@ -201,75 +198,87 @@
           </div>
         </div>
 
+        <div class="border-b border-gray-200 pb-5 my-4">
+          <h3 class="text-base font-semibold leading-6 text-gray-900">工作经历</h3>
+        </div>
         <!-- working exps -->
-        <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
-          <div class="sm:col-span-3">
-            <label for="company" class="block text-sm font-medium leading-6 text-gray-900">公司名称</label>
-            <div class="mt-2">
-              <input id="company" name="company" autocomplete="company" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+        <%= form.fields_for :work_experiences do |work_experience_form| %>
+          <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
+            <div class="sm:col-span-3">
+              <%= work_experience_form.label :company, "公司名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
+              <div class="mt-2">
+                <%= work_experience_form.text_field :company, autocomplete: "company", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+              </div>
             </div>
-          </div>
 
-          <div class="sm:col-span-3">
-            <label for="title" class="block text-sm font-medium leading-6 text-gray-900">职位名称</label>
-            <div class="mt-2">
-              <input id="title" name="title" autocomplete="title" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <div class="sm:col-span-3">
+              <%= work_experience_form.label :position, "职位名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
+              <div class="mt-2">
+                <%= work_experience_form.text_field :position, autocomplete: "position", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+              </div>
             </div>
-          </div>
 
-          <div class="sm:col-span-3">
-            <label for="start-at" class="block text-sm font-medium leading-6 text-gray-900">入职时间</label>
-            <div class="mt-2">
-              <input id="start-at" name="start-at" type="month" autocomplete="start-at" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <div class="sm:col-span-3">
+              <%= work_experience_form.label :start_date, "入职时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
+              <div class="mt-2">
+                <%= work_experience_form.month_field :start_date, autocomplete: "start-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+              </div>
+            </div>
+
+            <div class="sm:col-span-3">
+              <%= work_experience_form.label :end_date, "离职时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
+              <div class="mt-2">
+                <%= work_experience_form.month_field :end_date, autocomplete: "end-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+              </div>
+            </div>
+
+            <div class="sm:col-span-6">
+              <%= work_experience_form.label :project_experience, "项目经验", class: "block text-sm font-medium leading-6 text-gray-900" %>
+              <div class="mt-2">
+                <%= work_experience_form.text_area :project_experience, rows: 4, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+              </div>
             </div>
           </div>
-          <div class="sm:col-span-3">
-            <label for="end-at" class="block text-sm font-medium leading-6 text-gray-900">离职时间</label>
-            <div class="mt-2">
-              <input id="end-at" name="end-at" type="month" autocomplete="end-at" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-            </div>
-          </div>
-          <div class="sm:col-span-6">
-            <label for="projects" class="block text-sm font-medium leading-6 text-gray-900">项目经验</label>
-            <div class="mt-2">
-              <textarea rows="4" name="projects" id="projects" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
-            </div>
-          </div>
+        <% end %>
+
+        <div class="border-b border-gray-200 pb-5 my-4">
+          <h3 class="text-base font-semibold leading-6 text-gray-900">教育背景</h3>
         </div>
+        <%= form.fields_for :educations do |edu_form| %>
+          <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
+            <div class="sm:col-span-3">
+              <%= edu_form.label :school, "学校名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
+              <div class="mt-2">
+                <%= edu_form.text_field :school, autocomplete: "school", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+              </div>
+            </div>
 
+            <div class="sm:col-span-3">
+              <%= edu_form.label :major, "专业名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
+              <div class="mt-2">
+                <%= edu_form.text_field :major, autocomplete: "major", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+              </div>
+            </div>
+
+            <div class="sm:col-span-3">
+              <%= edu_form.label :start_date, "入学时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
+              <div class="mt-2">
+                <%= edu_form.month_field :start_date, autocomplete: "start-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+              </div>
+            </div>
+
+            <div class="sm:col-span-3">
+              <%= edu_form.label :end_date, "毕业时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
+              <div class="mt-2">
+                <%= edu_form.month_field :end_date, autocomplete: "end-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
         <!-- educations -->
-        <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
-          <div class="sm:col-span-3">
-            <label for="university" class="block text-sm font-medium leading-6 text-gray-900">学校名称</label>
-            <div class="mt-2">
-              <input id="university" name="university" autocomplete="university" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-            </div>
-          </div>
-
-          <div class="sm:col-span-3">
-            <label for="major-name" class="block text-sm font-medium leading-6 text-gray-900">专业名称</label>
-            <div class="mt-2">
-              <input id="major-name" name="major-name" autocomplete="major-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-            </div>
-          </div>
-
-          <div class="sm:col-span-3">
-            <label for="start-at" class="block text-sm font-medium leading-6 text-gray-900">入学时间</label>
-            <div class="mt-2">
-              <input id="start-at" name="start-at" type="month" autocomplete="start-at" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-            </div>
-          </div>
-          <div class="sm:col-span-3">
-            <label for="end-at" class="block text-sm font-medium leading-6 text-gray-900">毕业时间</label>
-            <div class="mt-2">
-              <input id="end-at" name="end-at" type="month" autocomplete="end-at" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-            </div>
-          </div>
-        </div>
-
       </div>
       <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-        <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">保存</button>
+        <%= form.submit "保存", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
       </div>
     <% end %>
   </div>

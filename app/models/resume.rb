@@ -2,6 +2,8 @@ class Resume < ApplicationRecord
   has_many :work_experiences, dependent: :destroy
   has_many :educations, dependent: :destroy
 
+  accepts_nested_attributes_for :work_experiences, :educations, :allow_destroy => true
+
   has_one_attached :original_file
   has_one_attached :enhanced_resume
 
