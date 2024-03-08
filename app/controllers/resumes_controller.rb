@@ -44,6 +44,7 @@ class ResumesController < ApplicationController
   end
 
   def update
+    pp resume_params
     if @resume.update(resume_params)
       redirect_to @resume, notice: 'Resume was successfully updated.'
     else
@@ -200,7 +201,7 @@ Document: #{file_content}",
       ],
       educations_attributes: [
         :id,
-        :university,
+        :school,
         :major,
         :start_date,
         :end_date,
