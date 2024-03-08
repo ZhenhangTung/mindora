@@ -44,11 +44,13 @@ class ResumesController < ApplicationController
   end
 
   def update
-    pp resume_params
-    if @resume.update(resume_params)
+    puts 'Before update:', params.inspect
+    modified_params = adjust_date_params(resume_params)
+    if @resume.update(modified_params)
+      puts 'After update:', @resume.work_experiences.inspect
       redirect_to @resume, notice: 'Resume was successfully updated.'
     else
-      # render :edit, status: :unprocessable_entity
+      redirect_to @resume, notice: 'Resume was failed to update.'
     end
   end
 
@@ -208,6 +210,26 @@ Document: #{file_content}",
         :_destroy
       ]
     )
+  end
+
+  def adjust_date_params(params)
+    # Regular expression to match YYYY-MM format
+    date_format_regex = /\A\d{4}-\d{2}\z/
+
+    params.tap do |whitelisted|
+      if whitelisted[:work_experiences_attributes]
+        whitelisted[:work_experiences_attributes].each do |_key, experience|
+          experience[:start_date] = "#{experience[:start_date]}-01" if experience[:start_date].present? && experience[:start_date].match?(date_format_regex)
+          experience[:end_date] = "#{experience[:end_date]}-01" if experience[:end_date].present? && experience[:end_date].match?(date_format_regex)
+        end
+      end
+      if whitelisted[:educations_attributes]
+        whitelisted[:educations_attributes].each do |_key, experience|
+          experience[:start_date] = "#{experience[:start_date]}-01" if experience[:start_date].present? && experience[:start_date].match?(date_format_regex)
+          experience[:end_date] = "#{experience[:end_date]}-01" if experience[:end_date].present? && experience[:end_date].match?(date_format_regex)
+        end
+      end
+    end
   end
 
   def read_docx_content(attachment)
