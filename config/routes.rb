@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "resumes#new"
   resources :resumes, only: [:new, :create, :show, :update]
+  post 'resumes/work_experiences/optimize', to: 'resumes#optimize'
+  post 'resumes/:id/job_match', to: 'resumes#job_match'
+
   resources :chat, only: [:index, :create]
 
   namespace :api do

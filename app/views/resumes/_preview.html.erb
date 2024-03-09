@@ -1,0 +1,35 @@
+<div class="max-w-full mx-auto bg-white shadow-lg rounded-lg p-5 text-black">
+  <div class="mb-2">
+    <p class=""><%= @resume.name %> | <%= @resume.gender %> | 电话：<%= @resume.phone_number %> | 邮箱：<%= @resume.email %></p>
+  </div>
+  <div class="mb-2">
+    <div class="text-center border-b-2 border-gray-200 my-1">
+      <h2 class="font-bold">工作经历</h2>
+    </div>
+    <% @resume.work_experiences.each do |experience| %>
+      <div class="mt-2">
+        <!-- Title | Company | Time -->
+        <div class="flex justify-between items-center mb-2 font-bold">
+          <h3 class="flex-1 text-left"><%= experience.position %></h3>
+          <p class="flex-1 text-center"><%= experience.company %></p>
+          <p class="flex-1 text-right"><%= experience.start_date.strftime("%Y.%m") %>-<%= experience.end_date.nil? ? "至今" : experience.end_date.strftime("%Y.%m") %></p>
+        </div>
+        <!-- Description -->
+        <p class="space-y-1">
+          <%= simple_format(experience.project_experience, {}, wrapper_tag: "div") %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+  <!-- Education Background-->
+  <div>
+    <div class="text-center border-b-2 border-gray-200 mb-1">
+      <h2 class="font-bold">教育背景</h2>
+    </div>
+    <% @resume.educations.each do |education| %>
+      <p class="mt-1">
+        <%= education.school %> | <%= education.major %> | <%= education.start_date.strftime("%Y.%m") %>-<%= education.end_date.strftime("%Y.%m") %> | <%= education.degree %>
+      </p>
+    <% end %>
+  </div>
+</div>
