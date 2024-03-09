@@ -3,6 +3,15 @@
     <p class=""><%= @resume.name %> | <%= @resume.gender %> | 电话：<%= @resume.phone_number %> | 邮箱：<%= @resume.email %></p>
   </div>
   <div class="mb-2">
+    <% if local_assigns[:show_job_match] %>
+      <div class="text-center border-b-2 border-gray-200 my-1">
+        <h2 class="font-bold">职位匹配</h2>
+      </div>
+      <div>
+        <p class="mt-2" id="job-match-preview"></p>
+      </div>
+    <% end %>
+
     <div class="text-center border-b-2 border-gray-200 my-1">
       <h2 class="font-bold">工作经历</h2>
     </div>

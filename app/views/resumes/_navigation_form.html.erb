@@ -294,7 +294,7 @@
     </div>
 
     <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
-      <%= render partial: "preview", locals: { resume: @resume } %>
+      <%= render partial: "preview", locals: { resume: @resume, show_job_match: false } %>
       <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
         <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">下一步</button>
       </div>
@@ -341,10 +341,12 @@
       <p class="mt-1 text-sm leading-6 text-gray-600">TODO：添加描述</p>
     </div>
 
-    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
-      <%= render partial: "preview", locals: { resume: @resume } %>
+    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" data-controller="resume">
+      <div data-resume-target="pdfSource">
+        <%= render partial: "preview", locals: { resume: @resume, show_job_match: true } %>
+      </div>
       <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-        <button type="button" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">下载简历</button>
+        <button type="button" data-action="resume#downloadPDF" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">下载简历</button>
       </div>
     </div>
   </div>

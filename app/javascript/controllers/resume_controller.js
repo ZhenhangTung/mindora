@@ -1,7 +1,7 @@
-import { Controller } from "@hotwired/stimulus"
+import {Controller} from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static targets = ["projectExperience", "jobDescription", "jobMatch"]
+    static targets = ["projectExperience", "jobDescription", "jobMatch", "pdfSource"]
 
     optimizeProjectExperience() {
         const originalText = this.projectExperienceTarget.value
@@ -24,7 +24,7 @@ export default class extends Controller {
     generateJobMatch() {
         const jd = this.jobDescriptionTarget.value
         const resumeId = this.data.get("id");
-        console.log(resumeId)
+        let jobMatch = ''
         fetch(`/resumes/${resumeId}/job_match`, {
             method: 'POST',
             headers: {
@@ -35,8 +35,26 @@ export default class extends Controller {
         })
             .then(response => response.json())
             .then(data => {
-                this.jobMatchTarget.value = data.job_match;
+                jobMatch = data.job_match;
+                this.jobMatchTarget.value = jobMatch;
+            }).then(() => {
+                // Assuming 'response' contains your text from the server
+                document.getElementById("job-match-preview").innerHTML = jobMatch.replace(/\r?\n/g, '<br>');
             })
             .catch(error => console.error('Error:', error));
+    }
+
+    downloadPDF() {
+        let element = this.pdfSourceTarget // Adjust if necessary to match your HTML structure
+        console.log(element)
+        let options = {
+            margin:       1,
+            filename:     'resume.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+        };
+
+        // Generate and download the PDF
+        html2pdf().set(options).from(element).save();
     }
 }
