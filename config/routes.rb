@@ -2,6 +2,17 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   mount ActionCable.server => '/cable'
 
+  # Defines the routes for the users controller
+  resources :users, only: [:create]
+  get 'signup', to: 'users#new', as: 'signup'
+
+  # resources :sessions, only: [:new, :create, :destroy]
+  # Defines the routes for the sessions controller
+  get 'sessions/new'
+  get 'login', to: 'sessions#new', as: 'new_session'
+  post 'login', to: 'sessions#create'
+  get 'logout', to: 'sessions#destroy'
+
   # Defines the root path route ("/")
   root "resumes#new"
   resources :resumes, only: [:new, :create, :show, :update]

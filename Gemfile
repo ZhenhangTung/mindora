@@ -90,3 +90,4 @@ gem "aws-sdk-s3", require: false
 gem "active_storage_validations"
 gem "pdf-reader"
 gem "docx"
+gem 'bcrypt', '~> 3.1.7'
