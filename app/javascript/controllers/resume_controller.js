@@ -1,8 +1,12 @@
 import {Controller} from "@hotwired/stimulus"
+// import html2pdf from "html2pdf";
 
 export default class extends Controller {
     static targets = ["projectExperience", "jobDescription", "jobMatch", "pdfSource"]
 
+    static values = {
+        name: String
+    }
     optimizeProjectExperience() {
         const originalText = this.projectExperienceTarget.value
 
@@ -23,6 +27,10 @@ export default class extends Controller {
 
     generateJobMatch() {
         const jd = this.jobDescriptionTarget.value
+        if (!jd) {
+            alert("请输入职位 JD 内容")
+            return
+        }
         const resumeId = this.data.get("id");
         let jobMatch = ''
         fetch(`/resumes/${resumeId}/job_match`, {
@@ -46,10 +54,9 @@ export default class extends Controller {
 
     downloadPDF() {
         let element = this.pdfSourceTarget // Adjust if necessary to match your HTML structure
-        console.log(element)
         let options = {
             margin:       1,
-            filename:     'resume.pdf',
+            filename:     `应聘(XXX)产品经理-(匹配1)-(匹配2)-${this.nameValue}.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2 },
         };

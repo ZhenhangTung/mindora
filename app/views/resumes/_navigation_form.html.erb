@@ -4,16 +4,20 @@
     <ol role="list" class="overflow-hidden rounded-md lg:flex lg:rounded-none lg:border-l lg:border-r lg:border-gray-200">
       <li class="relative overflow-hidden lg:flex-1">
         <div class="overflow-hidden border border-gray-200 rounded-t-md border-b-0 lg:border-0">
-          <a href="#" aria-current="step">
-            <span class="absolute left-0 top-0 h-full w-1 bg-indigo-600 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full" aria-hidden="true"></span>
+          <a href="/resumes/new" aria-current="step">
+            <span class="<%= step_indicator_class('new_resume', current_step) %>" aria-hidden="true"></span>
             <span class="flex items-start px-6 py-5 text-sm font-medium lg:pl-9">
-              <span class="flex-shrink-0">
-                <span class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-indigo-600">
-                  <span class="text-indigo-600">01</span>
+              <% if step_completed?('new_resume', current_step) %>
+                <%= render partial: "checkmark" %>
+              <% else %>
+                <span class="flex-shrink-0">
+                <span class="<%= step_indicator_border_class('new_resume', current_step) %>">
+                  <span class="<%= step_indicator_text_class('new_resume', current_step) %>">01</span>
                 </span>
               </span>
+              <% end %>
               <span class="ml-4 mt-0.5 flex min-w-0 flex-col">
-                <span class="text-sm font-medium text-indigo-600">上传简历</span>
+                <span class="text-sm font-medium <%= step_indicator_text_class('new_resume', current_step) %>">上传简历</span>
                 <span class="text-sm font-medium text-gray-500">汪呜！等你的简历！🐾</span>
               </span>
             </span>
@@ -28,17 +32,22 @@
       </li>
       <li class="relative overflow-hidden lg:flex-1">
         <div class="overflow-hidden border border-gray-200 lg:border-0">
-          <a href="#" class="group">
-            <span class="absolute left-0 top-0 h-full w-1 bg-transparent group-hover:bg-gray-200 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full" aria-hidden="true"></span>
+          <a href="<%= step_completed?('show_resume', current_step) ? "/resumes/#{@resume.id}" : '#' %>" class="group">
+            <span class="<%= step_indicator_class('show_resume', current_step) %>" aria-hidden="true"></span>
             <span class="flex items-start px-6 py-5 text-sm font-medium lg:pl-9">
-              <span class="flex-shrink-0">
-                <span class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-gray-300">
-                  <span class="text-gray-500">02</span>
+              <% if step_completed?('show_resume', current_step) %>
+                <%= render partial: "checkmark" %>
+              <% else %>
+                <span class="flex-shrink-0">
+                  <span class="<%= step_indicator_border_class('show_resume', current_step) %>">
+                    <span class="<%= step_indicator_text_class('show_resume', current_step) %>">02</span>
+                  </span>
                 </span>
-              </span>
+              <% end %>
+
               <span class="ml-4 mt-0.5 flex min-w-0 flex-col">
-                <span class="text-sm font-medium text-gray-500">简历预览</span>
-                <span class="text-sm font-medium text-gray-500">确认你的简历信息🔍</span>
+                <span class="text-sm font-medium <%= step_indicator_text_class('show_resume', current_step) %>">优化简历</span>
+                <span class="text-sm font-medium text-gray-500">产品经理面试官给建议💡</span>
               </span>
             </span>
           </a>
@@ -53,65 +62,20 @@
       <li class="relative overflow-hidden lg:flex-1">
         <div class="overflow-hidden border border-gray-200 lg:border-0">
           <a href="#" class="group">
-            <span class="absolute left-0 top-0 h-full w-1 bg-transparent group-hover:bg-gray-200 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full" aria-hidden="true"></span>
+            <span class="<%= step_indicator_class('customize_resume', current_step) %>" aria-hidden="true"></span>
             <span class="flex items-start px-6 py-5 text-sm font-medium lg:pl-9">
-              <span class="flex-shrink-0">
-                <span class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-gray-300">
-                  <span class="text-gray-500">03</span>
+              <% if step_completed?('customize_resume', current_step) %>
+                <%= render partial: "checkmark" %>
+              <% else %>
+                <span class="flex-shrink-0">
+                  <span class="<%= step_indicator_border_class('customize_resume', current_step) %>">
+                    <span class="<%= step_indicator_text_class('customize_resume', current_step) %>">03</span>
+                  </span>
                 </span>
-              </span>
+              <% end %>
               <span class="ml-4 mt-0.5 flex min-w-0 flex-col">
-                <span class="text-sm font-medium text-gray-500">优化简历</span>
-                <span class="text-sm font-medium text-gray-500">产品面试官给建议💡</span>
-              </span>
-            </span>
-          </a>
-          <!-- Separator -->
-          <div class="absolute inset-0 left-0 top-0 hidden w-3 lg:block" aria-hidden="true">
-            <svg class="h-full w-full text-gray-300" viewBox="0 0 12 82" fill="none" preserveAspectRatio="none">
-              <path d="M0.5 0V31L10.5 41L0.5 51V82" stroke="currentcolor" vector-effect="non-scaling-stroke" />
-            </svg>
-          </div>
-        </div>
-      </li>
-      <li class="relative overflow-hidden lg:flex-1">
-        <div class="overflow-hidden border border-gray-200 lg:border-0">
-          <a href="#" class="group">
-            <span class="absolute left-0 top-0 h-full w-1 bg-transparent group-hover:bg-gray-200 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full" aria-hidden="true"></span>
-            <span class="flex items-start px-6 py-5 text-sm font-medium lg:pl-9">
-              <span class="flex-shrink-0">
-                <span class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-gray-300">
-                  <span class="text-gray-500">04</span>
-                </span>
-              </span>
-              <span class="ml-4 mt-0.5 flex min-w-0 flex-col">
-                <span class="text-sm font-medium text-gray-500">定制简历</span>
-                <span class="text-sm font-medium text-gray-500">让你更有吸引力💗</span>
-              </span>
-            </span>
-          </a>
-          <!-- Separator -->
-          <div class="absolute inset-0 left-0 top-0 hidden w-3 lg:block" aria-hidden="true">
-            <svg class="h-full w-full text-gray-300" viewBox="0 0 12 82" fill="none" preserveAspectRatio="none">
-              <path d="M0.5 0V31L10.5 41L0.5 51V82" stroke="currentcolor" vector-effect="non-scaling-stroke" />
-            </svg>
-          </div>
-        </div>
-      </li>
-      <li class="relative overflow-hidden lg:flex-1">
-        <div class="overflow-hidden border border-gray-200 rounded-b-md border-t-0 lg:border-0">
-          <!-- Upcoming Step -->
-          <a href="#" class="group">
-            <span class="absolute left-0 top-0 h-full w-1 bg-transparent group-hover:bg-gray-200 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full" aria-hidden="true"></span>
-            <span class="flex items-start px-6 py-5 text-sm font-medium lg:pl-9">
-              <span class="flex-shrink-0">
-                <span class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-gray-300">
-                  <span class="text-gray-500">05</span>
-                </span>
-              </span>
-              <span class="ml-4 mt-0.5 flex min-w-0 flex-col">
-                <span class="text-sm font-medium text-gray-500">下载简历</span>
-                <span class="text-sm font-medium text-gray-500">赶紧投出简历吧！</span>
+                <span class="text-sm font-medium <%= step_indicator_text_class('customize_resume', current_step) %>">定制简历</span>
+                <span class="text-sm font-medium text-gray-500">根据职位定制简历，让你更有吸引力💗</span>
               </span>
             </span>
           </a>
@@ -129,196 +93,191 @@
 
 <!--Resume Form-->
 <div class="space-y-10 divide-y divide-gray-900/10 mt-4">
-  <div class="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-3">
-    <div class="px-4 sm:px-0">
-      <h2 class="text-base font-semibold leading-7 text-gray-900">简历信息</h2>
-      <p class="mt-1 text-sm leading-6 text-gray-600">请麻麻把简历投喂给我喔（摇尾巴）</p>
-    </div>
-    <%= form_with model: @resume, url: resumes_path, local: true, class: "bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2", html: { multipart: true } do |form| %>
-      <div class="px-4 py-6 sm:p-8">
-        <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+  <% if current_step == 'new_resume' %>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-3">
+      <div class="px-4 sm:px-0">
+        <h2 class="text-base font-semibold leading-7 text-gray-900">简历信息</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-600">请把简历投喂给我喔（摇尾巴）</p>
+      </div>
+      <%= form_with model: @resume, url: resumes_path, local: true, class: "bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2", html: { multipart: true } do |form| %>
+        <div class="px-4 py-6 sm:p-8">
+          <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
-          <div class="col-span-full">
-            <%= form.label :original_file, "你的简历", class: "block text-sm font-medium leading-6 text-gray-900" %>
-            <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-              <div class="text-center">
-                <!-- FIXME: image to file -->
-                <svg class="mx-auto h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z" clip-rule="evenodd" />
-                </svg>
-                <div class="mt-4 flex text-sm leading-6 text-gray-600">
-                  <label for="file-upload" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                    <span>上传简历</span>
-                    <%= form.file_field :original_file, direct_upload: true, accept: '.pdf,.docx', class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white" %>
-                  </label>
+            <div class="col-span-full">
+              <%= form.label :original_file, "你的简历", class: "block text-sm font-medium leading-6 text-gray-900" %>
+              <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+                <div class="text-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-auto h-12 w-12 text-gray-300">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
+                  </svg>
+                  <div class="mt-4 flex text-sm leading-6 text-gray-600">
+                    <label for="file-upload" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                      <span>上传简历</span>
+                      <%= form.file_field :original_file, required: true, direct_upload: true, accept: '.pdf,.docx', class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white" %>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-        <%= form.submit "上传", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
-      </div>
-    <% end %>
-  </div>
-
-  <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
-    <div class="px-4 sm:px-0">
-      <h2 class="text-base font-semibold leading-7 text-gray-900">简历编辑</h2>
-      <p class="mt-1 text-sm leading-6 text-gray-600">汪汪很努力地阅读简历了，如果有不准确的地方麻麻可以教汪汪修改，汪汪会像对待三文鱼一样认真学习喔！</p>
+        <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
+          <%= form.submit "上传", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+        </div>
+      <% end %>
     </div>
+  <% elsif current_step == 'show_resume' %>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
+      <div class="px-4 sm:px-0">
+        <h2 class="text-base font-semibold leading-7 text-gray-900">简历编辑</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-600">汪汪很努力地阅读简历了，如果有不准确的地方麻麻可以教汪汪修改，汪汪会像对待三文鱼一样认真学习喔！</p>
+      </div>
+      <%= form_with model: @resume, local: true, class: "bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" do |form| %>
+        <div class="px-4 py-6 sm:p-8">
+          <div class="border-b border-gray-200 pb-5 my-4">
+            <h3 class="text-base font-semibold leading-6 text-gray-900">基本信息</h3>
+          </div>
+          <!-- personal info -->
+          <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div class="sm:col-span-3">
+              <%= form.label :name, "姓名", class: "block text-sm font-medium leading-6 text-gray-900" %>
+              <div class="mt-2">
+                <%= form.text_field :name, autocomplete: "full-name", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+              </div>
+            </div>
 
-    <%= form_with model: @resume, local: true, class: "bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" do |form| %>
-      <div class="px-4 py-6 sm:p-8">
-        <div class="border-b border-gray-200 pb-5 my-4">
-          <h3 class="text-base font-semibold leading-6 text-gray-900">基本信息</h3>
-        </div>
-        <!-- personal info -->
-        <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-          <div class="sm:col-span-3">
-            <%= form.label :name, "姓名", class: "block text-sm font-medium leading-6 text-gray-900" %>
-            <div class="mt-2">
-              <%= form.text_field :name, autocomplete: "full-name", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+            <div class="sm:col-span-3">
+              <%= form.label :gender, "性别", class: "block text-sm font-medium leading-6 text-gray-900" %>
+              <div class="mt-2">
+                <%= form.select :gender, ['女', '男'], {}, { autocomplete: "gender", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" } %>
+              </div>
+            </div>
+
+            <div class="sm:col-span-3">
+              <%= form.label :email, "邮箱", class: "block text-sm font-medium leading-6 text-gray-900" %>
+              <div class="mt-2">
+                <%= form.email_field :email, autocomplete: "email", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+              </div>
             </div>
           </div>
 
-          <div class="sm:col-span-3">
-            <%= form.label :gender, "性别", class: "block text-sm font-medium leading-6 text-gray-900" %>
-            <div class="mt-2">
-              <%= form.select :gender, ['女', '男'], {}, { autocomplete: "gender", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" } %>
-            </div>
+          <div class="border-b border-gray-200 pb-5 my-4">
+            <h3 class="text-base font-semibold leading-6 text-gray-900">工作经历</h3>
           </div>
-
-          <div class="sm:col-span-3">
-            <%= form.label :email, "邮箱", class: "block text-sm font-medium leading-6 text-gray-900" %>
-            <div class="mt-2">
-              <%= form.email_field :email, autocomplete: "email", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-            </div>
-          </div>
-        </div>
-
-        <div class="border-b border-gray-200 pb-5 my-4">
-          <h3 class="text-base font-semibold leading-6 text-gray-900">工作经历</h3>
-        </div>
-        <!-- working exps -->
-        <%= form.fields_for :work_experiences do |work_experience_form| %>
-          <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
-            <div class="sm:col-span-3">
-              <%= work_experience_form.label :company, "公司名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
-              <div class="mt-2">
-                <%= work_experience_form.text_field :company, autocomplete: "company", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-              </div>
-            </div>
-
-            <div class="sm:col-span-3">
-              <%= work_experience_form.label :position, "职位名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
-              <div class="mt-2">
-                <%= work_experience_form.text_field :position, autocomplete: "position", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-              </div>
-            </div>
-
-            <div class="sm:col-span-3">
-              <%= work_experience_form.label :start_date, "入职时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
-              <div class="mt-2">
-                <%= work_experience_form.month_field :start_date, autocomplete: "start-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-              </div>
-            </div>
-
-            <div class="sm:col-span-3">
-              <%= work_experience_form.label :end_date, "离职时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
-              <div class="mt-2">
-                <%= work_experience_form.month_field :end_date, autocomplete: "end-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-              </div>
-            </div>
-
-            <div class="sm:col-span-6">
-              <div data-controller="resume">
-                <%= work_experience_form.label :project_experience, "项目经历", class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <!-- working exps -->
+          <%= form.fields_for :work_experiences do |work_experience_form| %>
+            <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
+              <div class="sm:col-span-3">
+                <%= work_experience_form.label :company, "公司名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
                 <div class="mt-2">
-                  <button type="button" data-action="click->resume#optimizeProjectExperience" class="rounded bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">优化本段经历</button>
-                  <%= work_experience_form.text_area :project_experience, data: { resume_target: "projectExperience" }, rows: 8, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                  <%= work_experience_form.text_field :company, autocomplete: "company", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                </div>
+              </div>
+
+              <div class="sm:col-span-3">
+                <%= work_experience_form.label :position, "职位名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                <div class="mt-2">
+                  <%= work_experience_form.text_field :position, autocomplete: "position", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                </div>
+              </div>
+
+              <div class="sm:col-span-3">
+                <%= work_experience_form.label :start_date, "入职时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                <div class="mt-2">
+                  <%= work_experience_form.month_field :start_date, autocomplete: "start-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                </div>
+              </div>
+
+              <div class="sm:col-span-3">
+                <%= work_experience_form.label :end_date, "离职时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                <div class="mt-2">
+                  <%= work_experience_form.month_field :end_date, autocomplete: "end-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                </div>
+              </div>
+
+              <div class="sm:col-span-6">
+                <div data-controller="resume">
+                  <%= work_experience_form.label :project_experience, "项目经历", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                  <div class="mt-2">
+                    <button type="button" data-action="click->resume#optimizeProjectExperience" class="rounded bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">优化本段经历</button>
+                    <%= work_experience_form.text_area :project_experience, data: { resume_target: "projectExperience" }, rows: 8, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                  </div>
                 </div>
               </div>
             </div>
+          <% end %>
+
+          <div class="border-b border-gray-200 pb-5 my-4">
+            <h3 class="text-base font-semibold leading-6 text-gray-900">教育背景</h3>
           </div>
-        <% end %>
+          <%= form.fields_for :educations do |edu_form| %>
+            <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
+              <div class="sm:col-span-3">
+                <%= edu_form.label :school, "学校名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                <div class="mt-2">
+                  <%= edu_form.text_field :school, autocomplete: "school", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                </div>
+              </div>
 
-        <div class="border-b border-gray-200 pb-5 my-4">
-          <h3 class="text-base font-semibold leading-6 text-gray-900">教育背景</h3>
+              <div class="sm:col-span-3">
+                <%= edu_form.label :major, "专业名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                <div class="mt-2">
+                  <%= edu_form.text_field :major, autocomplete: "major", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                </div>
+              </div>
+
+              <div class="sm:col-span-3">
+                <%= edu_form.label :start_date, "入学时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                <div class="mt-2">
+                  <%= edu_form.month_field :start_date, autocomplete: "start-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                </div>
+              </div>
+
+              <div class="sm:col-span-3">
+                <%= edu_form.label :end_date, "毕业时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                <div class="mt-2">
+                  <%= edu_form.month_field :end_date, autocomplete: "end-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          <!-- educations -->
         </div>
-        <%= form.fields_for :educations do |edu_form| %>
-          <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
-            <div class="sm:col-span-3">
-              <%= edu_form.label :school, "学校名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
-              <div class="mt-2">
-                <%= edu_form.text_field :school, autocomplete: "school", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-              </div>
-            </div>
+        <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
+          <%= form.submit "保存", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+        </div>
+      <% end %>
+    </div>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
+      <div class="px-4 sm:px-0">
+        <h2 class="text-base font-semibold leading-7 text-gray-900">简历预览</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-600">TODO：添加描述</p>
+      </div>
 
-            <div class="sm:col-span-3">
-              <%= edu_form.label :major, "专业名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
-              <div class="mt-2">
-                <%= edu_form.text_field :major, autocomplete: "major", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-              </div>
-            </div>
+      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+        <%= render partial: "preview", locals: { resume: @resume, show_job_match: false } %>
+        <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
+          <a href="/resumes/<%= @resume.id %>/customize" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">下一步</a>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
+      <div class="px-4 sm:px-0">
+        <h2 class="text-base font-semibold leading-7 text-gray-900">定制简历</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-600">TODO：添加描述</p>
+      </div>
 
-            <div class="sm:col-span-3">
-              <%= edu_form.label :start_date, "入学时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
-              <div class="mt-2">
-                <%= edu_form.month_field :start_date, autocomplete: "start-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-              </div>
-            </div>
-
-            <div class="sm:col-span-3">
-              <%= edu_form.label :end_date, "毕业时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
-              <div class="mt-2">
-                <%= edu_form.month_field :end_date, autocomplete: "end-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-              </div>
-            </div>
+      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" data-controller="resume" data-resume-id="<%= @resume.id %>">
+        <div class="px-4 py-6 sm:p-8">
+          <div class="border-b border-gray-200 pb-5 my-4">
+            <h3 class="text-base font-semibold leading-6 text-gray-900">职位匹配生成</h3>
           </div>
-        <% end %>
-        <!-- educations -->
-      </div>
-      <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-        <button type="button" class="text-sm font-semibold leading-6 text-gray-900">下一步</button>
-        <%= form.submit "保存", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
-      </div>
-    <% end %>
-  </div>
-
-  <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
-    <div class="px-4 sm:px-0">
-      <h2 class="text-base font-semibold leading-7 text-gray-900">简历预览</h2>
-      <p class="mt-1 text-sm leading-6 text-gray-600">TODO：添加描述</p>
-    </div>
-
-    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
-      <%= render partial: "preview", locals: { resume: @resume, show_job_match: false } %>
-      <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-        <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">下一步</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
-    <div class="px-4 sm:px-0">
-      <h2 class="text-base font-semibold leading-7 text-gray-900">定制简历</h2>
-      <p class="mt-1 text-sm leading-6 text-gray-600">TODO：添加描述</p>
-    </div>
-
-    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
-      <div class="px-4 py-6 sm:p-8">
-        <div class="border-b border-gray-200 pb-5 my-4">
-          <h3 class="text-base font-semibold leading-6 text-gray-900">职位匹配生成</h3>
-        </div>
-        <!-- job descriptions -->
-        <div data-controller="resume" data-resume-id="<%= @resume.id %>">
+          <!-- job descriptions -->
           <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
             <div class="sm:col-span-6">
               <label for="job-description" class="block text-sm font-medium leading-6 text-gray-900">职位 JD 内容</label>
               <div class="mt-2">
-                <button type="button" data-action="click->resume#generateJobMatch" class="rounded bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">生成职位匹配</button>
                 <textarea rows="16" name="job-description" id="job-description" data-resume-target="jobDescription" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
               </div>
             </div>
@@ -332,22 +291,25 @@
             </div>
           </div>
         </div>
+        <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
+          <button type="button" data-action="click->resume#generateJobMatch" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">生成职位匹配</button>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
-    <div class="px-4 sm:px-0">
-      <h2 class="text-base font-semibold leading-7 text-gray-900">简历预览</h2>
-      <p class="mt-1 text-sm leading-6 text-gray-600">TODO：添加描述</p>
-    </div>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
+      <div class="px-4 sm:px-0">
+        <h2 class="text-base font-semibold leading-7 text-gray-900">简历预览</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-600">TODO：添加描述</p>
+      </div>
 
-    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" data-controller="resume">
-      <div data-resume-target="pdfSource">
-        <%= render partial: "preview", locals: { resume: @resume, show_job_match: true } %>
-      </div>
-      <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-        <button type="button" data-action="resume#downloadPDF" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">下载简历</button>
+      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" data-controller="resume" data-resume-name-value="<%= @resume.name %>">
+        <div data-resume-target="pdfSource">
+          <%= render partial: "preview", locals: { resume: @resume, show_job_match: true } %>
+        </div>
+        <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
+          <button type="button" data-action="resume#downloadPDF" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">下载简历</button>
+        </div>
       </div>
     </div>
-  </div>
+  <% end %>
 </div>

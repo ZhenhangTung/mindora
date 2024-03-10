@@ -1,7 +1,8 @@
 class ResumesController < ApplicationController
-  before_action :set_resume, only: [:show, :update]
+  before_action :set_resume, only: [:show, :update, :customize]
 
   def new
+    @current_step = 'new_resume'
     @resume = Resume.new
   end
 
@@ -53,7 +54,12 @@ class ResumesController < ApplicationController
   end
 
   def show
+    @current_step = 'show_resume'
+  end
 
+  def customize
+    @current_step = 'customize_resume'
+    render 'show'
   end
 
   def extract_resume_from_file(file_content)
