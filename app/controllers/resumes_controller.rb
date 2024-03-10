@@ -1,13 +1,17 @@
 class ResumesController < ApplicationController
   before_action :set_resume, only: [:show, :update, :customize]
+  before_action :authenticate_user, only: :index
 
+  def index
+    @resumes = current_user.resumes
+  end
   def new
     @current_step = 'new_resume'
     @resume = Resume.new
   end
 
   def create
-    @resume = Resume.new(resume_params)
+    @resume = current_user.resumes.build(resume_params)
     if @resume.save
       file_content = read_uploaded_file_content(@resume.original_file)
       json_data = extract_resume_from_file(file_content)
@@ -17,29 +21,15 @@ class ResumesController < ApplicationController
       # Call the model method to update the resume with extracted data
       @resume.update_with_extracted_data(json_data)
 
-
       flash[:success] = '简历上传成功！'
-      # TODO: implement me
-      # https://tailwindui.com/components/application-ui/feedback/alerts
       redirect_to @resume
     else
-      flash[:fail] = '简历上传失败！'
-      render :new
+      flash[:error] = '简历上传失败！'
+      redirect_to :new
     end
   rescue => e
-    pp 'errrrr'
-    pp e
-    flash[:fail] = "An error occurred: #{e.message}"
-    render :new
-  #   @resume.user = current_user # Assuming you have a method to identify the current user
-
-    # if @resume.save
-    #   flash[:success] = "Resume uploaded successfully."
-    #   redirect_to @resume
-    # else
-    #   flash.now[:error] = "There was a problem with your upload."
-    #   render :new
-    # end
+    flash[:error] = "An error occurred: #{e.message}"
+    redirect_to :new
   end
 
   def update
@@ -423,6 +413,10 @@ JD 内容：
       end
     end
     content # Return the concatenated text content
+  end
+
+  def authenticate_user
+    redirect_to login_path unless current_user
   end
 
 end
