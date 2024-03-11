@@ -15,7 +15,7 @@ class ResumesController < ApplicationController
     if @resume.save
       file_content = read_uploaded_file_content(@resume.original_file)
       json_data = extract_resume_from_file(file_content)
-
+      pp "ooooooooo"
       pp json_data
 
       # Call the model method to update the resume with extracted data
@@ -25,11 +25,11 @@ class ResumesController < ApplicationController
       redirect_to @resume
     else
       flash[:error] = '简历上传失败！'
-      redirect_to :new
+      redirect_to new_resume_path
     end
   rescue => e
-    flash[:error] = "An error occurred: #{e.message}"
-    redirect_to :new
+    flash[:error] = "发生了错误: #{e.message}"
+    redirect_to new_resume_path
   end
 
   def update
@@ -157,7 +157,36 @@ Document: #{file_content}",
   end
 
   def extract_resume_content(content)
+    # Parse the JSON data into a Ruby hash, if not already done
+    resume_data = content.is_a?(String) ? JSON.parse(content, symbolize_names: true) : content
      content
+
+    # Process work experiences
+    if resume_data[:work_experiences]
+      resume_data[:work_experiences].each do |experience|
+        # Handle "至今" for end_date
+        if experience[:end_date] == "至今"
+          experience[:end_date] = nil
+        else
+          # Convert to Date and back to String to ensure YYYY-MM format is maintained
+          begin
+            parsed_date = Date.parse(experience[:end_date])
+            experience[:end_date] = parsed_date.strftime("%Y-%m-%d") # Adjust the formatting as per your model's expectation
+          rescue => e
+            experience[:end_date] = nil # Handle parsing error
+          end
+        end
+
+        # Start date: Ensure conversion is correct and falls back gracefully
+        begin
+          experience[:start_date] = "#{experience[:start_date]}-01" if experience[:start_date].match(/\A\d{4}-\d{2}\z/)
+          experience[:start_date] = Date.parse(experience[:start_date]).strftime("%Y-%m-%d")
+        rescue => e
+          experience[:start_date] = nil # Handle parsing error
+        end
+      end
+    end
+    resume_data
   end
 
   # Assuming `original_file` is a method/attribute of `@resume`

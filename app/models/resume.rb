@@ -43,6 +43,11 @@ class Resume < ApplicationRecord
     end
   end
 
+  # Checks if the resume owner is currently a student
+  def is_student?
+    educations.any? { |edu| edu.end_date.nil? || edu.end_date > Date.today }
+  end
+
   private
 
   def parse_date_fields(record)

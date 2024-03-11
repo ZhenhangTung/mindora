@@ -13,6 +13,7 @@ amazon:
   secret_access_key: <%= ENV['TENCENT_CLOUD_SECRET_KEY'] %>
   region: ap-singapore
   bucket: <%= ENV['TENCENT_CLOUD_COS_BUCKET'] %>
+  endpoint: <%= ENV['TENCENT_CLOUD_COS_ENDPOINT'] %>
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:
