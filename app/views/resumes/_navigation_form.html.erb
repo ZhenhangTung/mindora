@@ -277,52 +277,54 @@
       </div>
     </div>
   <% else %>
-    <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
-      <div class="px-4 sm:px-0">
-        <h2 class="text-base font-semibold leading-7 text-gray-900">定制简历</h2>
-        <p class="mt-1 text-sm leading-6 text-gray-600">TODO：添加描述</p>
-      </div>
+    <div data-controller="resume" data-resume-id="<%= @resume.id %>">
+      <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
+        <div class="px-4 sm:px-0">
+          <h2 class="text-base font-semibold leading-7 text-gray-900">定制简历</h2>
+          <p class="mt-1 text-sm leading-6 text-gray-600">TODO：添加描述</p>
+        </div>
 
-      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" data-controller="resume" data-resume-id="<%= @resume.id %>">
-        <div class="px-4 py-6 sm:p-8">
-          <div class="border-b border-gray-200 pb-5 my-4">
-            <h3 class="text-base font-semibold leading-6 text-gray-900">职位匹配生成</h3>
-          </div>
-          <!-- job descriptions -->
-          <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
-            <div class="sm:col-span-6">
-              <label for="job-description" class="block text-sm font-medium leading-6 text-gray-900">职位 JD 内容</label>
-              <div class="mt-2">
-                <textarea rows="16" name="job-description" id="job-description" data-resume-target="jobDescription" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+        <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+          <div class="px-4 py-6 sm:p-8">
+            <div class="border-b border-gray-200 pb-5 my-4">
+              <h3 class="text-base font-semibold leading-6 text-gray-900">职位匹配生成</h3>
+            </div>
+            <!-- job descriptions -->
+            <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
+              <div class="sm:col-span-6">
+                <label for="job-description" class="block text-sm font-medium leading-6 text-gray-900">职位 JD 内容</label>
+                <div class="mt-2">
+                  <textarea rows="16" name="job-description" id="job-description" data-resume-target="jobDescription" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
+              <div class="sm:col-span-6">
+                <label for="job-match" class="block text-sm font-medium leading-6 text-gray-900">职位匹配</label>
+                <div class="mt-2">
+                  <textarea rows="8" name="job-match" id="job-match" data-resume-target="jobMatch" data-action="input->resume#updateJobMatchPreview" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                </div>
               </div>
             </div>
           </div>
-          <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
-            <div class="sm:col-span-6">
-              <label for="job-match" class="block text-sm font-medium leading-6 text-gray-900">职位匹配</label>
-              <div class="mt-2">
-                <textarea rows="8" name="job-match" id="job-match" data-resume-target="jobMatch" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
-              </div>
-            </div>
+          <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
+            <button type="button" data-action="click->resume#generateJobMatch" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">生成职位匹配</button>
           </div>
         </div>
-        <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-          <button type="button" data-action="click->resume#generateJobMatch" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">生成职位匹配</button>
+      </div>
+      <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
+        <div class="px-4 sm:px-0">
+          <h2 class="text-base font-semibold leading-7 text-gray-900">简历预览</h2>
+          <p class="mt-1 text-sm leading-6 text-gray-600">TODO：添加描述</p>
         </div>
-      </div>
-    </div>
-    <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
-      <div class="px-4 sm:px-0">
-        <h2 class="text-base font-semibold leading-7 text-gray-900">简历预览</h2>
-        <p class="mt-1 text-sm leading-6 text-gray-600">TODO：添加描述</p>
-      </div>
 
-      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" data-controller="resume" data-resume-name-value="<%= @resume.name %>">
-        <div data-resume-target="pdfSource">
-          <%= render partial: "preview", locals: { resume: @resume, show_job_match: true } %>
-        </div>
-        <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-          <button type="button" data-action="resume#downloadPDF" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">下载简历</button>
+        <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" data-resume-name-value="<%= @resume.name %>">
+          <div data-resume-target="pdfSource">
+            <%= render partial: "preview", locals: { resume: @resume, show_job_match: true } %>
+          </div>
+          <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
+            <button type="button" data-action="resume#downloadPDF" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">下载简历</button>
+          </div>
         </div>
       </div>
     </div>

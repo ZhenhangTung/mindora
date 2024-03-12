@@ -2,7 +2,7 @@ import {Controller} from "@hotwired/stimulus"
 // import html2pdf from "html2pdf";
 
 export default class extends Controller {
-    static targets = ["projectExperience", "jobDescription", "jobMatch", "pdfSource"]
+    static targets = ["projectExperience", "jobDescription", "jobMatch", "jobMatchPreview", "pdfSource"]
 
     static values = {
         name: String
@@ -63,5 +63,10 @@ export default class extends Controller {
 
         // Generate and download the PDF
         html2pdf().set(options).from(element).save();
+    }
+
+    updateJobMatchPreview() {
+        const text = this.jobMatchTarget.value;
+        this.jobMatchPreviewTarget.innerHTML = text.replace(/\n/g, '<br>');
     }
 }
