@@ -13,7 +13,11 @@
     <% end %>
 
     <div class="text-center border-b-2 border-gray-200 my-1">
-      <h2 class="font-bold">工作经历</h2>
+      <% if @resume.is_student? %>
+        <h2 class="font-bold">实习经历</h2>
+      <% else %>
+        <h2 class="font-bold">工作经历</h2>
+      <% end %>
     </div>
     <% @resume.work_experiences.each do |experience| %>
       <div class="mt-2">
