@@ -96,8 +96,8 @@
   <% if current_step == 'new_resume' %>
     <div class="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-3">
       <div class="px-4 sm:px-0">
-        <h2 class="text-base font-semibold leading-7 text-gray-900">简历信息</h2>
-        <p class="mt-1 text-sm leading-6 text-gray-600">请把简历投喂给我喔（摇尾巴）</p>
+        <h2 class="text-base font-semibold leading-7 text-gray-900">简历文件</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-600">轻轻把简历扔过来，让我整理得光鲜亮丽！（摇尾期待）</p>
       </div>
       <%= form_with model: @resume, url: resumes_path, local: true, class: "bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2", html: { multipart: true } do |form| %>
         <div class="px-4 py-6 sm:p-8">
@@ -145,7 +145,8 @@
     <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
       <div class="px-4 sm:px-0">
         <h2 class="text-base font-semibold leading-7 text-gray-900">简历编辑</h2>
-        <p class="mt-1 text-sm leading-6 text-gray-600">汪汪很努力地阅读简历了，如果有不准确的地方麻麻可以教汪汪修改，汪汪会像对待三文鱼一样认真学习喔！</p>
+        <p class="mt-1 text-sm leading-6 text-gray-600">我已经用小狗的细心嗅探了你的简历。如果发现哪里不够完美，就跟我汪一声，改正它就像追球一样认真！</p>
+        <p class="mt-1 text-sm leading-6 text-gray-600">但嘿，<span class="text-red-400"><b>保持真实</b></span>哦，因为真诚的简历能带你找到最棒的工作！</p>
       </div>
       <%= form_with model: @resume, local: true, class: "bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" do |form| %>
         <div class="px-4 py-6 sm:p-8">
@@ -266,7 +267,7 @@
     <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
       <div class="px-4 sm:px-0">
         <h2 class="text-base font-semibold leading-7 text-gray-900">简历预览</h2>
-        <p class="mt-1 text-sm leading-6 text-gray-600">TODO：添加描述</p>
+        <p class="mt-1 text-sm leading-6 text-gray-600"></p>
       </div>
 
       <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
@@ -281,7 +282,7 @@
       <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
         <div class="px-4 sm:px-0">
           <h2 class="text-base font-semibold leading-7 text-gray-900">定制简历</h2>
-          <p class="mt-1 text-sm leading-6 text-gray-600">TODO：添加描述</p>
+          <p class="mt-1 text-sm leading-6 text-gray-600">把目标职位告诉汪汪，想象我正帮你梳理简历的毛发，让每一根都闪耀，迷住雇主的目光。但记得，<span class="text-red-400"><b>真实是赢得信任和机会的秘诀</b></span>。一起迈向理想工作！汪~</p>
         </div>
 
         <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
@@ -315,7 +316,7 @@
       <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
         <div class="px-4 sm:px-0">
           <h2 class="text-base font-semibold leading-7 text-gray-900">简历预览</h2>
-          <p class="mt-1 text-sm leading-6 text-gray-600">TODO：添加描述</p>
+          <p class="mt-1 text-sm leading-6 text-gray-600"></p>
         </div>
 
         <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" data-resume-name-value="<%= @resume.name %>">
