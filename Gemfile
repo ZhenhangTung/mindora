@@ -76,13 +76,18 @@ group :test do
   gem "webdrivers"
 end
 
-gem "ruby-openai", git: 'https://github.com/alexrudall/ruby-openai.git', ref: 'f9046a3'
+gem "ruby-openai", "~> 6.3.0"
+gem "langchainrb"
 gem 'dotenv-rails', groups: [:development, :test]
-# gem "langchainrb_rails", "~> 0.1.5"
-gem 'securerandom'
+gem "securerandom"
 gem "good_job", "~> 3.21"
 
 gem "dockerfile-rails", ">= 1.5", :group => :development
 gem "sentry-ruby", "~> 5.15"
 gem "sentry-rails", "~> 5.15"
 gem "rack-cors"
+gem "aws-sdk-s3", require: false
+gem "active_storage_validations"
+gem "pdf-reader"
+gem "docx"
+gem 'bcrypt', '~> 3.1.7'
