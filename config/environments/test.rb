@@ -31,7 +31,7 @@ Rails.application.configure do
   config.action_dispatch.show_exceptions = false
 
   # Disable request forgery protection in test environment.
-  config.action_controller.allow_forgery_protection = false
+  config.action_controller.allow_forgery_protection = true
 
   # Store uploaded files on the local file system in a temporary directory.
   config.active_storage.service = :amazon
@@ -64,6 +64,4 @@ Rails.application.configure do
   # Action Cable endpoint configuration
   config.action_cable.allowed_request_origins = [/http:\/\/*/, /https:\/\/*/]
 
-  config.assets.compile = true
-  config.action_view.cache_template_loading = true
 end
