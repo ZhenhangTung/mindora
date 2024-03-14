@@ -1,0 +1,38 @@
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <%= image_tag 'logo.png', class: 'mx-auto h-12 w-auto', alt: 'Your Company' %>
+    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">登录账户</h2>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <%= form_with(url: login_path, local: true, class: "space-y-6") do |form| %>
+      <div>
+        <%= form.label :phone_number, "汪汪帐号", class: "block text-sm font-medium text-gray-900" %>
+        <div class="mt-1">
+          <%= form.telephone_field :phone_number, autofocus: true, required: true,
+                                   pattern: "\\d{11}", placeholder: "汪~请输入你的电话号码", title: "电话号码得是11位数字哦",
+                                   autocomplete: "tel-national",
+                                   class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+        </div>
+      </div>
+
+      <div>
+        <%= form.label :password, "秘密狗窝密码", class: "block text-sm font-medium text-gray-900" %>
+        <div class="mt-1">
+          <%= form.password_field :password, autocomplete: "current-password", required: true,
+                                  placeholder: "不少于8个字符哦，记得藏点数字在里面", pattern: "(?=.*\\d).{8,}",
+                                  title: "密码得至少8个字符长，还得至少有一个数字",
+                                  class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+        </div>
+      </div>
+
+      <div>
+        <%= form.submit "登入狗窝", class: "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+      </div>
+    <% end %>
+
+    <p class="mt-2 text-center text-sm text-gray-600">
+      还没加入汪汪家族？<%= link_to "快来注册", signup_path, class: "font-medium text-indigo-600 hover:text-indigo-500" %>
+    </p>
+  </div>
+</div>

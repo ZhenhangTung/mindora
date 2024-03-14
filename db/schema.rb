@@ -10,9 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_16_035236) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_10_103530) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
 
   create_table "assistants", force: :cascade do |t|
     t.string "external_id"
@@ -39,6 +67,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_16_035236) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["assistant_id"], name: "index_chat_sessions_on_assistant_id"
+  end
+
+  create_table "educations", force: :cascade do |t|
+    t.bigint "resume_id", null: false
+    t.string "school"
+    t.string "major"
+    t.date "start_date"
+    t.date "end_date"
+    t.string "degree"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["resume_id"], name: "index_educations_on_resume_id"
   end
 
   create_table "good_job_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -118,6 +158,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_16_035236) do
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
   end
 
+  create_table "resumes", force: :cascade do |t|
+    t.string "name"
+    t.string "gender"
+    t.string "phone_number"
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_resumes_on_user_id"
+  end
+
   create_table "service_sessions", force: :cascade do |t|
     t.string "external_id"
     t.json "metadata"
@@ -127,7 +178,32 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_16_035236) do
     t.index ["chat_session_id"], name: "index_service_sessions_on_chat_session_id"
   end
 
+  create_table "users", force: :cascade do |t|
+    t.string "phone_number"
+    t.string "password_digest"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["phone_number"], name: "index_users_on_phone_number", unique: true
+  end
+
+  create_table "work_experiences", force: :cascade do |t|
+    t.bigint "resume_id", null: false
+    t.string "position"
+    t.string "company"
+    t.date "start_date"
+    t.date "end_date"
+    t.text "project_experience"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["resume_id"], name: "index_work_experiences_on_resume_id"
+  end
+
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "chat_messages", "chat_sessions"
   add_foreign_key "chat_sessions", "assistants"
+  add_foreign_key "educations", "resumes"
+  add_foreign_key "resumes", "users"
   add_foreign_key "service_sessions", "chat_sessions"
+  add_foreign_key "work_experiences", "resumes"
 end
