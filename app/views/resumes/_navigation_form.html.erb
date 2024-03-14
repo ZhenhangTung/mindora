@@ -278,7 +278,7 @@
       </div>
     </div>
   <% else %>
-    <div data-controller="resume" data-resume-id="<%= @resume.id %>">
+    <div data-controller="resume" data-resume-id="<%= @resume.id %>" data-resume-name-value="<%= @resume.name %>">
       <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
         <div class="px-4 sm:px-0">
           <h2 class="text-base font-semibold leading-7 text-gray-900">定制简历</h2>
@@ -319,7 +319,7 @@
           <p class="mt-1 text-sm leading-6 text-gray-600"></p>
         </div>
 
-        <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" data-resume-name-value="<%= @resume.name %>">
+        <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"">
           <div data-resume-target="pdfSource">
             <%= render partial: "preview", locals: { resume: @resume, show_job_match: true } %>
           </div>
