@@ -12,22 +12,28 @@ class ResumesController < ApplicationController
 
   def create
     @resume = current_user.resumes.build(resume_params)
-    if @resume.save
-      file_content = read_uploaded_file_content(@resume.original_file)
-      json_data = extract_resume_from_file(file_content)
 
-      # Call the model method to update the resume with extracted data
-      @resume.update_with_extracted_data(json_data)
+    if @resume.original_file.attached?
+      # TODO: Any space for improvement?
+      begin
+        ActiveRecord::Base.transaction do
+          uploaded_file = resume_params[:original_file]
+          file_content = read_uploaded_file_content(uploaded_file)
+          json_data = extract_resume_from_file(file_content)
+          @resume.update_with_extracted_data(json_data)
+          @resume.save!
+        end
 
-      flash[:success] = '简历上传成功！'
-      redirect_to @resume
+        flash[:success] = '简历上传成功！'
+        redirect_to @resume
+      rescue => e
+        flash[:error] = "简历上传失败！错误信息: #{e.message}"
+        redirect_to new_resume_path
+      end
     else
-      flash[:error] = '简历上传失败！'
+      flash[:error] = '未找到上传的文件，请重试。'
       redirect_to new_resume_path
     end
-  rescue => e
-    flash[:error] = "发生了错误: #{e.message}"
-    redirect_to new_resume_path
   end
 
   def update
@@ -188,13 +194,27 @@ Document: #{file_content}",
   end
 
   # Assuming `original_file` is a method/attribute of `@resume`
-  def read_uploaded_file_content(attachment)
-    if attachment.attached?
-      case File.extname(attachment.filename.to_s).downcase
+  # def read_uploaded_file_content(attachment)
+  #   if attachment.attached?
+  #     case File.extname(attachment.filename.to_s).downcase
+  #     when ".docx"
+  #       read_docx_content(attachment)
+  #     when ".pdf"
+  #       read_pdf_content(attachment)
+  #     else
+  #       "Unsupported file type"
+  #     end
+  #   end
+  # end
+
+  def read_uploaded_file_content(uploaded_file)
+    # Check if the file exists and is not nil
+    if uploaded_file.present?
+      case File.extname(uploaded_file.original_filename).downcase
       when ".docx"
-        read_docx_content(attachment)
+        read_docx_content(uploaded_file)
       when ".pdf"
-        read_pdf_content(attachment)
+        read_pdf_content(uploaded_file)
       else
         "Unsupported file type"
       end
@@ -359,26 +379,45 @@ JD 内容：
     end
   end
 
-  def read_docx_content(attachment)
-    content = ''
-    attachment.blob.open do |tempfile|
-      doc = Docx::Document.open(tempfile.path)
-      content = doc.paragraphs.map(&:to_s).join("\n") # Join paragraphs with newline characters
+  # TODO: original implementation
+  # def read_docx_content(attachment)
+  #   content = ''
+  #   attachment.blob.open do |tempfile|
+  #     doc = Docx::Document.open(tempfile.path)
+  #     content = doc.paragraphs.map(&:to_s).join("\n") # Join paragraphs with newline characters
+  #   end
+  #   content
+  # rescue StandardError => e
+  #   "Failed to read .docx file: #{e.message}"
+  # end
+  #
+  # def read_pdf_content(attachment)
+  #   content = "" # Initialize an empty string to hold the extracted content
+  #   attachment.blob.open do |tempfile|
+  #     reader = PDF::Reader.new(tempfile.path) # Initialize the PDF reader with the path to the temporary file
+  #     reader.pages.each do |page|
+  #       content += page.text + "\n" # Append the text of each page to the content variable
+  #     end
+  #   end
+  #   content # Return the concatenated text content
+  # end
+
+  def read_docx_content(uploaded_file)
+    # Process DOCX file
+    Docx::Document.open(uploaded_file.path) do |doc|
+      doc.paragraphs.map(&:text).join("\n") # Assuming you want to return the text as a string
     end
-    content
   rescue StandardError => e
     "Failed to read .docx file: #{e.message}"
   end
 
-  def read_pdf_content(attachment)
-    content = "" # Initialize an empty string to hold the extracted content
-    attachment.blob.open do |tempfile|
-      reader = PDF::Reader.new(tempfile.path) # Initialize the PDF reader with the path to the temporary file
-      reader.pages.each do |page|
-        content += page.text + "\n" # Append the text of each page to the content variable
-      end
-    end
-    content # Return the concatenated text content
+  def read_pdf_content(uploaded_file)
+    # Process PDF file
+    PDF::Reader.new(uploaded_file.path).pages.map(&:text).join("\n")
+  rescue PDF::Reader::MalformedPDFError => e
+    "Failed to read .pdf file: #{e.message}"
+  rescue StandardError => e
+    "Failed to read .pdf file: #{e.message}"
   end
 
   def authenticate_user
