@@ -41,7 +41,7 @@
     </div>
     <% @resume.educations.each do |education| %>
       <p class="mt-1">
-        <%= education.school %> | <%= education.major %> | <%= education.start_date.strftime("%Y.%m") %>-<%= education.end_date.strftime("%Y.%m") %> | <%= education.degree %>
+        <%= education.school %> | <%= education.major %> | <%= education.start_date.strftime("%Y.%m") if education.start_date.present? %>-<%= education.end_date.strftime("%Y.%m") if education.end_date.present? %> | <%= education.degree %>
       </p>
     <% end %>
   </div>
