@@ -25,15 +25,18 @@ class Resume < ApplicationRecord
       self.email = data[:email] if data.key?(:email)
 
       # Assuming `data` is a hash with :work_experiences and :educations keys
-      data[:work_experiences].each do |we_data|
-        we_data = parse_date_fields(we_data)
-        self.work_experiences.create!(we_data)
+      work_experiences_attributes = data[:work_experiences].each do |we_data|
+        parse_date_fields(we_data)
+        # self.work_experiences.create!(we_data)
       end
 
-      data[:educations].each do |ed_data|
-        ed_data = parse_date_fields(ed_data)
-        self.educations.create!(ed_data)
+      educations_attributes = data[:educations].each do |ed_data|
+        parse_date_fields(ed_data)
+        # self.educations.create!(ed_data)
       end
+
+      self.work_experiences_attributes = work_experiences_attributes
+      self.educations_attributes = educations_attributes
 
       # Add any other fields in `data` that should update the resume itself
       # self.update!(other_fields: data[:other_fields])
@@ -51,9 +54,32 @@ class Resume < ApplicationRecord
   private
 
   def parse_date_fields(record)
-    # Convert date fields from String to Date for both start_date and end_date
-    record[:start_date] = Date.parse(record[:start_date]) if record[:start_date].present?
-    record[:end_date] = Date.parse(record[:end_date]) if record[:end_date].present?
+    # Convert start_date from String to Date if present and valid
+    begin
+      record[:start_date] = Date.parse(record[:start_date]) if record[:start_date].present? && valid_date_format?(record[:start_date])
+    rescue ArgumentError
+      # Log error, set to nil, or handle as needed
+      record[:start_date] = nil
+    end
+
+    # Convert end_date from String to Date if present and valid
+    begin
+      record[:end_date] = Date.parse(record[:end_date]) if record[:end_date].present? && valid_date_format?(record[:end_date])
+    rescue ArgumentError
+      # Log error, set to nil, or handle as needed
+      record[:end_date] = nil
+    end
+
     record
+  end
+
+  # Helper method to check if a date string is in a valid format
+  def valid_date_format?(date_str)
+    # Define the desired format here; e.g., 'YYYY-MM-DD' or 'YYYY-MM'
+    date_format = '%Y-%m-%d' # Example for 'YYYY-MM' format
+    DateTime.strptime(date_str, date_format)
+    true
+  rescue ArgumentError
+    false
   end
 end
