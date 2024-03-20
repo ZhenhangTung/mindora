@@ -158,15 +158,16 @@ class Api::ChatGptController < ApplicationController
 
   def handle_openai_interaction
     system_message = { role: "system", content: @assistant.instructions }
-    chat_history = @chat_session.chat_messages.order(created_at: :asc).map do |message|
+    recent_chat_history = @chat_session.chat_messages.order(created_at: :desc).limit(6).reverse.map do |message|
       { role: message.sender_role, content: message.message_text }
     end
-    messages_for_api = [system_message] + chat_history
+    messages_for_api = [system_message] + recent_chat_history
 
     client = OpenAI::Client.new
     response = client.chat(
       parameters: {
-        model: @assistant.model,
+        # model: @assistant.model,
+        model: 'gpt-3.5-turbo', # TODO: fixme
         messages: messages_for_api,
         temperature: 0.7,
       })
