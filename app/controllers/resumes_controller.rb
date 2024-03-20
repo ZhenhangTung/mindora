@@ -19,6 +19,8 @@ class ResumesController < ApplicationController
         ActiveRecord::Base.transaction do
           uploaded_file = resume_params[:original_file]
           file_content = read_uploaded_file_content(uploaded_file)
+          pp '------'
+          pp file_content
           json_data = extract_resume_from_file(file_content)
           pp json_data
           @resume.update_with_extracted_data(json_data)
@@ -66,7 +68,7 @@ class ResumesController < ApplicationController
         messages: [
           {
             "role": "system",
-            "content": "Carefully analyze the provided resume document to extract detailed information without missing any specifics for each schema key. It is crucial to avoid summarizing details; instead, capture the information verbatim,especially for sections like Personal Information, Education, Work Experience, Skills, Certifications, Publications, and References. Ensure that every piece of information is accurately placed into the corresponding field within the JSON schema below. If the data doesn't fit exactly or if any details are ambiguous, please mark these instances clearly for manual review rather than omitting or summarizing. The objective is to maintain the integrity of the original information while organizing it into the structured JSON format provided, ensuring completeness and precision in every key.",
+            "content": "请处理以下简历，将信息提取并分类为两个主要部分：工作经历和项目经历。对于工作经历，准确识别职位、公司、开始和结束日期，并描述任何具体的项目经历，确保使用项目符号清晰地格式化这些描述。对于项目经历，准确识别项目名称、开始和结束日期，并描述任何具体的项目经历，确保使用项目符号清晰地格式化这些描述。至关重要的是，尤其对于个人信息、教育、工作经历、项目经历等部分，必须逐字捕获所有细节。根据提供的JSON模式结构化输出，确保每一条信息的完整性和精确性，准确地将它们放置在JSON模式的相应字段中。如果任何细节与模式不完全对应，或者出现歧义，请清楚地标记这些实例以供人工审查，而不是省略或总结。目标是在将原始信息组织成提供的结构化JSON格式的同时，保持原始信息的完整性，确保详尽地提取每个模式键的具体信息，不遗漏任何细节。",
           },
           {
             "role": "user",
@@ -93,8 +95,14 @@ Document: #{file_content}",
                   "items": {
                     "type": "object",
                     "properties": {
-                      "position": { "type": "string" },
-                      "company": { "type": "string" },
+                      "position": {
+                        "type": "string",
+                        "description": "从工作经历中提取的职位名称"
+                      },
+                      "company": {
+                        "type": "string",
+                        "description": "从工作经历中提取的公司名称"
+                      },
                       "start_date": {
                         "type": "string",
                         "format": "date",
@@ -111,14 +119,42 @@ Document: #{file_content}",
                       },
                       "experience_type": {
                         "type": "string",
-                        "description": "The type of experience, either 'work' or 'project'. If the experience is a project, this field should be set to 'project' and the 'project_name' field should be filled out. If the experience is a regular work experience, this field should be set to 'work' and the 'project_name' field should be left empty. 通常 'work' 对应简历的工作经历或者工作经验，'project' 对应项目经历或者项目经验。"
-                      },
-                      "project_name": {
-                        "type": "string",
-                        "description": "The name of the project"
+                        "description": "The type of experience, either 'work' or 'project'. 如果是工作经历将它定义为'work'，如果是项目经历将它定义为'project'。"
                       }
                     },
                     "required": ["position", "company", "start_date", "end_date", "project_experience", "experience_type"]
+                  }
+                },
+                project_experiences: {
+                  "type": "array",
+                  "description": "项目经历或者项目经验部分下的多条内容",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "start_date": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "The start date in yyyy-mm-dd format (e.g. 2023-02-13)"
+                      },
+                      "end_date": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "The end date in yyyy-mm-dd format (e.g. 2023-02-13)"
+                      },
+                      "project_experience": {
+                        "type": "string",
+                        "description": "详细描述项目经历，使用项目符号（•）进行清晰区分 "
+                      },
+                      "experience_type": {
+                        "type": "string",
+                        "description": "经历类型，'work'表示工作经历，'project'表示项目经历。"
+                      },
+                      "project_name": {
+                        "type": "string",
+                        "description": "项目名称"
+                      }
+                    },
+                    "required": ["start_date", "end_date", "project_experience", "experience_type"]
                   }
                 },
                 educations: {
