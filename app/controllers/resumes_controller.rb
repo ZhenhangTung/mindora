@@ -20,6 +20,7 @@ class ResumesController < ApplicationController
           uploaded_file = resume_params[:original_file]
           file_content = read_uploaded_file_content(uploaded_file)
           json_data = extract_resume_from_file(file_content)
+          pp json_data
           @resume.update_with_extracted_data(json_data)
           @resume.save!
         end
@@ -107,9 +108,17 @@ Document: #{file_content}",
                       "project_experience": {
                         "type": "string",
                         "description": "Extract the project experiences listed under each work experience from the resume, and present them using bullet points (•) for clear distinction. "
+                      },
+                      "experience_type": {
+                        "type": "string",
+                        "description": "The type of experience, either 'work' or 'project'. If the experience is a project, this field should be set to 'project' and the 'project_name' field should be filled out. If the experience is a regular work experience, this field should be set to 'work' and the 'project_name' field should be left empty. 通常 'work' 对应简历的工作经历或者工作经验，'project' 对应项目经历或者项目经验。"
+                      },
+                      "project_name": {
+                        "type": "string",
+                        "description": "The name of the project"
                       }
                     },
-                    "required": ["position", "company", "start_date", "end_date", "project_experience"]
+                    "required": ["position", "company", "start_date", "end_date", "project_experience", "experience_type"]
                   }
                 },
                 educations: {
