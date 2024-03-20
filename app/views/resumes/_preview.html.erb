@@ -19,12 +19,30 @@
         <h2 class="font-bold">工作经历</h2>
       <% end %>
     </div>
-    <% @resume.work_experiences.each do |experience| %>
+    <% @resume.work_experiences.reject(&:project?).each do |experience| %>
       <div class="mt-2">
         <!-- Title | Company | Time -->
         <div class="flex justify-between items-center mb-2 font-bold">
           <h3 class="flex-1 text-left"><%= experience.position %></h3>
           <p class="flex-1 text-center"><%= experience.company %></p>
+          <p class="flex-1 text-right"><%= experience.start_date.strftime("%Y.%m") %>-<%= experience.end_date.nil? ? "至今" : experience.end_date.strftime("%Y.%m") %></p>
+        </div>
+        <!-- Description -->
+        <p class="space-y-1">
+          <%= simple_format(experience.project_experience, {}, wrapper_tag: "div") %>
+        </p>
+      </div>
+    <% end %>
+
+    <div class="text-center border-b-2 border-gray-200 my-1">
+      <h2 class="font-bold">项目经历</h2>
+    </div>
+
+    <% @resume.work_experiences.select(&:project?).each do |experience| %>
+      <div class="mt-2">
+        <!-- Title | Company | Time -->
+        <div class="flex justify-between items-center mb-2 font-bold">
+          <h3 class="flex-1 text-left"><%= experience.project_name %></h3>
           <p class="flex-1 text-right"><%= experience.start_date.strftime("%Y.%m") %>-<%= experience.end_date.nil? ? "至今" : experience.end_date.strftime("%Y.%m") %></p>
         </div>
         <!-- Description -->

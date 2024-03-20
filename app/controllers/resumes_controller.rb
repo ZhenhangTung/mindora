@@ -19,10 +19,7 @@ class ResumesController < ApplicationController
         ActiveRecord::Base.transaction do
           uploaded_file = resume_params[:original_file]
           file_content = read_uploaded_file_content(uploaded_file)
-          pp '------'
-          pp file_content
           json_data = extract_resume_from_file(file_content)
-          pp json_data
           @resume.update_with_extracted_data(json_data)
           @resume.save!
         end
@@ -60,10 +57,12 @@ class ResumesController < ApplicationController
   end
 
   def extract_resume_from_file(file_content)
+    model = "gpt-4-turbo-preview"
+    model = "gpt-3.5-turbo" if Rails.env.development?
     client = OpenAI::Client.new
     response = client.chat(
       parameters: {
-        model: "gpt-3.5-turbo",
+        model: model,
         temperature: 0.1,
         messages: [
           {
@@ -210,47 +209,27 @@ Document: #{file_content}",
     resume_data = content.is_a?(String) ? JSON.parse(content, symbolize_names: true) : content
      content
 
-    # Process work experiences
-    if resume_data[:work_experiences]
-      resume_data[:work_experiences].each do |experience|
-        # Handle "至今" for end_date
-        if experience[:end_date] == "至今"
-          experience[:end_date] = nil
-        else
-          # Convert to Date and back to String to ensure YYYY-MM format is maintained
-          begin
-            parsed_date = Date.parse(experience[:end_date])
-            experience[:end_date] = parsed_date.strftime("%Y-%m-%d") # Adjust the formatting as per your model's expectation
-          rescue => e
-            experience[:end_date] = nil # Handle parsing error
-          end
-        end
+    # Ensure work experiences are processed for date formatting and any other adjustments
+    processed_work_experiences = resume_data[:work_experiences]&.map do |we_data|
+      process_experience_dates(we_data)
+    end || []
 
-        # Start date: Ensure conversion is correct and falls back gracefully
-        begin
-          experience[:start_date] = "#{experience[:start_date]}-01" if experience[:start_date].match(/\A\d{4}-\d{2}\z/)
-          experience[:start_date] = Date.parse(experience[:start_date]).strftime("%Y-%m-%d")
-        rescue => e
-          experience[:start_date] = nil # Handle parsing error
-        end
+
+
+    # Combine project experiences into work experiences if project experiences are present
+    if resume_data[:project_experiences]
+      processed_project_experiences = resume_data[:project_experiences].map do |project_experience|
+        process_project_experience(project_experience)
       end
+      # Combine work experiences and project experiences
+      combined_experiences = processed_work_experiences + processed_project_experiences
+      resume_data[:work_experiences] = combined_experiences
+    else
+      resume_data[:work_experiences] = processed_work_experiences
     end
+
     resume_data
   end
-
-  # Assuming `original_file` is a method/attribute of `@resume`
-  # def read_uploaded_file_content(attachment)
-  #   if attachment.attached?
-  #     case File.extname(attachment.filename.to_s).downcase
-  #     when ".docx"
-  #       read_docx_content(attachment)
-  #     when ".pdf"
-  #       read_pdf_content(attachment)
-  #     else
-  #       "Unsupported file type"
-  #     end
-  #   end
-  # end
 
   def read_uploaded_file_content(uploaded_file)
     # Check if the file exists and is not nil
@@ -424,29 +403,6 @@ JD 内容：
     end
   end
 
-  # TODO: original implementation
-  # def read_docx_content(attachment)
-  #   content = ''
-  #   attachment.blob.open do |tempfile|
-  #     doc = Docx::Document.open(tempfile.path)
-  #     content = doc.paragraphs.map(&:to_s).join("\n") # Join paragraphs with newline characters
-  #   end
-  #   content
-  # rescue StandardError => e
-  #   "Failed to read .docx file: #{e.message}"
-  # end
-  #
-  # def read_pdf_content(attachment)
-  #   content = "" # Initialize an empty string to hold the extracted content
-  #   attachment.blob.open do |tempfile|
-  #     reader = PDF::Reader.new(tempfile.path) # Initialize the PDF reader with the path to the temporary file
-  #     reader.pages.each do |page|
-  #       content += page.text + "\n" # Append the text of each page to the content variable
-  #     end
-  #   end
-  #   content # Return the concatenated text content
-  # end
-
   def read_docx_content(uploaded_file)
     # Process DOCX file
     Docx::Document.open(uploaded_file.path) do |doc|
@@ -467,6 +423,37 @@ JD 内容：
 
   def authenticate_user
     redirect_to login_path unless current_user
+  end
+
+
+  def process_experience_dates(experience)
+    # Handle "至今" for end_date
+    experience[:end_date] = nil if experience[:end_date] == "至今"
+
+    # Convert start_date and end_date from String to Date
+    begin
+      experience[:start_date] = Date.parse("#{experience[:start_date]}-01").strftime("%Y-%m") if experience[:start_date]&.match(/\A\d{4}-\d{2}\z/)
+      experience[:end_date] = Date.parse(experience[:end_date]).strftime("%Y-%m") unless experience[:end_date].nil?
+    rescue ArgumentError
+      experience[:end_date] = nil # Handle parsing error for end_date
+    end
+
+    experience
+  end
+
+  def process_project_experience(project_experience)
+    experience_entry = {
+      position: "", # No position info, set as empty or handle accordingly
+      company: "", # No company info, set as empty or handle accordingly
+      start_date: project_experience[:start_date],
+      end_date: project_experience[:end_date],
+      project_experience: project_experience[:project_experience],
+      experience_type: project_experience[:experience_type], # 'project'
+      project_name: project_experience[:project_name]
+    }
+
+    # Process dates for project experience
+    process_experience_dates(experience_entry)
   end
 
 end

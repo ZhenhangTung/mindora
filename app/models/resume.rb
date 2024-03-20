@@ -27,12 +27,10 @@ class Resume < ApplicationRecord
       # Assuming `data` is a hash with :work_experiences and :educations keys
       work_experiences_attributes = data[:work_experiences].each do |we_data|
         parse_date_fields(we_data)
-        # self.work_experiences.create!(we_data)
       end
 
       educations_attributes = data[:educations].each do |ed_data|
         parse_date_fields(ed_data)
-        # self.educations.create!(ed_data)
       end
 
       self.work_experiences_attributes = work_experiences_attributes
