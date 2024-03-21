@@ -158,7 +158,7 @@ class Api::ChatGptController < ApplicationController
 
   def handle_openai_interaction
     system_message = { role: "system", content: @assistant.instructions }
-    recent_chat_history = @chat_session.chat_messages.order(created_at: :desc).limit(6).reverse.map do |message|
+    recent_chat_history = @chat_session.chat_messages.order(created_at: :desc).limit(10).reverse.map do |message|
       { role: message.sender_role, content: message.message_text }
     end
     messages_for_api = [system_message] + recent_chat_history
