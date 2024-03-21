@@ -57,12 +57,10 @@ class ResumesController < ApplicationController
   end
 
   def extract_resume_from_file(file_content)
-    model = "gpt-4-turbo-preview"
-    model = "gpt-3.5-turbo" if Rails.env.development?
     client = OpenAI::Client.new
     response = client.chat(
       parameters: {
-        model: model,
+        model: gpt_model,
         temperature: 0.1,
         messages: [
           {
@@ -275,7 +273,7 @@ Document: #{file_content}",
     client = OpenAI::Client.new
     response = client.chat(
       parameters: {
-        model: "gpt-3.5-turbo",
+        model: gpt_model,
         temperature: 0.2,
         # max_tokens: 200,
         # top_p: 0.9,
@@ -325,12 +323,12 @@ JD 内容：
     client = OpenAI::Client.new
     response = client.chat(
       parameters: {
-        model: "gpt-3.5-turbo",
+        model: gpt_model,
         temperature: 0.5,
         messages: [
           {
             "role": "system",
-            "content": "根据以下职位要求的关键元素和权重，从提供的工作经历中提取相关性最高的匹配项：
+            "content": "根据以下职位要求的关键元素和权重，从提供的工作经历中提取相关性最高的 3 项匹配项，要求每一项不超过 70 字：
 - 职位要求关键元素与权重：[职位要求关键词1]:[权重], [职位要求关键词2]:[权重], ...
 - 提供的工作经历：[工作经历1描述], [工作经历2描述], ...
 如果某项要求没有直接匹配的经历，请使用占位符“[请提供相关经验或技能]”提示用户补充。
@@ -456,6 +454,10 @@ JD 内容：
 
     # Process dates for project experience
     process_experience_dates(experience_entry)
+  end
+
+  def gpt_model
+    Rails.env.development? ? "gpt-3.5-turbo" : "gpt-4-turbo-preview"
   end
 
 end

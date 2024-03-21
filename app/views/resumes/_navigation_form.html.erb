@@ -229,7 +229,7 @@
             <div class="flex items-center justify-between mt-2">
               <span class="flex flex-grow flex-col">
                 <span class="text-sm font-medium leading-6 text-gray-900" id="highlight_project_experience-label">置顶</span>
-                <span class="text-sm text-gray-500" id="highlight_project_experience-description">如果没有产品工作经验，需要置顶你的产品项目</span>
+                <span class="text-sm text-gray-500" id="highlight_project_experience-description">若无产品工作经验，置顶你的产品项目让面试官看到</span>
               </span>
               <%= form.check_box :highlight_project_experience,
                                  class: "hidden",
@@ -365,8 +365,9 @@
             <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
               <div class="sm:col-span-6">
                 <label for="job-match" class="block text-sm font-medium leading-6 text-gray-900">职位匹配</label>
-                <div class="mt-2">
-                  <textarea rows="8" name="job-match" id="job-match" data-resume-target="jobMatch" data-action="input->resume#updateJobMatchPreview" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                <div class="mt-2 h-64">
+                  <div id="job-match-editor"></div>
+                  <textarea rows="8" name="job-match" id="job-match" data-resume-target="jobMatch" class="hidden block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
                 </div>
               </div>
             </div>

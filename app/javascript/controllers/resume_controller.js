@@ -1,5 +1,6 @@
 import {Controller} from "@hotwired/stimulus"
 // import html2pdf from "html2pdf";
+import Quill from "quill";
 
 export default class extends Controller {
     static targets = ["projectExperience", "jobDescription", "jobMatch", "jobMatchPreview", "pdfSource", "highlight", "switchButton"]
@@ -12,6 +13,23 @@ export default class extends Controller {
         if (this.hasHighlightTarget) {
             this.updateSwitchState();
         }
+
+        this.editor = new Quill('#job-match-editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    ['bold'],
+                    // [{ 'list': 'bullet' }], //（bullet points）TODO: implement this
+                    [{ 'background': ['white', 'yellow'] }], // background color
+                ]
+            }
+        });
+
+        // 监听编辑器内容的变化
+        this.editor.on('text-change', () => {
+            this.jobMatchTarget.value = this.editor.root.innerHTML;
+            this.updateJobMatchPreview();
+        });
     }
 
     optimizeProjectExperience() {
@@ -50,11 +68,13 @@ export default class extends Controller {
         })
             .then(response => response.json())
             .then(data => {
-                jobMatch = data.job_match;
-                this.jobMatchTarget.value = jobMatch;
+                // jobMatch = data.job_match;
+                // this.jobMatchTarget.value = jobMatch;
+                this.editor.setText(data.job_match);
             }).then(() => {
                 // Assuming 'response' contains your text from the server
-                document.getElementById("job-match-preview").innerHTML = jobMatch.replace(/\r?\n/g, '<br>');
+                // document.getElementById("job-match-preview").innerHTML = jobMatch.replace(/\r?\n/g, '<br>');
+                // this.editor.setText(jobMatch);
             })
             .catch(error => console.error('Error:', error));
     }
@@ -73,8 +93,26 @@ export default class extends Controller {
     }
 
     updateJobMatchPreview() {
-        const text = this.jobMatchTarget.value;
-        this.jobMatchPreviewTarget.innerHTML = text.replace(/\n/g, '<br>');
+        // const text = this.jobMatchTarget.value;
+        // this.jobMatchPreviewTarget.innerHTML = text.replace(/\n/g, '<br>');
+
+        // const htmlContent = this.jobMatchTarget.value;
+        // this.jobMatchPreviewTarget.innerHTML = htmlContent;
+
+        const htmlContent = this.jobMatchTarget.value;
+
+        // 创建一个临时的 div 元素
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlContent;
+
+        // 为所有的 <ol> 元素添加 Tailwind CSS 类
+        const unorderedLists = tempDiv.querySelectorAll('ul');
+        unorderedLists.forEach(ul => {
+            ul.classList.add('list-disc', 'list-inside');
+        });
+
+        // 将处理后的 HTML 设置回预览区
+        this.jobMatchPreviewTarget.innerHTML = tempDiv.innerHTML;
     }
 
     toggleHighlightSwitch() {
