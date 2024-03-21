@@ -363,6 +363,7 @@ JD 内容：
       :email,
       :phone_number,
       :gender,
+      :highlight_project_experience,
       work_experiences_attributes: [
         :id,
         :company,
@@ -370,6 +371,7 @@ JD 内容：
         :start_date,
         :end_date,
         :project_experience,
+        :project_name,
         :_destroy
       ],
       educations_attributes: [

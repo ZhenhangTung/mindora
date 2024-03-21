@@ -2,11 +2,18 @@ import {Controller} from "@hotwired/stimulus"
 // import html2pdf from "html2pdf";
 
 export default class extends Controller {
-    static targets = ["projectExperience", "jobDescription", "jobMatch", "jobMatchPreview", "pdfSource"]
+    static targets = ["projectExperience", "jobDescription", "jobMatch", "jobMatchPreview", "pdfSource", "highlight", "switchButton"]
 
     static values = {
         name: String
     }
+
+    connect() {
+        if (this.hasHighlightTarget) {
+            this.updateSwitchState();
+        }
+    }
+
     optimizeProjectExperience() {
         const originalText = this.projectExperienceTarget.value
 
@@ -68,5 +75,27 @@ export default class extends Controller {
     updateJobMatchPreview() {
         const text = this.jobMatchTarget.value;
         this.jobMatchPreviewTarget.innerHTML = text.replace(/\n/g, '<br>');
+    }
+
+    toggleHighlightSwitch() {
+        // Toggle the checkbox value
+        this.highlightTarget.checked = !this.highlightTarget.checked;
+        this.updateSwitchState();
+    }
+
+    updateSwitchState() {
+        const isChecked = this.highlightTarget.checked;
+        const switchButton = this.switchButtonTarget;
+        const switchIndicator = switchButton.querySelector("span");
+
+        if (isChecked) {
+            switchButton.classList.replace("bg-gray-200", "bg-indigo-600");
+            switchIndicator.classList.replace("translate-x-0", "translate-x-5");
+            switchButton.setAttribute("aria-checked", "true");
+        } else {
+            switchButton.classList.replace("bg-indigo-600", "bg-gray-200");
+            switchIndicator.classList.replace("translate-x-5", "translate-x-0");
+            switchButton.setAttribute("aria-checked", "false");
+        }
     }
 }

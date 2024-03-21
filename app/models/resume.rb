@@ -49,6 +49,14 @@ class Resume < ApplicationRecord
     educations.any? { |edu| edu.end_date.nil? || edu.end_date > Date.today }
   end
 
+  def non_project_work_experiences
+    work_experiences.where(experience_type: WorkExperience::EXPERIENCE_TYPES[0]).order(start_date: :desc)
+  end
+
+  def project_work_experiences
+    work_experiences.where(experience_type: WorkExperience::EXPERIENCE_TYPES[1]).order(start_date: :desc)
+  end
+
   private
 
   def parse_date_fields(record)
