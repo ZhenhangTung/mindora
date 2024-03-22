@@ -212,11 +212,10 @@
               </div>
 
               <div class="sm:col-span-6">
-                <div data-controller="resume">
+                <div data-controller="resume" data-resume-experience-type-value="<%= work_experience_form.object.experience_type %>">
                   <%= work_experience_form.label :project_experience, "工作经历", class: "block text-sm font-medium leading-6 text-gray-900" %>
                   <div class="mt-2">
-<!--                    TODO: implementing the optimize button -->
-<!--                    <button type="button" data-action="click->resume#optimizeProjectExperience" class="rounded bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">优化本段经历</button>-->
+                    <button type="button" data-action="click->resume#optimizeProjectExperience" class="rounded bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">优化本段经历</button>
                     <%= work_experience_form.text_area :project_experience, data: { resume_target: "projectExperience" }, rows: 8, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
                   </div>
                 </div>
@@ -226,7 +225,7 @@
 
 
           <div class="border-b border-gray-200 pb-5 my-4" data-controller="resume">
-            <h3 class="text-base font-semibold leading-6 text-gray-900">项目经历</h3>
+            <h3 class="text-base font-semibold leading-6 text-gray-900">项目经验</h3>
             <div class="flex items-center justify-between mt-2">
               <span class="flex flex-grow flex-col">
                 <span class="text-sm font-medium leading-6 text-gray-900" id="highlight_project_experience-label">置顶</span>
@@ -276,10 +275,10 @@
               </div>
 
               <div class="sm:col-span-6">
-                <div data-controller="resume">
-                  <%= work_experience_form.label :project_experience, "项目经历", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                <div data-controller="resume" data-resume-experience-type-value="<%= work_experience_form.object.experience_type %>">
+                  <%= work_experience_form.label :project_experience, "项目经验", class: "block text-sm font-medium leading-6 text-gray-900" %>
                   <div class="mt-2">
-                    <button type="button" data-action="click->resume#optimizeProjectExperience" class="rounded bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">优化本段经历</button>
+                    <button type="button" data-action="click->resume#optimizeProjectExperience" class="rounded bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">优化本段经验</button>
                     <%= work_experience_form.text_area :project_experience, data: { resume_target: "projectExperience" }, rows: 8, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
                   </div>
                 </div>

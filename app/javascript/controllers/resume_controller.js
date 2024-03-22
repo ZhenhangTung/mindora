@@ -6,7 +6,8 @@ export default class extends Controller {
     static targets = ["projectExperience", "jobDescription", "jobMatch", "jobMatchPreview", "pdfSource", "highlight", "switchButton"]
 
     static values = {
-        name: String
+        name: String,
+        experienceType: String
     }
 
     connect() {
@@ -14,12 +15,18 @@ export default class extends Controller {
             this.updateSwitchState();
         }
 
+        if (document.querySelector('#job-match-editor')) {
+            this.initializeQuill();
+        }
+    }
+
+    initializeQuill() {
         this.editor = new Quill('#job-match-editor', {
             theme: 'snow',
             modules: {
                 toolbar: [
                     ['bold'],
-                    // [{ 'list': 'bullet' }], //（bullet points）TODO: implement this
+                    // [{ 'list': 'bullet' }], // TODO: implement this
                     [{ 'background': ['white', 'yellow'] }], // background color
                 ]
             }
@@ -34,6 +41,7 @@ export default class extends Controller {
 
     optimizeProjectExperience() {
         const originalText = this.projectExperienceTarget.value
+        const experienceType = this.experienceTypeValue;
 
         fetch('/resumes/work_experiences/optimize', {
             method: 'POST',
@@ -41,7 +49,10 @@ export default class extends Controller {
                 'Content-Type': 'application/json',
                 'X-CSRF-Token': document.querySelector("[name='csrf-token']").content
             },
-            body: JSON.stringify({ project_experience: originalText })
+            body: JSON.stringify({
+                project_experience: originalText,
+                experience_type: experienceType
+            })
         })
             .then(response => response.json())
             .then(data => {
