@@ -245,14 +245,56 @@ Document: #{file_content}",
 
 
   def optimize
-    original_text = params[:project_experience]
-    optimized_text = optimize_with_chatgpt(original_text)
-    render json: { optimized_text: optimized_text }
+    # Check for required parameters
+    if params[:project_experience].present? && params[:experience_type].present? && WorkExperience::EXPERIENCE_TYPES.include?(params[:experience_type])
+      original_text = params[:project_experience]
+      experience_type = params[:experience_type]
+
+      optimized_text = if experience_type == WorkExperience::EXPERIENCE_TYPES[0]
+                         optimize_work_exp_with_chatgpt(original_text)
+                       else
+                         optimize_project_exp_with_chatgpt(original_text)
+                       end
+
+      render json: { optimized_text: optimized_text }
+    else
+      # Respond with an error message if required params are missing or invalid
+      render json: { error: "Missing or invalid parameters" }, status: :bad_request
+    end
   end
 
-  def optimize_with_chatgpt(original_text)
+  def optimize_work_exp_with_chatgpt(original_text)
+    prompt = "工作经历的原始内容：#{original_text}"
+    client = OpenAI::Client.new
+    response = client.chat(
+      parameters: {
+        model: gpt_model,
+        temperature: 0.2,
+        # max_tokens: 200,
+        # top_p: 0.9,
+        messages: [
+          {
+            "role": "system",
+            "content": "请将下述工作经历合并并精简至70字内，同时突出职责、贡献和成就，参考如下格式：
+• 职责: [简要描述您的主要职责，如领导产品开发团队。]
+• 贡献: [描述您为公司创造的具体价值，如增加20%的用户增长。]
+• 成就: [列出您的个人成就，如获得年度最佳员工奖。]
+
+请确保描述中明确突出量化数据；对于原内容中没有可量化数据的部分，请插入占位符 '[请提供数据]'，以便简历撰写者填入自己的数据。"
+          },
+          {
+            "role": "user",
+            "content": prompt
+          }
+        ],
+      }
+    )
+    response.dig("choices", 0, "message", "content")
+  end
+
+  def optimize_project_exp_with_chatgpt(original_text)
     # TODO: replace the following prompt
-    prompt = "以下是针对产品经理简历中工作经历的修改：
+    prompt = "以下是针对产品经理简历中项目经历的修改：
 修改前：
 原有系统X业务分散、数据不互通、协同困难，需建立全新的Y系统，涉及数个外部系统的整合重构，需满足多个部门的个性化需求：
 1、完善工具A、工具B、工具C等低代码工具，从0到1设计Y系统产品方案，实现全流程低代码开发，节省一定比例的开发工作量；
