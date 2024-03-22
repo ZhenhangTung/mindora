@@ -181,7 +181,7 @@
             <h3 class="text-base font-semibold leading-6 text-gray-900">工作经历</h3>
           </div>
           <!-- working exps -->
-          <%= form.fields_for :work_experiences do |work_experience_form| %>
+          <%= form.fields_for :work_experiences, @resume.non_project_work_experiences do |work_experience_form| %>
             <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
               <div class="sm:col-span-3">
                 <%= work_experience_form.label :company, "公司名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
@@ -206,6 +206,70 @@
 
               <div class="sm:col-span-3">
                 <%= work_experience_form.label :end_date, "离职时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                <div class="mt-2">
+                  <%= work_experience_form.month_field :end_date, autocomplete: "end-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                </div>
+              </div>
+
+              <div class="sm:col-span-6">
+                <div data-controller="resume">
+                  <%= work_experience_form.label :project_experience, "工作经历", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                  <div class="mt-2">
+<!--                    TODO: implementing the optimize button -->
+<!--                    <button type="button" data-action="click->resume#optimizeProjectExperience" class="rounded bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">优化本段经历</button>-->
+                    <%= work_experience_form.text_area :project_experience, data: { resume_target: "projectExperience" }, rows: 8, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+
+          <div class="border-b border-gray-200 pb-5 my-4" data-controller="resume">
+            <h3 class="text-base font-semibold leading-6 text-gray-900">项目经历</h3>
+            <div class="flex items-center justify-between mt-2">
+              <span class="flex flex-grow flex-col">
+                <span class="text-sm font-medium leading-6 text-gray-900" id="highlight_project_experience-label">置顶</span>
+                <span class="text-sm text-gray-500" id="highlight_project_experience-description">若无产品工作经验，置顶你的产品项目让面试官看到</span>
+              </span>
+              <%= form.check_box :highlight_project_experience,
+                                 class: "hidden",
+                                 "data-resume-target": "highlight",
+                                 "data-action": "change->resume#toggleHighlightSwitch",
+                                 id: "highlight_project_experience",
+                                 checked: @resume.highlight_project_experience %>
+              <label for="highlight_project_experience"
+                     class="bg-gray-200 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
+                     role="switch"
+                     aria-checked="false"
+                     aria-labelledby="highlight_project_experience-label"
+                     aria-describedby="highlight_project_experience-description"
+                     data-resume-target="switchButton"
+                     data-action="click->resume#toggleHighlightSwitch">
+                <span aria-hidden="true" class="translate-x-0 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- working exps -->
+          <%= form.fields_for :work_experiences, @resume.project_work_experiences do |work_experience_form| %>
+            <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
+              <div class="sm:col-span-3">
+                <%= work_experience_form.label :project_name, "项目名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                <div class="mt-2">
+                  <%= work_experience_form.text_field :project_name, autocomplete: "project-name", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                </div>
+              </div>
+
+              <div class="sm:col-span-3">
+                <%= work_experience_form.label :start_date, "开始时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                <div class="mt-2">
+                  <%= work_experience_form.month_field :start_date, autocomplete: "start-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                </div>
+              </div>
+
+              <div class="sm:col-span-3">
+                <%= work_experience_form.label :end_date, "结束时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
                 <div class="mt-2">
                   <%= work_experience_form.month_field :end_date, autocomplete: "end-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
                 </div>
@@ -302,8 +366,9 @@
             <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
               <div class="sm:col-span-6">
                 <label for="job-match" class="block text-sm font-medium leading-6 text-gray-900">职位匹配</label>
-                <div class="mt-2">
-                  <textarea rows="8" name="job-match" id="job-match" data-resume-target="jobMatch" data-action="input->resume#updateJobMatchPreview" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                <div class="mt-2 h-64">
+                  <div id="job-match-editor"></div>
+                  <textarea rows="8" name="job-match" id="job-match" data-resume-target="jobMatch" class="hidden block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
                 </div>
               </div>
             </div>
@@ -319,7 +384,7 @@
           <p class="mt-1 text-sm leading-6 text-gray-600"></p>
         </div>
 
-        <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"">
+        <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
           <div data-resume-target="pdfSource">
             <%= render partial: "preview", locals: { resume: @resume, show_job_match: true } %>
           </div>
