@@ -12,5 +12,5 @@
  *
  *= require_tree .
  *= require_self
+ *= require quill.snow
  */
-/*@import "quill.snow.css";*/
