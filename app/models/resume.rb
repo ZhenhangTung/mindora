@@ -24,15 +24,17 @@ class Resume < ApplicationRecord
       self.phone_number = data[:phone_number] if data.key?(:phone_number)
       self.email = data[:email] if data.key?(:email)
 
+      # Check if required data is present
+      raise "Work experiences data is missing" unless data.key?(:work_experiences) && data[:work_experiences].present?
+      raise "Educations data is missing" unless data.key?(:educations) && data[:educations].present?
+
       # Assuming `data` is a hash with :work_experiences and :educations keys
       work_experiences_attributes = data[:work_experiences].each do |we_data|
         parse_date_fields(we_data)
-        # self.work_experiences.create!(we_data)
       end
 
       educations_attributes = data[:educations].each do |ed_data|
         parse_date_fields(ed_data)
-        # self.educations.create!(ed_data)
       end
 
       self.work_experiences_attributes = work_experiences_attributes
@@ -49,6 +51,14 @@ class Resume < ApplicationRecord
   # Checks if the resume owner is currently a student
   def is_student?
     educations.any? { |edu| edu.end_date.nil? || edu.end_date > Date.today }
+  end
+
+  def non_project_work_experiences
+    work_experiences.where(experience_type: WorkExperience::EXPERIENCE_TYPES[0]).order(start_date: :desc)
+  end
+
+  def project_work_experiences
+    work_experiences.where(experience_type: WorkExperience::EXPERIENCE_TYPES[1]).order(start_date: :desc)
   end
 
   private

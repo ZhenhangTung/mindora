@@ -60,12 +60,12 @@ class ResumesController < ApplicationController
     client = OpenAI::Client.new
     response = client.chat(
       parameters: {
-        model: "gpt-3.5-turbo",
+        model: gpt_model,
         temperature: 0.1,
         messages: [
           {
             "role": "system",
-            "content": "Carefully analyze the provided resume document to extract detailed information without missing any specifics for each schema key. It is crucial to avoid summarizing details; instead, capture the information verbatim,especially for sections like Personal Information, Education, Work Experience, Skills, Certifications, Publications, and References. Ensure that every piece of information is accurately placed into the corresponding field within the JSON schema below. If the data doesn't fit exactly or if any details are ambiguous, please mark these instances clearly for manual review rather than omitting or summarizing. The objective is to maintain the integrity of the original information while organizing it into the structured JSON format provided, ensuring completeness and precision in every key.",
+            "content": "请处理以下简历，将信息提取并分类为两个主要部分：工作经历和项目经历。对于工作经历，准确识别职位、公司、开始和结束日期，并描述任何具体的项目经历，确保使用项目符号清晰地格式化这些描述。对于项目经历，准确识别项目名称、开始和结束日期，并描述任何具体的项目经历，确保使用项目符号清晰地格式化这些描述。至关重要的是，尤其对于个人信息、教育、工作经历、项目经历等部分，必须逐字捕获所有细节。根据提供的JSON模式结构化输出，确保每一条信息的完整性和精确性，准确地将它们放置在JSON模式的相应字段中。如果任何细节与模式不完全对应，或者出现歧义，请清楚地标记这些实例以供人工审查，而不是省略或总结。目标是在将原始信息组织成提供的结构化JSON格式的同时，保持原始信息的完整性，确保详尽地提取每个模式键的具体信息，不遗漏任何细节。",
           },
           {
             "role": "user",
@@ -92,8 +92,14 @@ Document: #{file_content}",
                   "items": {
                     "type": "object",
                     "properties": {
-                      "position": { "type": "string" },
-                      "company": { "type": "string" },
+                      "position": {
+                        "type": "string",
+                        "description": "从工作经历中提取的职位名称"
+                      },
+                      "company": {
+                        "type": "string",
+                        "description": "从工作经历中提取的公司名称"
+                      },
                       "start_date": {
                         "type": "string",
                         "format": "date",
@@ -107,9 +113,45 @@ Document: #{file_content}",
                       "project_experience": {
                         "type": "string",
                         "description": "Extract the project experiences listed under each work experience from the resume, and present them using bullet points (•) for clear distinction. "
+                      },
+                      "experience_type": {
+                        "type": "string",
+                        "description": "The type of experience, either 'work' or 'project'. 如果是工作经历将它定义为'work'，如果是项目经历将它定义为'project'。"
                       }
                     },
-                    "required": ["position", "company", "start_date", "end_date", "project_experience"]
+                    "required": ["position", "company", "start_date", "end_date", "project_experience", "experience_type"]
+                  }
+                },
+                project_experiences: {
+                  "type": "array",
+                  "description": "项目经历或者项目经验部分下的多条内容",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "start_date": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "The start date in yyyy-mm-dd format (e.g. 2023-02-13)"
+                      },
+                      "end_date": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "The end date in yyyy-mm-dd format (e.g. 2023-02-13)"
+                      },
+                      "project_experience": {
+                        "type": "string",
+                        "description": "详细描述项目经历，使用项目符号（•）进行清晰区分 "
+                      },
+                      "experience_type": {
+                        "type": "string",
+                        "description": "经历类型，'work'表示工作经历，'project'表示项目经历。"
+                      },
+                      "project_name": {
+                        "type": "string",
+                        "description": "项目名称"
+                      }
+                    },
+                    "required": ["start_date", "end_date", "project_experience", "experience_type"]
                   }
                 },
                 educations: {
@@ -165,47 +207,27 @@ Document: #{file_content}",
     resume_data = content.is_a?(String) ? JSON.parse(content, symbolize_names: true) : content
      content
 
-    # Process work experiences
-    if resume_data[:work_experiences]
-      resume_data[:work_experiences].each do |experience|
-        # Handle "至今" for end_date
-        if experience[:end_date] == "至今"
-          experience[:end_date] = nil
-        else
-          # Convert to Date and back to String to ensure YYYY-MM format is maintained
-          begin
-            parsed_date = Date.parse(experience[:end_date])
-            experience[:end_date] = parsed_date.strftime("%Y-%m-%d") # Adjust the formatting as per your model's expectation
-          rescue => e
-            experience[:end_date] = nil # Handle parsing error
-          end
-        end
+    # Ensure work experiences are processed for date formatting and any other adjustments
+    processed_work_experiences = resume_data[:work_experiences]&.map do |we_data|
+      process_experience_dates(we_data)
+    end || []
 
-        # Start date: Ensure conversion is correct and falls back gracefully
-        begin
-          experience[:start_date] = "#{experience[:start_date]}-01" if experience[:start_date].match(/\A\d{4}-\d{2}\z/)
-          experience[:start_date] = Date.parse(experience[:start_date]).strftime("%Y-%m-%d")
-        rescue => e
-          experience[:start_date] = nil # Handle parsing error
-        end
+
+
+    # Combine project experiences into work experiences if project experiences are present
+    if resume_data[:project_experiences]
+      processed_project_experiences = resume_data[:project_experiences].map do |project_experience|
+        process_project_experience(project_experience)
       end
+      # Combine work experiences and project experiences
+      combined_experiences = processed_work_experiences + processed_project_experiences
+      resume_data[:work_experiences] = combined_experiences
+    else
+      resume_data[:work_experiences] = processed_work_experiences
     end
+
     resume_data
   end
-
-  # Assuming `original_file` is a method/attribute of `@resume`
-  # def read_uploaded_file_content(attachment)
-  #   if attachment.attached?
-  #     case File.extname(attachment.filename.to_s).downcase
-  #     when ".docx"
-  #       read_docx_content(attachment)
-  #     when ".pdf"
-  #       read_pdf_content(attachment)
-  #     else
-  #       "Unsupported file type"
-  #     end
-  #   end
-  # end
 
   def read_uploaded_file_content(uploaded_file)
     # Check if the file exists and is not nil
@@ -223,14 +245,56 @@ Document: #{file_content}",
 
 
   def optimize
-    original_text = params[:project_experience]
-    optimized_text = optimize_with_chatgpt(original_text)
-    render json: { optimized_text: optimized_text }
+    # Check for required parameters
+    if params[:project_experience].present? && params[:experience_type].present? && WorkExperience::EXPERIENCE_TYPES.include?(params[:experience_type])
+      original_text = params[:project_experience]
+      experience_type = params[:experience_type]
+
+      optimized_text = if experience_type == WorkExperience::EXPERIENCE_TYPES[0]
+                         optimize_work_exp_with_chatgpt(original_text)
+                       else
+                         optimize_project_exp_with_chatgpt(original_text)
+                       end
+
+      render json: { optimized_text: optimized_text }
+    else
+      # Respond with an error message if required params are missing or invalid
+      render json: { error: "Missing or invalid parameters" }, status: :bad_request
+    end
   end
 
-  def optimize_with_chatgpt(original_text)
+  def optimize_work_exp_with_chatgpt(original_text)
+    prompt = "工作经历的原始内容：#{original_text}"
+    client = OpenAI::Client.new
+    response = client.chat(
+      parameters: {
+        model: gpt_model,
+        temperature: 0.2,
+        # max_tokens: 200,
+        # top_p: 0.9,
+        messages: [
+          {
+            "role": "system",
+            "content": "请将下述工作经历合并并精简至70字内，同时突出职责、贡献和成就，参考如下格式：
+• 职责: [简要描述您的主要职责，如领导产品开发团队。]
+• 贡献: [描述您为公司创造的具体价值，如增加20%的用户增长。]
+• 成就: [列出您的个人成就，如获得年度最佳员工奖。]
+
+请确保描述中明确突出量化数据；对于原内容中没有可量化数据的部分，请插入占位符 '[请提供数据]'，以便简历撰写者填入自己的数据。"
+          },
+          {
+            "role": "user",
+            "content": prompt
+          }
+        ],
+      }
+    )
+    response.dig("choices", 0, "message", "content")
+  end
+
+  def optimize_project_exp_with_chatgpt(original_text)
     # TODO: replace the following prompt
-    prompt = "以下是针对产品经理简历中工作经历的修改：
+    prompt = "以下是针对产品经理简历中项目经历的修改：
 修改前：
 原有系统X业务分散、数据不互通、协同困难，需建立全新的Y系统，涉及数个外部系统的整合重构，需满足多个部门的个性化需求：
 1、完善工具A、工具B、工具C等低代码工具，从0到1设计Y系统产品方案，实现全流程低代码开发，节省一定比例的开发工作量；
@@ -251,7 +315,7 @@ Document: #{file_content}",
     client = OpenAI::Client.new
     response = client.chat(
       parameters: {
-        model: "gpt-3.5-turbo",
+        model: gpt_model,
         temperature: 0.2,
         # max_tokens: 200,
         # top_p: 0.9,
@@ -301,12 +365,12 @@ JD 内容：
     client = OpenAI::Client.new
     response = client.chat(
       parameters: {
-        model: "gpt-3.5-turbo",
+        model: gpt_model,
         temperature: 0.5,
         messages: [
           {
             "role": "system",
-            "content": "根据以下职位要求的关键元素和权重，从提供的工作经历中提取相关性最高的匹配项：
+            "content": "根据以下职位要求的关键元素和权重，从提供的工作经历中提取相关性最高的 3 项匹配项，要求每一项不超过 70 字：
 - 职位要求关键元素与权重：[职位要求关键词1]:[权重], [职位要求关键词2]:[权重], ...
 - 提供的工作经历：[工作经历1描述], [工作经历2描述], ...
 如果某项要求没有直接匹配的经历，请使用占位符“[请提供相关经验或技能]”提示用户补充。
@@ -339,6 +403,7 @@ JD 内容：
       :email,
       :phone_number,
       :gender,
+      :highlight_project_experience,
       work_experiences_attributes: [
         :id,
         :company,
@@ -346,6 +411,7 @@ JD 内容：
         :start_date,
         :end_date,
         :project_experience,
+        :project_name,
         :_destroy
       ],
       educations_attributes: [
@@ -379,29 +445,6 @@ JD 内容：
     end
   end
 
-  # TODO: original implementation
-  # def read_docx_content(attachment)
-  #   content = ''
-  #   attachment.blob.open do |tempfile|
-  #     doc = Docx::Document.open(tempfile.path)
-  #     content = doc.paragraphs.map(&:to_s).join("\n") # Join paragraphs with newline characters
-  #   end
-  #   content
-  # rescue StandardError => e
-  #   "Failed to read .docx file: #{e.message}"
-  # end
-  #
-  # def read_pdf_content(attachment)
-  #   content = "" # Initialize an empty string to hold the extracted content
-  #   attachment.blob.open do |tempfile|
-  #     reader = PDF::Reader.new(tempfile.path) # Initialize the PDF reader with the path to the temporary file
-  #     reader.pages.each do |page|
-  #       content += page.text + "\n" # Append the text of each page to the content variable
-  #     end
-  #   end
-  #   content # Return the concatenated text content
-  # end
-
   def read_docx_content(uploaded_file)
     # Process DOCX file
     Docx::Document.open(uploaded_file.path) do |doc|
@@ -422,6 +465,41 @@ JD 内容：
 
   def authenticate_user
     redirect_to login_path unless current_user
+  end
+
+
+  def process_experience_dates(experience)
+    # Handle "至今" for end_date
+    experience[:end_date] = nil if experience[:end_date] == "至今"
+
+    # Convert start_date and end_date from String to Date
+    begin
+      experience[:start_date] = Date.parse("#{experience[:start_date]}-01").strftime("%Y-%m") if experience[:start_date]&.match(/\A\d{4}-\d{2}\z/)
+      experience[:end_date] = Date.parse(experience[:end_date]).strftime("%Y-%m") unless experience[:end_date].nil?
+    rescue ArgumentError
+      experience[:end_date] = nil # Handle parsing error for end_date
+    end
+
+    experience
+  end
+
+  def process_project_experience(project_experience)
+    experience_entry = {
+      position: "", # No position info, set as empty or handle accordingly
+      company: "", # No company info, set as empty or handle accordingly
+      start_date: project_experience[:start_date],
+      end_date: project_experience[:end_date],
+      project_experience: project_experience[:project_experience],
+      experience_type: project_experience[:experience_type], # 'project'
+      project_name: project_experience[:project_name]
+    }
+
+    # Process dates for project experience
+    process_experience_dates(experience_entry)
+  end
+
+  def gpt_model
+    Rails.env.development? ? "gpt-3.5-turbo" : "gpt-4-turbo-preview"
   end
 
 end

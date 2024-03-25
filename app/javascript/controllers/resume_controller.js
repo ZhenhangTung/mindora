@@ -1,14 +1,47 @@
 import {Controller} from "@hotwired/stimulus"
 // import html2pdf from "html2pdf";
+import Quill from "quill";
 
 export default class extends Controller {
-    static targets = ["projectExperience", "jobDescription", "jobMatch", "jobMatchPreview", "pdfSource"]
+    static targets = ["projectExperience", "jobDescription", "jobMatch", "jobMatchPreview", "pdfSource", "highlight", "switchButton"]
 
     static values = {
-        name: String
+        name: String,
+        experienceType: String
     }
+
+    connect() {
+        if (this.hasHighlightTarget) {
+            this.updateSwitchState();
+        }
+
+        if (document.querySelector('#job-match-editor')) {
+            this.initializeQuill();
+        }
+    }
+
+    initializeQuill() {
+        this.editor = new Quill('#job-match-editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    ['bold'],
+                    // [{ 'list': 'bullet' }], // TODO: implement this
+                    [{ 'background': ['white', 'yellow'] }], // background color
+                ]
+            }
+        });
+
+        // 监听编辑器内容的变化
+        this.editor.on('text-change', () => {
+            this.jobMatchTarget.value = this.editor.root.innerHTML;
+            this.updateJobMatchPreview();
+        });
+    }
+
     optimizeProjectExperience() {
         const originalText = this.projectExperienceTarget.value
+        const experienceType = this.experienceTypeValue;
 
         fetch('/resumes/work_experiences/optimize', {
             method: 'POST',
@@ -16,7 +49,10 @@ export default class extends Controller {
                 'Content-Type': 'application/json',
                 'X-CSRF-Token': document.querySelector("[name='csrf-token']").content
             },
-            body: JSON.stringify({ project_experience: originalText })
+            body: JSON.stringify({
+                project_experience: originalText,
+                experience_type: experienceType
+            })
         })
             .then(response => response.json())
             .then(data => {
@@ -43,11 +79,13 @@ export default class extends Controller {
         })
             .then(response => response.json())
             .then(data => {
-                jobMatch = data.job_match;
-                this.jobMatchTarget.value = jobMatch;
+                // jobMatch = data.job_match;
+                // this.jobMatchTarget.value = jobMatch;
+                this.editor.setText(data.job_match);
             }).then(() => {
                 // Assuming 'response' contains your text from the server
-                document.getElementById("job-match-preview").innerHTML = jobMatch.replace(/\r?\n/g, '<br>');
+                // document.getElementById("job-match-preview").innerHTML = jobMatch.replace(/\r?\n/g, '<br>');
+                // this.editor.setText(jobMatch);
             })
             .catch(error => console.error('Error:', error));
     }
@@ -66,7 +104,47 @@ export default class extends Controller {
     }
 
     updateJobMatchPreview() {
-        const text = this.jobMatchTarget.value;
-        this.jobMatchPreviewTarget.innerHTML = text.replace(/\n/g, '<br>');
+        // const text = this.jobMatchTarget.value;
+        // this.jobMatchPreviewTarget.innerHTML = text.replace(/\n/g, '<br>');
+
+        // const htmlContent = this.jobMatchTarget.value;
+        // this.jobMatchPreviewTarget.innerHTML = htmlContent;
+
+        const htmlContent = this.jobMatchTarget.value;
+
+        // 创建一个临时的 div 元素
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlContent;
+
+        // 为所有的 <ol> 元素添加 Tailwind CSS 类
+        const unorderedLists = tempDiv.querySelectorAll('ul');
+        unorderedLists.forEach(ul => {
+            ul.classList.add('list-disc', 'list-inside');
+        });
+
+        // 将处理后的 HTML 设置回预览区
+        this.jobMatchPreviewTarget.innerHTML = tempDiv.innerHTML;
+    }
+
+    toggleHighlightSwitch() {
+        // Toggle the checkbox value
+        this.highlightTarget.checked = !this.highlightTarget.checked;
+        this.updateSwitchState();
+    }
+
+    updateSwitchState() {
+        const isChecked = this.highlightTarget.checked;
+        const switchButton = this.switchButtonTarget;
+        const switchIndicator = switchButton.querySelector("span");
+
+        if (isChecked) {
+            switchButton.classList.replace("bg-gray-200", "bg-indigo-600");
+            switchIndicator.classList.replace("translate-x-0", "translate-x-5");
+            switchButton.setAttribute("aria-checked", "true");
+        } else {
+            switchButton.classList.replace("bg-indigo-600", "bg-gray-200");
+            switchIndicator.classList.replace("translate-x-5", "translate-x-0");
+            switchButton.setAttribute("aria-checked", "false");
+        }
     }
 }

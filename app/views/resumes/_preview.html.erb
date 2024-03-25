@@ -8,30 +8,18 @@
         <h2 class="font-bold">职位匹配</h2>
       </div>
       <div>
-        <p class="mt-2" id="job-match-preview" data-resume-target="jobMatchPreview"></p>
+        <div class="mt-2" id="job-match-preview" data-resume-target="jobMatchPreview"></div>
       </div>
-    <% end %>
+  <% end %>
 
-    <div class="text-center border-b-2 border-gray-200 my-1">
-      <% if @resume.is_student? %>
-        <h2 class="font-bold">实习经历</h2>
-      <% else %>
-        <h2 class="font-bold">工作经历</h2>
-      <% end %>
-    </div>
-    <% @resume.work_experiences.each do |experience| %>
-      <div class="mt-2">
-        <!-- Title | Company | Time -->
-        <div class="flex justify-between items-center mb-2 font-bold">
-          <h3 class="flex-1 text-left"><%= experience.position %></h3>
-          <p class="flex-1 text-center"><%= experience.company %></p>
-          <p class="flex-1 text-right"><%= experience.start_date.strftime("%Y.%m") %>-<%= experience.end_date.nil? ? "至今" : experience.end_date.strftime("%Y.%m") %></p>
-        </div>
-        <!-- Description -->
-        <p class="space-y-1">
-          <%= simple_format(experience.project_experience, {}, wrapper_tag: "div") %>
-        </p>
-      </div>
+    <% if @resume.highlight_project_experience %>
+      <!-- Highlight Project Experiences First -->
+      <%= render 'project_experiences', experiences: @resume.project_work_experiences %>
+      <%= render 'work_experiences', experiences: @resume.non_project_work_experiences, is_student: @resume.is_student? %>
+    <% else %>
+      <!-- Highlight Work Experiences First -->
+      <%= render 'work_experiences', experiences: @resume.non_project_work_experiences, is_student: @resume.is_student? %>
+      <%= render 'project_experiences', experiences: @resume.project_work_experiences %>
     <% end %>
   </div>
   <!-- Education Background-->
