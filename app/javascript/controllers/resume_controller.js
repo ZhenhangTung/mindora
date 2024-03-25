@@ -3,7 +3,7 @@ import {Controller} from "@hotwired/stimulus"
 import Quill from "quill";
 
 export default class extends Controller {
-    static targets = ["projectExperience", "jobDescription", "jobMatch", "jobMatchPreview", "pdfSource", "highlight", "switchButton"]
+    static targets = ["projectExperience", "jobDescription", "jobMatch", "jobMatchPreview", "pdfSource", "highlight", "switchButton", "optimizeButton"]
 
     static values = {
         name: String,
@@ -42,6 +42,11 @@ export default class extends Controller {
     optimizeProjectExperience() {
         const originalText = this.projectExperienceTarget.value
         const experienceType = this.experienceTypeValue;
+        const button = this.optimizeButtonTarget;
+
+        // Disable the button and add animation
+        button.classList.add('cursor-not-allowed', 'animate-bounce');
+        button.setAttribute('disabled', true);
 
         fetch('/resumes/work_experiences/optimize', {
             method: 'POST',
@@ -57,8 +62,16 @@ export default class extends Controller {
             .then(response => response.json())
             .then(data => {
                 this.projectExperienceTarget.value = data.optimized_text;
+                // Restore the button's state after successful operation
+                button.classList.remove('cursor-not-allowed', 'animate-bounce');
+                button.removeAttribute('disabled');
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                // Also restore the button's state in case of error
+                button.classList.remove('cursor-not-allowed', 'animate-bounce');
+                button.removeAttribute('disabled');
+            });
     }
 
     generateJobMatch() {
