@@ -214,12 +214,19 @@
                 </div>
               </div>
 
-              <div class="sm:col-span-6">
+              <div class="sm:col-span-6 relative">
                 <div data-controller="resume" data-resume-experience-type-value="<%= work_experience_form.object.experience_type %>">
                   <%= work_experience_form.label :project_experience, "工作经历", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                  <div class="mt-2">
-                    <button type="button" data-action="click->resume#optimizeProjectExperience" class="rounded bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">优化本段经历</button>
-                    <%= work_experience_form.text_area :project_experience, data: { resume_target: "projectExperience" }, rows: 8, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                  <div class="mt-2 relative">
+                    <%= work_experience_form.text_area :project_experience, data: { resume_target: "projectExperience" }, rows: 8, class: "block w-full rounded-md border py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 pb-10" %>
+                    <button
+                      type="button"
+                      data-action="click->resume#optimizeProjectExperience"
+                      data-resume-target="optimizeButton"
+                      class="absolute right-2 bottom-2 rounded bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                    >
+                      优化
+                    </button>
                   </div>
                 </div>
               </div>
@@ -277,12 +284,18 @@
                 </div>
               </div>
 
-              <div class="sm:col-span-6">
+              <div class="sm:col-span-6 relative">
                 <div data-controller="resume" data-resume-experience-type-value="<%= work_experience_form.object.experience_type %>">
                   <%= work_experience_form.label :project_experience, "项目经验", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                  <div class="mt-2">
-                    <button type="button" data-action="click->resume#optimizeProjectExperience" class="rounded bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">优化本段经验</button>
-                    <%= work_experience_form.text_area :project_experience, data: { resume_target: "projectExperience" }, rows: 8, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                  <div class="mt-2 relative">
+                    <%= work_experience_form.text_area :project_experience, data: { resume_target: "projectExperience" }, rows: 8, class: "block w-full rounded-md border py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 pb-10" %>
+                    <button type="button"
+                            data-action="click->resume#optimizeProjectExperience"
+                            data-resume-target="optimizeButton"
+                            class="absolute right-2 bottom-2 rounded bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                    >
+                      优化
+                    </button>
                   </div>
                 </div>
               </div>
@@ -375,7 +388,7 @@
               </div>
             </div>
           </div>
-          <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
+          <div class="mt-6 flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
             <button type="button" data-action="click->resume#generateJobMatch" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">生成职位匹配</button>
           </div>
         </div>
