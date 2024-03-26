@@ -1,6 +1,7 @@
 class ResumesController < ApplicationController
   before_action :set_resume, only: [:show, :update, :customize]
   before_action :authenticate_user, only: :index
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def index
     @resumes = current_user.resumes
@@ -393,7 +394,12 @@ JD 内容：
   private
 
   def set_resume
-    @resume = Resume.find(params[:id])
+    @resume = current_user.resumes.find(params[:id])
+  end
+
+  def record_not_found
+    flash[:error] = "未找到该简历"
+    redirect_to root_url
   end
 
   def resume_params
