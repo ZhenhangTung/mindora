@@ -3,7 +3,7 @@ import {Controller} from "@hotwired/stimulus"
 import Quill from "quill";
 
 export default class extends Controller {
-    static targets = ["projectExperience", "jobDescription", "jobMatch", "jobMatchPreview", "pdfSource", "highlight", "switchButton", "optimizeButton"]
+    static targets = ["projectExperience", "jobDescription", "jobMatch", "jobMatchPreview", "pdfSource", "highlight", "switchButton", "optimizeButton", "jobMatchButton"]
 
     static values = {
         name: String,
@@ -76,10 +76,14 @@ export default class extends Controller {
 
     generateJobMatch() {
         const jd = this.jobDescriptionTarget.value
+        const button = this.jobMatchButtonTarget;
         if (!jd) {
             alert("请输入职位 JD 内容")
             return
         }
+        button.classList.add('cursor-not-allowed', 'animate-bounce');
+        button.setAttribute('disabled', true);
+
         const resumeId = this.data.get("id");
         let jobMatch = ''
         fetch(`/resumes/${resumeId}/job_match`, {
@@ -92,15 +96,15 @@ export default class extends Controller {
         })
             .then(response => response.json())
             .then(data => {
-                // jobMatch = data.job_match;
-                // this.jobMatchTarget.value = jobMatch;
                 this.editor.setText(data.job_match);
-            }).then(() => {
-                // Assuming 'response' contains your text from the server
-                // document.getElementById("job-match-preview").innerHTML = jobMatch.replace(/\r?\n/g, '<br>');
-                // this.editor.setText(jobMatch);
+                button.classList.remove('cursor-not-allowed', 'animate-bounce');
+                button.removeAttribute('disabled');
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error)
+                button.classList.remove('cursor-not-allowed', 'animate-bounce');
+                button.removeAttribute('disabled');
+            });
     }
 
     downloadPDF() {
