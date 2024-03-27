@@ -126,17 +126,22 @@ class Api::ChatGptController < ApplicationController
 
   def find_or_create_chat_session(user_identifier)
     chat_session = ChatSession.find_or_initialize_by(anonymous_user_id: user_identifier, assistant_id: @assistant.id)
-    unless chat_session.save
-      render json: { error: "Failed to save chat session" }, status: :internal_server_error
+    begin
+      chat_session.save!
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error("Failed to save chat session: #{e.message}")
+      render json: { error: "Failed to save chat session: #{e.message}" }, status: :internal_server_error
     end
     chat_session
   end
 
   def create_chat_message(message_text)
     chat_message = @chat_session.chat_messages.build(message_text: message_text, sender_role: ChatMessage::SENDER_ROLE_USER)
-    unless chat_message.save
-      render json: { error: "Failed to save message" }, status: :internal_server_error
-      return
+    begin
+      chat_message.save!
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error("Failed to save chat message: #{e.message}")
+      render json: { error: "Failed to save message: #{e.message}" }, status: :internal_server_error
     end
     # Get OpenAI's response
     openai_response = handle_openai_interaction
