@@ -64,4 +64,8 @@ Rails.application.configure do
   # Action Cable endpoint configuration
   config.action_cable.allowed_request_origins = [/http:\/\/*/, /https:\/\/*/]
 
+  # stdout logger
+  config.logger = ActiveSupport::Logger.new(STDOUT)
+  config.log_level = :debug
+
 end
