@@ -26,5 +26,6 @@ release_command = "./bin/rails db:prepare"
 
 [env]
 RAILS_ENV = "test"
-TENCENT_CLOUD_COS_ENDPOINT= "https://cos.ap-singapore.myqcloud.com"
-TENCENT_CLOUD_COS_BUCKET= "chanpinwangwangtest-1256601241"
+TENCENT_CLOUD_COS_ENDPOINT = "https://cos.ap-singapore.myqcloud.com"
+TENCENT_CLOUD_COS_BUCKET = "chanpinwangwangtest-1256601241"
+RAILS_LOG_TO_STDOUT = "true"
