@@ -61,7 +61,6 @@ class ResumesController < ApplicationController
     client = OpenAI::Client.new
     response = client.chat(
       parameters: {
-        model: gpt_model,
         temperature: 0.1,
         messages: [
           {
@@ -269,7 +268,6 @@ Document: #{file_content}",
     client = OpenAI::Client.new
     response = client.chat(
       parameters: {
-        model: gpt_model,
         temperature: 0.2,
         # max_tokens: 200,
         # top_p: 0.9,
@@ -316,7 +314,6 @@ Document: #{file_content}",
     client = OpenAI::Client.new
     response = client.chat(
       parameters: {
-        model: gpt_model,
         temperature: 0.2,
         # max_tokens: 200,
         # top_p: 0.9,
@@ -366,7 +363,6 @@ JD 内容：
     client = OpenAI::Client.new
     response = client.chat(
       parameters: {
-        model: gpt_model,
         temperature: 0.5,
         messages: [
           {
@@ -506,10 +502,6 @@ JD 内容：
 
     # Process dates for project experience
     process_experience_dates(experience_entry)
-  end
-
-  def gpt_model
-    Rails.env.development? ? "gpt-3.5-turbo" : "gpt-4-turbo-preview"
   end
 
 end
