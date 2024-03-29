@@ -18,33 +18,36 @@ class Resume < ApplicationRecord
 
   # Method to update resume with extracted data
   def update_with_extracted_data(data)
-    self.transaction do
-      self.name = data[:name] if data.key?(:name)
-      self.gender = data[:gender] if data.key?(:gender)
-      self.phone_number = data[:phone_number] if data.key?(:phone_number)
-      self.email = data[:email] if data.key?(:email)
+    self.class.transaction do
+      begin
+        self.name = data[:name] if data.key?(:name)
+        self.gender = data[:gender] if data.key?(:gender)
+        self.phone_number = data[:phone_number] if data.key?(:phone_number)
+        self.email = data[:email] if data.key?(:email)
 
-      # Check if required data is present
-      raise "Work experiences data is missing" unless data.key?(:work_experiences) && data[:work_experiences].present?
-      raise "Educations data is missing" unless data.key?(:educations) && data[:educations].present?
+        # Check if required data is present
+        raise "Work experiences data is missing" unless data.key?(:work_experiences) && data[:work_experiences].present?
+        raise "Educations data is missing" unless data.key?(:educations) && data[:educations].present?
 
-      # Assuming `data` is a hash with :work_experiences and :educations keys
-      work_experiences_attributes = data[:work_experiences].each do |we_data|
-        parse_date_fields(we_data)
+        # Assuming `data` is a hash with :work_experiences and :educations keys
+        work_experiences_attributes = data[:work_experiences].each do |we_data|
+          parse_date_fields(we_data)
+        end
+
+        educations_attributes = data[:educations].each do |ed_data|
+          parse_date_fields(ed_data)
+        end
+
+        self.work_experiences_attributes = work_experiences_attributes
+        self.educations_attributes = educations_attributes
+
+        # Save changes or raise an exception if validations fail
+        self.save!
+      rescue => e
+        # Log error and re-raise the exception
+        Rails.logger.error "Failed to update resume with extracted data: #{e.message}"
+        raise e
       end
-
-      educations_attributes = data[:educations].each do |ed_data|
-        parse_date_fields(ed_data)
-      end
-
-      self.work_experiences_attributes = work_experiences_attributes
-      self.educations_attributes = educations_attributes
-
-      # Add any other fields in `data` that should update the resume itself
-      # self.update!(other_fields: data[:other_fields])
-
-      # Save changes or raise an exception if validations fail
-      self.save!
     end
   end
 

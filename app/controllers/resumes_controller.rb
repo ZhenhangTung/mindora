@@ -28,20 +28,25 @@ class ResumesController < ApplicationController
         flash[:success] = '简历上传成功！'
         redirect_to @resume
       rescue => e
+        # Log error with detailed information
+        Rails.logger.error "Resume upload failed for user #{current_user.id}: #{e.message}"
+
         flash[:error] = "简历上传失败！错误信息: #{e.message}"
         redirect_to new_resume_path
       end
     else
+      # Log the absence of an attached file
+      Rails.logger.warn "Resume upload attempt without an attached file by user #{current_user.id}"
       flash[:error] = '未找到上传的文件，请重试。'
       redirect_to new_resume_path
     end
   end
 
   def update
-    puts 'Before update:', params.inspect
+    Rails.logger.debug { "Before update: #{params.inspect}" }
     modified_params = adjust_date_params(resume_params)
     if @resume.update(modified_params)
-      puts 'After update:', @resume.work_experiences.inspect
+      Rails.logger.debug { "After update: #{@resume.work_experiences.inspect}" }
       redirect_to @resume, notice: 'Resume was successfully updated.'
     else
       redirect_to @resume, notice: 'Resume was failed to update.'
@@ -457,6 +462,7 @@ JD 内容：
       doc.paragraphs.map(&:text).join("\n") # Assuming you want to return the text as a string
     end
   rescue StandardError => e
+    Rails.logger.error "Failed to read .docx file: #{e.message}"
     "Failed to read .docx file: #{e.message}"
   end
 
@@ -464,8 +470,10 @@ JD 内容：
     # Process PDF file
     PDF::Reader.new(uploaded_file.path).pages.map(&:text).join("\n")
   rescue PDF::Reader::MalformedPDFError => e
+    Rails.logger.error "Failed to read .pdf file: #{e.message}"
     "Failed to read .pdf file: #{e.message}"
   rescue StandardError => e
+    Rails.logger.error "Failed to read .pdf file: #{e.message}"
     "Failed to read .pdf file: #{e.message}"
   end
 
