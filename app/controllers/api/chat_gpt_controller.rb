@@ -7,6 +7,7 @@ class Api::ChatGptController < ApplicationController
 
     chat_session = ChatSession.find_by(anonymous_user_id: user_identifier)
     if chat_session
+      # TODO: paginate messages
       render json: chat_session.chat_messages.order(created_at: :asc)
     else
       render json: []
@@ -148,12 +149,22 @@ class Api::ChatGptController < ApplicationController
 
     # Check if response is obtained and save it
     if openai_response
-      assistant_message = @chat_session.chat_messages.create(
-        message_text: openai_response,
-        sender_role: ChatMessage::SENDER_ROLE_ASSISTANT
-      )
-      return assistant_message
+      begin
+        # Attempt to create the chat message
+        assistant_message = @chat_session.chat_messages.create!(
+          message_text: openai_response,
+          sender_role: ChatMessage::SENDER_ROLE_ASSISTANT
+        )
+        return assistant_message
+      rescue => e
+        # Log the error with details
+        Rails.logger.error "Failed to create chat message: #{e.message}"
+        # Respond with a generic error message
+        render json: { error: "An error occurred, please try again." }, status: :internal_server_error
+        return nil
+      end
     else
+      Rails.logger.error "Failed to obtain response from OpenAI"
       render json: { error: "Failed to obtain response from OpenAI" }, status: :internal_server_error
       return nil
     end
