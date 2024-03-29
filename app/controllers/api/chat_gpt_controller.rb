@@ -60,7 +60,6 @@ class Api::ChatGptController < ApplicationController
     "
     response = client.chat(
       parameters: {
-        model: "gpt-3.5-turbo", # Required.
         messages: [{ role: "user", content: prompt}], # Required.
         temperature: 0.7,
       })
@@ -100,7 +99,6 @@ class Api::ChatGptController < ApplicationController
     "
     response = client.chat(
       parameters: {
-        model: "gpt-3.5-turbo", # Required.
         messages: [{ role: "user", content: prompt}], # Required.
         temperature: 0.7,
       })
@@ -166,8 +164,6 @@ class Api::ChatGptController < ApplicationController
     client = OpenAI::Client.new
     response = client.chat(
       parameters: {
-        # model: @assistant.model,
-        model: 'gpt-3.5-turbo', # TODO: fixme
         messages: messages_for_api,
         temperature: 0.7,
       })
