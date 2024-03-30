@@ -180,8 +180,9 @@
             </div>
           </div>
 
-          <div class="border-b border-gray-200 pb-5 my-4">
+          <div class="border-b border-gray-200 pb-5 my-4 flex justify-between items-center">
             <h3 class="text-base font-semibold leading-6 text-gray-900">工作经历</h3>
+            <button type="button" class="rounded bg-indigo-50 px-2 py-1 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">新增经历</button>
           </div>
           <!-- working exps -->
           <%= form.fields_for :work_experiences, @resume.non_project_work_experiences do |work_experience_form| %>
@@ -231,6 +232,7 @@
                 </div>
               </div>
             </div>
+            <button type="button" class="rounded bg-red-50 px-2 py-1 text-sm font-semibold text-red-600 shadow-sm hover:bg-red-100">删除</button>
           <% end %>
 
 
