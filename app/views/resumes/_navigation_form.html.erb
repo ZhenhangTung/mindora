@@ -180,171 +180,101 @@
             </div>
           </div>
 
-          <div class="border-b border-gray-200 pb-5 my-4 flex justify-between items-center">
-            <h3 class="text-base font-semibold leading-6 text-gray-900">工作经历</h3>
-            <button type="button" class="rounded bg-indigo-50 px-2 py-1 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">新增经历</button>
-          </div>
-          <!-- working exps -->
-          <%= form.fields_for :work_experiences, @resume.non_project_work_experiences do |work_experience_form| %>
-            <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
-              <div class="sm:col-span-3">
-                <%= work_experience_form.label :company, "公司名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                <div class="mt-2">
-                  <%= work_experience_form.text_field :company, autocomplete: "company", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-                </div>
-              </div>
-
-              <div class="sm:col-span-3">
-                <%= work_experience_form.label :position, "职位名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                <div class="mt-2">
-                  <%= work_experience_form.text_field :position, autocomplete: "position", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-                </div>
-              </div>
-
-              <div class="sm:col-span-3">
-                <%= work_experience_form.label :start_date, "入职时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                <div class="mt-2">
-                  <%= work_experience_form.month_field :start_date, autocomplete: "start-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-                </div>
-              </div>
-
-              <div class="sm:col-span-3">
-                <%= work_experience_form.label :end_date, "离职时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                <div class="mt-2">
-                  <%= work_experience_form.month_field :end_date, autocomplete: "end-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-                </div>
-              </div>
-
-              <div class="sm:col-span-6 relative">
-                <div data-controller="resume" data-resume-experience-type-value="<%= work_experience_form.object.experience_type %>">
-                  <%= work_experience_form.label :project_experience, "工作经历", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                  <div class="mt-2 relative">
-                    <%= work_experience_form.text_area :project_experience, data: { resume_target: "projectExperience" }, rows: 8, class: "block w-full rounded-md border py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 pb-10" %>
-                    <button
-                      type="button"
-                      data-action="click->resume#optimizeProjectExperience"
-                      data-resume-target="optimizeButton"
-                      class="absolute right-2 bottom-2 rounded bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-                    >
-                      优化
-                    </button>
-                  </div>
-                </div>
-              </div>
+          <div data-controller="nested-form" data-nested-form-wrapper-selector-value=".nested-form-wrapper" class="mt-12">
+            <div class="border-b border-gray-200 pb-5 my-4 flex justify-between items-center">
+              <h3 class="text-base font-semibold leading-6 text-gray-900">工作经历</h3>
+              <button type="button" class="rounded bg-indigo-50 px-2 py-1 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100" data-action="nested-form#add">新增</button>
             </div>
-            <button type="button" class="rounded bg-red-50 px-2 py-1 text-sm font-semibold text-red-600 shadow-sm hover:bg-red-100">删除</button>
-          <% end %>
+
+            <!-- working exps -->
+            <template data-nested-form-target="template">
+              <%= form.fields_for :work_experiences, WorkExperience.new, child_index: "NEW_RECORD" do |work_experience_form| %>
+                <%= render "work_experiences_fields", work_experience_form: work_experience_form %>
+              <% end %>
+            </template>
+
+            <%= form.fields_for :work_experiences, @resume.non_project_work_experiences do |work_experience_form| %>
+              <%= render "work_experiences_fields", work_experience_form: work_experience_form %>
+            <% end %>
+
+            <!-- Inserted elements will be injected before that target. -->
+            <div data-nested-form-target="target"></div>
+          </div>
 
 
-          <div class="border-b border-gray-200 pb-5 my-4" data-controller="resume">
-            <h3 class="text-base font-semibold leading-6 text-gray-900">项目经验</h3>
-            <div class="flex items-center justify-between mt-2">
+          <div data-controller="nested-form" data-nested-form-wrapper-selector-value=".nested-form-wrapper" class="mt-12">
+            <div class="border-b border-gray-200 pb-5 my-4" data-controller="resume">
+              <div class="flex justify-between items-center">
+                <h3 class="text-base font-semibold leading-6 text-gray-900">项目经验</h3>
+                <button type="button" class="rounded bg-indigo-50 px-2 py-1 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100" data-action="nested-form#add">新增</button>
+              </div>
+              <div class="flex items-center justify-between mt-2">
               <span class="flex flex-grow flex-col">
                 <span class="text-sm font-medium leading-6 text-gray-900" id="highlight_project_experience-label">置顶</span>
                 <span class="text-sm text-gray-500" id="highlight_project_experience-description">若无产品工作经验，置顶你的产品项目让面试官看到</span>
               </span>
-              <%= form.check_box :highlight_project_experience,
-                                 class: "hidden",
-                                 "data-resume-target": "highlight",
-                                 "data-action": "change->resume#toggleHighlightSwitch",
-                                 id: "highlight_project_experience",
-                                 checked: @resume.highlight_project_experience %>
-              <label for="highlight_project_experience"
-                     class="bg-gray-200 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
-                     role="switch"
-                     aria-checked="false"
-                     aria-labelledby="highlight_project_experience-label"
-                     aria-describedby="highlight_project_experience-description"
-                     data-resume-target="switchButton"
-                     data-action="click->resume#toggleHighlightSwitch">
-                <span aria-hidden="true" class="translate-x-0 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
-              </label>
+                <%= form.check_box :highlight_project_experience,
+                                   class: "hidden",
+                                   "data-resume-target": "highlight",
+                                   "data-action": "change->resume#toggleHighlightSwitch",
+                                   id: "highlight_project_experience",
+                                   checked: @resume.highlight_project_experience %>
+                <label for="highlight_project_experience"
+                       class="bg-gray-200 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
+                       role="switch"
+                       aria-checked="false"
+                       aria-labelledby="highlight_project_experience-label"
+                       aria-describedby="highlight_project_experience-description"
+                       data-resume-target="switchButton"
+                       data-action="click->resume#toggleHighlightSwitch">
+                  <span aria-hidden="true" class="translate-x-0 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+                </label>
+              </div>
             </div>
+
+            <!-- project exps -->
+            <template data-nested-form-target="template">
+              <%= form.fields_for :work_experiences, WorkExperience.new, child_index: "NEW_RECORD" do |project_experience_form| %>
+                <%= render "project_experiences_fields", project_experience_form: project_experience_form %>
+              <% end %>
+            </template>
+
+            <%= form.fields_for :work_experiences, @resume.project_work_experiences do |project_experience_form| %>
+              <%= render "project_experiences_fields", project_experience_form: project_experience_form %>
+            <% end %>
+
+            <!-- Inserted elements will be injected before that target. -->
+            <div data-nested-form-target="target"></div>
           </div>
 
-          <!-- working exps -->
-          <%= form.fields_for :work_experiences, @resume.project_work_experiences do |work_experience_form| %>
-            <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
-              <div class="sm:col-span-3">
-                <%= work_experience_form.label :project_name, "项目名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                <div class="mt-2">
-                  <%= work_experience_form.text_field :project_name, autocomplete: "project-name", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-                </div>
-              </div>
-
-              <div class="sm:col-span-3">
-                <%= work_experience_form.label :start_date, "开始时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                <div class="mt-2">
-                  <%= work_experience_form.month_field :start_date, autocomplete: "start-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-                </div>
-              </div>
-
-              <div class="sm:col-span-3">
-                <%= work_experience_form.label :end_date, "结束时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                <div class="mt-2">
-                  <%= work_experience_form.month_field :end_date, autocomplete: "end-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-                </div>
-              </div>
-
-              <div class="sm:col-span-6 relative">
-                <div data-controller="resume" data-resume-experience-type-value="<%= work_experience_form.object.experience_type %>">
-                  <%= work_experience_form.label :project_experience, "项目经验", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                  <div class="mt-2 relative">
-                    <%= work_experience_form.text_area :project_experience, data: { resume_target: "projectExperience" }, rows: 8, class: "block w-full rounded-md border py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 pb-10" %>
-                    <button type="button"
-                            data-action="click->resume#optimizeProjectExperience"
-                            data-resume-target="optimizeButton"
-                            class="absolute right-2 bottom-2 rounded bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-                    >
-                      优化
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          <% end %>
-
-          <div class="border-b border-gray-200 pb-5 my-4">
-            <h3 class="text-base font-semibold leading-6 text-gray-900">教育背景</h3>
-          </div>
-          <%= form.fields_for :educations do |edu_form| %>
-            <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4">
-              <div class="sm:col-span-3">
-                <%= edu_form.label :school, "学校名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                <div class="mt-2">
-                  <%= edu_form.text_field :school, autocomplete: "school", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-                </div>
-              </div>
-
-              <div class="sm:col-span-3">
-                <%= edu_form.label :major, "专业名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                <div class="mt-2">
-                  <%= edu_form.text_field :major, autocomplete: "major", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-                </div>
-              </div>
-
-              <div class="sm:col-span-3">
-                <%= edu_form.label :start_date, "入学时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                <div class="mt-2">
-                  <%= edu_form.month_field :start_date, autocomplete: "start-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-                </div>
-              </div>
-
-              <div class="sm:col-span-3">
-                <%= edu_form.label :end_date, "毕业时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                <div class="mt-2">
-                  <%= edu_form.month_field :end_date, autocomplete: "end-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-                </div>
-              </div>
-            </div>
-          <% end %>
           <!-- educations -->
+          <div data-controller="nested-form" data-nested-form-wrapper-selector-value=".nested-form-wrapper" class="mt-12">
+            <div class="border-b border-gray-200 pb-5 my-4 flex justify-between items-center">
+              <h3 class="text-base font-semibold leading-6 text-gray-900">教育背景</h3>
+              <button type="button" class="rounded bg-indigo-50 px-2 py-1 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100" data-action="nested-form#add">新增</button>
+            </div>
+
+            <template data-nested-form-target="template">
+              <%= form.fields_for :educations, Education.new, child_index: "NEW_RECORD" do |edu_form| %>
+                <%= render "education_fields", edu_form: edu_form %>
+              <% end %>
+            </template>
+
+            <%= form.fields_for :educations do |edu_form| %>
+              <%= render "education_fields", edu_form: edu_form %>
+            <% end %>
+
+            <!-- Inserted elements will be injected before that target. -->
+            <div data-nested-form-target="target"></div>
+          </div>
         </div>
         <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
           <%= form.submit "保存", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
         </div>
       <% end %>
     </div>
+
+<!--    Resume Preview Section -->
     <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
       <div class="px-4 sm:px-0">
         <h2 class="text-base font-semibold leading-7 text-gray-900">简历预览</h2>
