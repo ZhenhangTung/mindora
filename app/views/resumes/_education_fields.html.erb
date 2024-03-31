@@ -1,0 +1,35 @@
+<div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-4 nested-form-wrapper" data-new-record="<%= edu_form.object.new_record? %>">
+  <div class="sm:col-span-3">
+    <%= edu_form.label :school, "学校名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
+    <div class="mt-2">
+      <%= edu_form.text_field :school, required: true, autocomplete: "school", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+    </div>
+  </div>
+
+  <div class="sm:col-span-3">
+    <%= edu_form.label :major, "专业名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
+    <div class="mt-2">
+      <%= edu_form.text_field :major, required: true, autocomplete: "major", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+    </div>
+  </div>
+
+  <div class="sm:col-span-3">
+    <%= edu_form.label :start_date, "入学时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
+    <div class="mt-2">
+      <%= edu_form.month_field :start_date, required: true, autocomplete: "start-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+    </div>
+  </div>
+
+  <div class="sm:col-span-3">
+    <%= edu_form.label :end_date, "毕业时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
+    <div class="mt-2">
+      <%= edu_form.month_field :end_date, autocomplete: "end-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+    </div>
+  </div>
+
+  <div class="sm:col-span-6 flex justify-end">
+    <button type="button" class="rounded bg-red-50 px-2 py-1 text-sm font-semibold text-red-600 shadow-sm hover:bg-red-100" data-action="nested-form#remove">删除</button>
+  </div>
+
+  <%= edu_form.hidden_field :_destroy %>
+</div>

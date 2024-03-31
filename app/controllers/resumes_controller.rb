@@ -49,6 +49,9 @@ class ResumesController < ApplicationController
       Rails.logger.debug { "After update: #{@resume.work_experiences.inspect}" }
       redirect_to @resume, notice: 'Resume was successfully updated.'
     else
+      # Log error messages if update fails
+      Rails.logger.error { "Update failed for Resume ID: #{@resume.id}. Errors: #{@resume.errors.full_messages.join(", ")}" }
+
       redirect_to @resume, notice: 'Resume was failed to update.'
     end
   end
@@ -422,6 +425,7 @@ JD 内容：
         :start_date,
         :end_date,
         :project_experience,
+        :experience_type,
         :project_name,
         :_destroy
       ],
