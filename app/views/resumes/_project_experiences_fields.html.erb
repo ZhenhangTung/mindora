@@ -2,14 +2,14 @@
   <div class="sm:col-span-3">
     <%= project_experience_form.label :project_name, "项目名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
     <div class="mt-2">
-      <%= project_experience_form.text_field :project_name, autocomplete: "project-name", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+      <%= project_experience_form.text_field :project_name, required: true, autocomplete: "project-name", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
     </div>
   </div>
 
   <div class="sm:col-span-3">
     <%= project_experience_form.label :start_date, "开始时间", class: "block text-sm font-medium leading-6 text-gray-900" %>
     <div class="mt-2">
-      <%= project_experience_form.month_field :start_date, autocomplete: "start-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+      <%= project_experience_form.month_field :start_date, required: true, autocomplete: "start-date", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
     </div>
   </div>
 
@@ -24,7 +24,7 @@
     <div data-controller="resume" data-resume-experience-type-value="<%= project_experience_form.object.experience_type %>">
       <%= project_experience_form.label :project_experience, "项目经验", class: "block text-sm font-medium leading-6 text-gray-900" %>
       <div class="mt-2 relative">
-        <%= project_experience_form.text_area :project_experience, data: { resume_target: "projectExperience" }, rows: 8, class: "block w-full rounded-md border py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 pb-10" %>
+        <%= project_experience_form.text_area :project_experience, required: true, data: { resume_target: "projectExperience" }, rows: 8, class: "block w-full rounded-md border py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 pb-10" %>
         <button type="button"
                 data-action="click->resume#optimizeProjectExperience"
                 data-resume-target="optimizeButton"
@@ -35,6 +35,8 @@
       </div>
     </div>
   </div>
+
+  <%= project_experience_form.hidden_field :experience_type, value: "project" %>
 
   <div class="sm:col-span-6 flex justify-end">
     <button type="button" class="rounded bg-red-50 px-2 py-1 text-sm font-semibold text-red-600 shadow-sm hover:bg-red-100" data-action="nested-form#remove">删除</button>
