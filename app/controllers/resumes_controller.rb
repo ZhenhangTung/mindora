@@ -63,7 +63,9 @@ class ResumesController < ApplicationController
   end
 
   def extract_resume_from_file(file_content)
-    client = OpenAI::Client.new
+    client = OpenAI::Client.new(
+      request_timeout: 300,
+    )
     response = client.chat(
       parameters: {
         temperature: 0.1,
