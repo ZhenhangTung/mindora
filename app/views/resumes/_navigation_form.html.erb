@@ -193,12 +193,12 @@
               <% end %>
             </template>
 
+            <!-- Inserted elements will be injected before that target. -->
+            <div data-nested-form-target="target"></div>
+
             <%= form.fields_for :work_experiences, @resume.non_project_work_experiences do |work_experience_form| %>
               <%= render "work_experiences_fields", work_experience_form: work_experience_form %>
             <% end %>
-
-            <!-- Inserted elements will be injected before that target. -->
-            <div data-nested-form-target="target"></div>
           </div>
 
 
@@ -239,12 +239,12 @@
               <% end %>
             </template>
 
+            <!-- Inserted elements will be injected before that target. -->
+            <div data-nested-form-target="target"></div>
+
             <%= form.fields_for :work_experiences, @resume.project_work_experiences do |project_experience_form| %>
               <%= render "project_experiences_fields", project_experience_form: project_experience_form %>
             <% end %>
-
-            <!-- Inserted elements will be injected before that target. -->
-            <div data-nested-form-target="target"></div>
           </div>
 
           <!-- educations -->
@@ -260,12 +260,12 @@
               <% end %>
             </template>
 
+            <!-- Inserted elements will be injected before that target. -->
+            <div data-nested-form-target="target"></div>
+
             <%= form.fields_for :educations do |edu_form| %>
               <%= render "education_fields", edu_form: edu_form %>
             <% end %>
-
-            <!-- Inserted elements will be injected before that target. -->
-            <div data-nested-form-target="target"></div>
           </div>
         </div>
         <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
