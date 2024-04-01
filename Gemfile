@@ -91,3 +91,4 @@ gem "active_storage_validations"
 gem "pdf-reader"
 gem "docx"
 gem 'bcrypt', '~> 3.1.7'
+gem "redis-rails"
