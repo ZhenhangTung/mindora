@@ -1,6 +1,7 @@
 module SessionsHelper
   # Logs in the given user
   def log_in(user)
+    Rails.logger.debug "User #{user.id} logged in at #{Time.current}"
     session[:user_id] = user.id
   end
 
