@@ -25,7 +25,7 @@ class ResumesController < ApplicationController
           @resume.save!
         end
 
-        flash[:success] = '简历上传成功！'
+        flash[:success] = '简历上传成功！若简历的智能解析内容不准确，你可以手动修改简历。'
         redirect_to @resume
       rescue => e
         # Log error with detailed information

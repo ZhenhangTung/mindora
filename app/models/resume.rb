@@ -26,8 +26,9 @@ class Resume < ApplicationRecord
         self.email = data[:email] if data.key?(:email)
 
         # Check if required data is present
-        raise "Work experiences data is missing" unless data.key?(:work_experiences) && data[:work_experiences].present?
-        raise "Educations data is missing" unless data.key?(:educations) && data[:educations].present?
+        # TODO: remove it
+        # raise "Work experiences data is missing" unless data.key?(:work_experiences) && data[:work_experiences].present?
+        # raise "Educations data is missing" unless data.key?(:educations) && data[:educations].present?
 
         # Assuming `data` is a hash with :work_experiences and :educations keys
         work_experiences_attributes = data[:work_experiences].each do |we_data|
