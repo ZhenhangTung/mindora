@@ -1,6 +1,6 @@
 class ResumesController < ApplicationController
   before_action :set_resume, only: [:show, :update, :customize]
-  before_action :authenticate_user, only: :index
+  before_action :authenticate_user, only: [:index, :show, :customize]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def index
@@ -401,7 +401,12 @@ JD 内容：
   private
 
   def set_resume
-    @resume = current_user.resumes.find(params[:id])
+    if current_user
+      @resume = current_user.resumes.find(params[:id])
+    else
+      flash[:warning] = "请先登录"
+      redirect_to login_path
+    end
   end
 
   def record_not_found
