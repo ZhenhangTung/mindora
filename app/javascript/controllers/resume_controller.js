@@ -108,10 +108,11 @@ export default class extends Controller {
     }
 
     downloadPDF() {
-        let element = this.pdfSourceTarget // Adjust if necessary to match your HTML structure
+        this.updateJobMatchPreview(); // up to date job match preview
+        let element = this.pdfSourceTarget; // Adjust if necessary to match your HTML structure
         let options = {
             margin:       1,
-            filename:     `应聘(XXX)产品经理-(匹配1)-(匹配2)-${this.nameValue}.pdf`,
+            filename:     `应聘(XXX)产品经理-(匹配1)-(匹配2)-${this.nameValue}-${new Date().getTime()}（请删除此唯一标识符片段）.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2 },
         };
@@ -121,12 +122,6 @@ export default class extends Controller {
     }
 
     updateJobMatchPreview() {
-        // const text = this.jobMatchTarget.value;
-        // this.jobMatchPreviewTarget.innerHTML = text.replace(/\n/g, '<br>');
-
-        // const htmlContent = this.jobMatchTarget.value;
-        // this.jobMatchPreviewTarget.innerHTML = htmlContent;
-
         const htmlContent = this.jobMatchTarget.value;
 
         // 创建一个临时的 div 元素
