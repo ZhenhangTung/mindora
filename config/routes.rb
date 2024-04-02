@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   # Defines the routes for the users controller
   resources :users, only: [:create]
   get 'signup', to: 'users#new', as: 'signup'
+  get 'reset_password', to: 'users#reset_password_form'
+  post 'reset_password', to: 'users#reset_password'
 
   # resources :sessions, only: [:new, :create, :destroy]
   # Defines the routes for the sessions controller
