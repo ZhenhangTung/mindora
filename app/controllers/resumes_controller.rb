@@ -20,6 +20,7 @@ class ResumesController < ApplicationController
         ActiveRecord::Base.transaction do
           uploaded_file = resume_params[:original_file]
           file_content = read_uploaded_file_content(uploaded_file)
+          Rails.logger.debug "Resume file content for user #{current_user.id}: #{file_content}"
           json_data = extract_resume_from_file(file_content)
           @resume.update_with_extracted_data(json_data)
           @resume.save!
@@ -30,6 +31,7 @@ class ResumesController < ApplicationController
       rescue => e
         # Log error with detailed information
         Rails.logger.error "Resume upload failed for user #{current_user.id}: #{e.message}"
+        Rails.logger.error e.backtrace.join("\n")
 
         flash[:error] = "简历上传失败！错误信息: #{e.message}"
         redirect_to new_resume_path
@@ -67,7 +69,7 @@ class ResumesController < ApplicationController
 
   def extract_resume_from_file(file_content)
     client = OpenAI::Client.new(
-      request_timeout: 300,
+      request_timeout: 600,
     )
     response = client.chat(
       parameters: {
