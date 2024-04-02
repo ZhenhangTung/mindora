@@ -9,10 +9,12 @@ class SessionsController < ApplicationController
       # Log the user in and redirect to the user's show page
       log_in user  # `log_in` is a helper method you'll need to create in sessions_helper.rb
       flash[:success] = "你已经成功登录！"
+      Rails.logger.info "User #{user.id} logged in at #{Time.current}"
       redirect_to root_path(user)
     else
       # Create an error message
       flash[:warning] = '手机号或者密码错误' # Not quite right!
+      Rails.logger.warn "Failed login attempt for phone number: #{params[:phone_number]}"
       redirect_to new_session_path
       # FIXME: Using turbo_stream to render flash message
       # flash.now[:warning] = "Invalid phone number or password"
@@ -27,6 +29,7 @@ class SessionsController < ApplicationController
 
   # DELETE /logout
   def destroy
+    Rails.logger.info "User #{current_user.id} logged out at #{Time.current}" if logged_in?
     log_out if logged_in?  # `log_out` and `logged_in?` are helper methods to be defined in sessions_helper.rb
     flash[:success] = "你已经成功退出！"
     redirect_to root_url
