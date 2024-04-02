@@ -25,7 +25,7 @@ class ResumesController < ApplicationController
           @resume.save!
         end
 
-        flash[:success] = '简历上传成功！'
+        flash[:success] = '简历上传成功！若简历的智能解析内容不准确，你可以手动修改简历。'
         redirect_to @resume
       rescue => e
         # Log error with detailed information
@@ -49,6 +49,9 @@ class ResumesController < ApplicationController
       Rails.logger.debug { "After update: #{@resume.work_experiences.inspect}" }
       redirect_to @resume, notice: 'Resume was successfully updated.'
     else
+      # Log error messages if update fails
+      Rails.logger.error { "Update failed for Resume ID: #{@resume.id}. Errors: #{@resume.errors.full_messages.join(", ")}" }
+
       redirect_to @resume, notice: 'Resume was failed to update.'
     end
   end
@@ -429,6 +432,7 @@ JD 内容：
         :start_date,
         :end_date,
         :project_experience,
+        :experience_type,
         :project_name,
         :_destroy
       ],
