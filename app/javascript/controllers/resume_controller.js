@@ -110,15 +110,9 @@ export default class extends Controller {
     downloadPDF() {
         this.updateJobMatchPreview(); // up to date job match preview
         let element = this.pdfSourceTarget; // Adjust if necessary to match your HTML structure
-        console.log(element)
 
-        let tempDiv = document.createElement('div');
-        tempDiv.innerHTML = `
-  <div class="mt-2" id="job-match-preview" data-resume-target="jobMatchPreview" element-id="41">
-    <p>• 有产品设计经验和优秀的自驱力：通过自学Axure在5天内完成大学生租房产品设计方案，包含房源信息、用户系统、租房经验等9个页面的设计。</p>
-    <p>• 有需求分析和用户调研经验：通过用户反馈和业务数据的分析，提升产品运营效率，<span style="background-color: yellow;">为</span><span style="background-color: yellow;">研</span><span style="background-color: yellow;">发</span><span style="background-color: yellow;">团</span><span style="background-color: yellow;">队</span><span style="background-color: yellow;">提</span><span style="background-color: yellow;">供</span><span style="background-color: yellow;">1</span><span style="background-color: yellow;">7</span><span style="background-color: yellow;">项</span><span style="background-color: yellow;">优</span><span style="background-color: yellow;">化</span><span style="background-color: yellow;">建</span><span style="background-color: yellow;">议</span><span style="background-color: yellow;">。</span></div></p>
-    <p>• 有一定的数据分析能力：通过参与AI内容编辑工作，贡献于模型准确率提升至77%。</p>
-  </div>`;
+        this.highlightEachCharacter(element)
+
         let options = {
             margin:       1,
             filename:     `应聘(XXX)产品经理-(匹配1)-(匹配2)-${this.nameValue}.pdf`,
@@ -127,7 +121,38 @@ export default class extends Controller {
         };
 
         // Generate and download the PDF
-        html2pdf().set(options).from(tempDiv).save();
+        html2pdf().set(options).from(element).save();
+    }
+
+    // 将一整个高亮的 span 切割成每个字符单独高亮
+     highlightEachCharacter(container) {
+        // 找到所有最外层的含有特定样式的 span 元素
+        const outerSpans = container.querySelectorAll('span[style*="background-color: yellow;"]');
+
+        outerSpans.forEach(outerSpan => {
+            // 获取 span 的文本内容
+            const text = outerSpan.innerText;
+            let highlightedText = '';
+
+            // 遍历文本内容的每个字符，将其包装在单独的 span 中，并应用高亮样式
+            Array.from(text).forEach(char => {
+                highlightedText += `<span style="background-color: yellow;">${char}</span>`;
+            });
+
+            // 创建一个临时容器 div
+            const tempDiv = document.createElement('div');
+            // 将生成的字符串设置为这个临时 div 的内容
+            tempDiv.innerHTML = highlightedText;
+
+            // 使用文档片段来移除最外层的 span 并添加处理过的字符
+            const docFrag = document.createDocumentFragment();
+            while (tempDiv.firstChild) {
+                docFrag.appendChild(tempDiv.firstChild);
+            }
+
+            // 将新内容插入到原来 span 的父元素中，并移除原来的 span
+            outerSpan.parentNode.replaceChild(docFrag, outerSpan);
+        });
     }
 
     updateJobMatchPreview() {
