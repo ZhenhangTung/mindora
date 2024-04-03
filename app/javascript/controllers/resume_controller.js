@@ -108,7 +108,11 @@ export default class extends Controller {
     }
 
     downloadPDF() {
-        let element = this.pdfSourceTarget // Adjust if necessary to match your HTML structure
+        this.updateJobMatchPreview(); // up to date job match preview
+        let element = this.pdfSourceTarget; // Adjust if necessary to match your HTML structure
+
+        this.highlightEachCharacter(element)
+
         let options = {
             margin:       1,
             filename:     `应聘(XXX)产品经理-(匹配1)-(匹配2)-${this.nameValue}.pdf`,
@@ -120,13 +124,38 @@ export default class extends Controller {
         html2pdf().set(options).from(element).save();
     }
 
+    // 将一整个高亮的 span 切割成每个字符单独高亮
+     highlightEachCharacter(container) {
+        // 找到所有最外层的含有特定样式的 span 元素
+        const outerSpans = container.querySelectorAll('span[style*="background-color: yellow;"]');
+
+        outerSpans.forEach(outerSpan => {
+            // 获取 span 的文本内容
+            const text = outerSpan.innerText;
+            let highlightedText = '';
+
+            // 遍历文本内容的每个字符，将其包装在单独的 span 中，并应用高亮样式
+            Array.from(text).forEach(char => {
+                highlightedText += `<span style="background-color: yellow;">${char}</span>`;
+            });
+
+            // 创建一个临时容器 div
+            const tempDiv = document.createElement('div');
+            // 将生成的字符串设置为这个临时 div 的内容
+            tempDiv.innerHTML = highlightedText;
+
+            // 使用文档片段来移除最外层的 span 并添加处理过的字符
+            const docFrag = document.createDocumentFragment();
+            while (tempDiv.firstChild) {
+                docFrag.appendChild(tempDiv.firstChild);
+            }
+
+            // 将新内容插入到原来 span 的父元素中，并移除原来的 span
+            outerSpan.parentNode.replaceChild(docFrag, outerSpan);
+        });
+    }
+
     updateJobMatchPreview() {
-        // const text = this.jobMatchTarget.value;
-        // this.jobMatchPreviewTarget.innerHTML = text.replace(/\n/g, '<br>');
-
-        // const htmlContent = this.jobMatchTarget.value;
-        // this.jobMatchPreviewTarget.innerHTML = htmlContent;
-
         const htmlContent = this.jobMatchTarget.value;
 
         // 创建一个临时的 div 元素
