@@ -110,15 +110,24 @@ export default class extends Controller {
     downloadPDF() {
         this.updateJobMatchPreview(); // up to date job match preview
         let element = this.pdfSourceTarget; // Adjust if necessary to match your HTML structure
+        console.log(element)
+
+        let tempDiv = document.createElement('div');
+        tempDiv.innerHTML = `
+  <div class="mt-2" id="job-match-preview" data-resume-target="jobMatchPreview" element-id="41">
+    <p>• 有产品设计经验和优秀的自驱力：通过自学Axure在5天内完成大学生租房产品设计方案，包含房源信息、用户系统、租房经验等9个页面的设计。</p>
+    <p>• 有需求分析和用户调研经验：通过用户反馈和业务数据的分析，提升产品运营效率，<span style="background-color: yellow;">为</span><span style="background-color: yellow;">研</span><span style="background-color: yellow;">发</span><span style="background-color: yellow;">团</span><span style="background-color: yellow;">队</span><span style="background-color: yellow;">提</span><span style="background-color: yellow;">供</span><span style="background-color: yellow;">1</span><span style="background-color: yellow;">7</span><span style="background-color: yellow;">项</span><span style="background-color: yellow;">优</span><span style="background-color: yellow;">化</span><span style="background-color: yellow;">建</span><span style="background-color: yellow;">议</span><span style="background-color: yellow;">。</span></div></p>
+    <p>• 有一定的数据分析能力：通过参与AI内容编辑工作，贡献于模型准确率提升至77%。</p>
+  </div>`;
         let options = {
             margin:       1,
-            filename:     `应聘(XXX)产品经理-(匹配1)-(匹配2)-${this.nameValue}-${new Date().getTime()}（请删除此唯一标识符片段）.pdf`,
+            filename:     `应聘(XXX)产品经理-(匹配1)-(匹配2)-${this.nameValue}.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2 },
         };
 
         // Generate and download the PDF
-        html2pdf().set(options).from(element).save();
+        html2pdf().set(options).from(tempDiv).save();
     }
 
     updateJobMatchPreview() {
