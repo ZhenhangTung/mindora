@@ -10,5 +10,8 @@ eagerLoadControllersFrom("controllers", application)
 // import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
 // lazyLoadControllersFrom("controllers", application)
 
-import RailsNestedForm from '@stimulus-components/rails-nested-form'
+import RailsNestedForm from "@stimulus-components/rails-nested-form"
+import Popover from "@stimulus-components/popover"
+
 application.register('nested-form', RailsNestedForm)
+application.register('popover', Popover)
