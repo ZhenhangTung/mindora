@@ -181,7 +181,7 @@
         </h2>
         <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-1 overflow-y-auto max-h-screen">
           <% if @resume.original_file.attached? && @resume.original_file.content_type == "application/pdf" %>
-            <iframe src="<%= rails_blob_url(@resume.original_file) %>" class="w-full h-[600px] border-0" frameborder="0"></iframe>
+            <iframe src="<%= cdn_url_for(@resume.original_file) %>" class="w-full h-[600px] border-0" frameborder="0"></iframe>
           <% elsif @resume.original_file.attached? %>
             <div class="flex items-center justify-center h-[600px]">
               <p class="text-gray-500">WORD 版本的原始简历暂不支持预览</p>
