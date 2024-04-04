@@ -11,3 +11,4 @@ pin_all_from "app/javascript/channels", under: "channels"
 pin "quill" # @1.3.7
 pin "buffer" # @2.0.1
 pin "@stimulus-components/rails-nested-form", to: "@stimulus-components--rails-nested-form.js" # @5.0.0
+pin "@stimulus-components/popover", to: "@stimulus-components--popover.js" # @7.0.0
