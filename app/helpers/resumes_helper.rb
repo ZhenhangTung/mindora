@@ -35,7 +35,7 @@ module ResumesHelper
   end
 
   def current_step_before(step, current_step)
-    steps_order = ['new_resume', 'show_resume', 'customize_resume']
+    steps_order = ['new_resume', 'show_resume', 'customize_resume', 'prepare_interviews']
     steps_order.index(step) < steps_order.index(current_step)
   end
 end

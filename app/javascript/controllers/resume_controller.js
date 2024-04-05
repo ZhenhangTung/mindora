@@ -1,4 +1,4 @@
-import {Controller} from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus"
 // import html2pdf from "html2pdf";
 import Quill from "quill";
 
