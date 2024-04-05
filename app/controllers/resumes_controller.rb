@@ -1,5 +1,5 @@
 class ResumesController < ApplicationController
-  before_action :set_resume, only: [:show, :update, :customize]
+  before_action :set_resume, only: [:show, :update, :customize, :prepare_interviews]
   before_action :authenticate_user, only: [:index, :show, :customize]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 

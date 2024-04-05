@@ -75,7 +75,7 @@
               <% end %>
               <span class="ml-4 mt-0.5 flex min-w-0 flex-col">
                 <span class="text-sm font-medium <%= step_indicator_text_class('customize_resume', current_step) %>">定制简历</span>
-                <span class="text-sm font-medium text-gray-500">根据职位定制简历，让你更有吸引力💗</span>
+                <span class="text-sm font-medium text-gray-500">定制简历让你更有吸引力💗</span>
               </span>
             </span>
           </a>
@@ -360,7 +360,7 @@
         </div>
       </div>
     </div>
-  <% else %>
+  <% elsif current_step == 'customize_resume' %>
     <div data-controller="resume" data-resume-id="<%= @resume.id %>" data-resume-name-value="<%= @resume.name %>">
       <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
         <div class="px-4 sm:px-0">
@@ -419,6 +419,116 @@
           </div>
         </div>
       </div>
+    </div>
+  <% elsif current_step == 'prepare_interviews' %>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-3">
+      <div class="px-4 sm:px-0">
+        <h2 class="text-base font-semibold leading-7 text-gray-900">职位信息</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-600">请填写目标职位的公司背景信息和职位的 JD 内容</p>
+      </div>
+
+      <form class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+        <div class="px-4 py-6 sm:p-8">
+          <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div class="col-span-full">
+              <div class="border-b border-gray-200 pb-5 my-4">
+                <h3 class="text-base font-semibold leading-6 text-gray-900">职位信息</h3>
+              </div>
+              <label for="company-description" class="block text-sm font-medium leading-6 text-gray-900">公司介绍</label>
+              <div class="mt-2">
+                <textarea rows="8" name="job-description" id="company-description" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+              </div>
+            </div>
+            <div class="col-span-full">
+              <label for="job-description" class="block text-sm font-medium leading-6 text-gray-900">JD 内容</label>
+              <div class="mt-2">
+                <textarea rows="8" name="job-description" id="job-description" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
+      <div class="px-4 sm:px-0">
+        <h2 class="text-base font-semibold leading-7 text-gray-900">自我介绍</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-600">根据公司和职位信息定制化自我介绍</p>
+      </div>
+
+      <form class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+        <div class="px-4 py-6 sm:p-8">
+          <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div class="col-span-full">
+              <label for="company-description" class="block text-sm font-medium leading-6 text-gray-900">自我介绍</label>
+              <div class="mt-2">
+                <textarea rows="8" name="job-description" id="company-description" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
+          <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">生成</button>
+        </div>
+      </form>
+    </div>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
+      <div class="px-4 sm:px-0">
+        <h2 class="text-base font-semibold leading-7 text-gray-900">模拟面试问题</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-600">根据职位信息和你的简历生成模拟面试问题清单</p>
+      </div>
+
+      <form class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+        <div class="px-4 py-6 sm:p-8">
+          <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div class="col-span-full">
+              <label for="company-description" class="block text-sm font-medium leading-6 text-gray-900">产品专业领域</label>
+              <div class="mt-2">
+                <textarea rows="8" name="job-description" id="company-description" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+              </div>
+            </div>
+
+            <div class="col-span-full">
+              <label for="company-description" class="block text-sm font-medium leading-6 text-gray-900">价值观领域</label>
+              <div class="mt-2">
+                <textarea rows="8" name="job-description" id="company-description" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
+          <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">生成</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
+      <div class="px-4 sm:px-0">
+        <h2 class="text-base font-semibold leading-7 text-gray-900">面试问题分析</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-600">面试结束后，分析面试官的问题总结面试经验</p>
+      </div>
+
+      <form class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+        <div class="px-4 py-6 sm:p-8">
+          <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div class="col-span-full">
+              <label for="company-description" class="block text-sm font-medium leading-6 text-gray-900">面试官问题</label>
+              <div class="mt-2">
+                <textarea rows="8" name="job-description" id="company-description" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+              </div>
+            </div>
+
+            <div class="col-span-full">
+              <label for="company-description" class="block text-sm font-medium leading-6 text-gray-900">问题分析</label>
+              <div class="mt-2">
+                <textarea rows="8" name="job-description" id="company-description" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
+          <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">生成</button>
+        </div>
+      </form>
     </div>
   <% end %>
 </div>
