@@ -31,9 +31,23 @@ export default class extends Controller {
                 interview_questions: interviewQuestions
             })
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 this.interviewQuestionsAnalysisResponseTarget.innerText = data.analysis;
+            })
+            .catch(error => {
+                // Handle the error
+                console.error('There has been a problem with your fetch operation:', error);
+                this.interviewQuestionsAnalysisResponseTarget.innerText = "抱歉，发生了请求错误";
+            })
+            .finally(() => {
+                // This block will run regardless of the fetch outcome.
+                // Re-enable the button and stop animation here
                 button.classList.remove('cursor-not-allowed', 'animate-bounce');
                 button.removeAttribute('disabled');
             });
@@ -61,9 +75,23 @@ export default class extends Controller {
                 job_description: jobDescription,
             })
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 this.selfIntroductionResponseTarget.innerText = data.self_introduction;
+            })
+            .catch(error => {
+                // Handle the error
+                console.error('There has been a problem with your fetch operation:', error);
+                this.selfIntroductionResponseTarget.innerText = "抱歉，发生了请求错误";
+            })
+            .finally(() => {
+                // This block will run regardless of the fetch outcome.
+                // Re-enable the button and stop animation here
                 button.classList.remove('cursor-not-allowed', 'animate-bounce');
                 button.removeAttribute('disabled');
             });
@@ -92,9 +120,23 @@ export default class extends Controller {
                 job_description: jobDescription,
             })
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 this.potentialInterviewQuestionsResponseTarget.innerText = data.interview_questions;
+            })
+            .catch(error => {
+                // Handle the error
+                console.error('There has been a problem with your fetch operation:', error);
+                this.potentialInterviewQuestionsResponseTarget.innerText = "抱歉，发生了请求错误";
+            })
+            .finally(() => {
+                // This block will run regardless of the fetch outcome.
+                // Re-enable the button and stop animation here
                 button.classList.remove('cursor-not-allowed', 'animate-bounce');
                 button.removeAttribute('disabled');
             });
