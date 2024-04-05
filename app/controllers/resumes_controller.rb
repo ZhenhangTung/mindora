@@ -67,6 +67,11 @@ class ResumesController < ApplicationController
     render 'show'
   end
 
+  def prepare_interviews
+    @current_step = 'prepare_interviews'
+    render 'show'
+  end
+
   def extract_resume_from_file(file_content)
     client = OpenAI::Client.new(
       request_timeout: 600,
@@ -400,6 +405,22 @@ JD 内容：
       }
     )
     response.dig("choices", 0, "message", "content")
+  end
+
+  def potential_interview_questions
+
+  end
+
+  def self_introduction
+
+  end
+
+  def project_experience_stories
+
+  end
+
+  def review_interview_questions
+
   end
 
 

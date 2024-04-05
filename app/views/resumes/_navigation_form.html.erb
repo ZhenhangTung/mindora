@@ -18,7 +18,7 @@
               <% end %>
               <span class="ml-4 mt-0.5 flex min-w-0 flex-col">
                 <span class="text-sm font-medium <%= step_indicator_text_class('new_resume', current_step) %>">上传简历</span>
-                <span class="text-sm font-medium text-gray-500">汪呜！等你的简历！🐾</span>
+                <span class="text-sm font-medium text-gray-500">汪呜！等你的简历！🌟</span>
               </span>
             </span>
           </a>
@@ -76,6 +76,34 @@
               <span class="ml-4 mt-0.5 flex min-w-0 flex-col">
                 <span class="text-sm font-medium <%= step_indicator_text_class('customize_resume', current_step) %>">定制简历</span>
                 <span class="text-sm font-medium text-gray-500">根据职位定制简历，让你更有吸引力💗</span>
+              </span>
+            </span>
+          </a>
+          <!-- Separator -->
+          <div class="absolute inset-0 left-0 top-0 hidden w-3 lg:block" aria-hidden="true">
+            <svg class="h-full w-full text-gray-300" viewBox="0 0 12 82" fill="none" preserveAspectRatio="none">
+              <path d="M0.5 0V31L10.5 41L0.5 51V82" stroke="currentcolor" vector-effect="non-scaling-stroke" />
+            </svg>
+          </div>
+        </div>
+      </li>
+      <li class="relative overflow-hidden lg:flex-1">
+        <div class="overflow-hidden border border-gray-200 lg:border-0">
+          <a href="#" class="group">
+            <span class="<%= step_indicator_class('prepare_interviews', current_step) %>" aria-hidden="true"></span>
+            <span class="flex items-start px-6 py-5 text-sm font-medium lg:pl-9">
+              <% if step_completed?('prepare_interviews', current_step) %>
+                <%= render partial: "checkmark" %>
+              <% else %>
+                <span class="flex-shrink-0">
+                  <span class="<%= step_indicator_border_class('prepare_interviews', current_step) %>">
+                    <span class="<%= step_indicator_text_class('prepare_interviews', current_step) %>">04</span>
+                  </span>
+                </span>
+              <% end %>
+              <span class="ml-4 mt-0.5 flex min-w-0 flex-col">
+                <span class="text-sm font-medium <%= step_indicator_text_class('prepare_interviews', current_step) %>">面试通关</span>
+                <span class="text-sm font-medium text-gray-500">从自我介绍到深度问题，我会陪你一步步准备🐾</span>
               </span>
             </span>
           </a>

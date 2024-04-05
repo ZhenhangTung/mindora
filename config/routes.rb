@@ -21,6 +21,11 @@ Rails.application.routes.draw do
   get 'resumes/:id/customize', to: 'resumes#customize'
   post 'resumes/work_experiences/optimize', to: 'resumes#optimize'
   post 'resumes/:id/job_match', to: 'resumes#job_match'
+  get 'resumes/:id/prepare_interviews', to: 'resumes#prepare_interviews'
+  post 'resumes/:id/potential_interview_questions', to: 'resumes#potential_interview_questions'
+  post 'resumes/:id/self_introduction', to: 'resumes#self_introduction'
+  post 'resumes/:id/project_experience_stories', to: 'resumes#project_experience_stories'
+  post 'resumes/:id/review_interview_questions', to: 'resumes#review_interview_questions'
 
   resources :chat, only: [:index, :create]
 
