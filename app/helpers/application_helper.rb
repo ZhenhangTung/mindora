@@ -1,5 +1,13 @@
 module ApplicationHelper
+  def active_storage_service_name
+    ActiveStorage::Blob.service.name
+  end
+
   def cdn_url_for(blob)
-    "#{ENV["FILES_CDN_URL"]}/#{blob.key}" if blob.attached?
+    if active_storage_service_name == :amazon && blob.attached?
+      "#{ENV["FILES_CDN_URL"]}/#{blob.key}" if blob.attached?
+    else
+      rails_blob_url(blob)
+    end
   end
 end
