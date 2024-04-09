@@ -127,7 +127,7 @@
     </a>
   </div>
 
-  <main class="py-10 lg:pl-72" data-controller="thinking-model">
+  <main class="py-10 lg:pl-72" data-controller="thinking-models">
     <div class="overflow-hidden rounded-lg bg-white shadow">
       <div class="px-4 py-5 sm:p-6">
         <div class="px-4 sm:px-6 lg:px-8">
@@ -230,55 +230,43 @@
               </div>
             </div>
             <!-- Prompt message input -->
-            <!-- Suggestions pannel above input -->
-            <div
-              class="mt-4 flex w-full gap-x-2 overflow-x-auto whitespace-nowrap text-xs text-slate-600 dark:text-slate-300 sm:text-sm"
-            >
-              <button
-                class="rounded-lg bg-slate-200 p-2 hover:bg-blue-600 hover:text-slate-200 dark:bg-slate-800 dark:hover:bg-blue-600 dark:hover:text-slate-50"
-              >
-                卡诺模型分析
-              </button>
-              <button
-                class="rounded-lg bg-slate-200 p-2 hover:bg-blue-600 hover:text-slate-200 dark:bg-slate-800 dark:hover:bg-blue-600 dark:hover:text-slate-50"
-              >
-                MVP 功能判断
-              </button>
-              <button
-                class="rounded-lg bg-slate-200 p-2 hover:bg-blue-600 hover:text-slate-200 dark:bg-slate-800 dark:hover:bg-blue-600 dark:hover:text-slate-50"
-              >
-                寻找 PMF 思路
-              </button>
-            </div>
-
-            <div class="mt-4 flex flex-wrap gap-2">
-              <!-- 卡诺模型分析 -->
-              <label class="bg-white p-2 text-gray-500 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-blue-600 hover:text-white dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-blue-600 dark:hover:text-white peer-checked:bg-blue-600 peer-checked:text-white">
-                <input type="checkbox" value="kano" class="hidden peer" data-chat-target="model">
-                <span class="text-sm font-medium">卡诺模型分析</span>
-              </label>
-
-              <!-- MVP 功能判断 -->
-              <label class="bg-white p-2 text-gray-500 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-blue-600 hover:text-white dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-blue-600 dark:hover:text-white peer-checked:bg-blue-600 peer-checked:text-white">
-                <input type="checkbox" value="mvp" class="hidden peer" data-chat-target="model">
-                <span class="text-sm font-medium">MVP 功能判断</span>
-              </label>
-
-              <!-- 寻找 PMF 思路 -->
-              <label class="bg-white p-2 text-gray-500 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-blue-600 hover:text-white dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-blue-600 dark:hover:text-white peer-checked:bg-blue-600 peer-checked:text-white">
-                <input type="checkbox" value="pmf" class="hidden peer" data-chat-target="model">
-                <span class="text-sm font-medium">寻找 PMF 思路</span>
-              </label>
-            </div>
-            <!-- Input -->
-            <form class="mt-2" data-action="thinking-model#submit">
-              <label for="chat-input" class="sr-only">Enter prompt</label>
+            <form class="mt-2" data-action="thinking-models#submit">
+              <div class="mb-2 flex gap-x-2 overflow-x-auto whitespace-nowrap text-xs text-slate-600 dark:text-slate-300 sm:text-sm">
+                <div class="flex items-center space-x-4"> <!-- 使用 flex 布局和 space-x-4 为每个选项提供间距 -->
+                  <div>
+                    <input type="checkbox" id="switch-to-user-view" value="switch-to-user-view" class="hidden peer" data-thinking-models-target="model">
+                    <label for="switch-to-user-view" class="inline-flex items-center justify-center px-2 py-1 text-sm font-medium text-gray-500 bg-white border-4 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 peer-checked:border-4">
+                      切换至用户视角
+                    </label>
+                  </div>
+                  <div>
+                    <input type="checkbox" id="kano-model" value="kano" class="hidden peer" data-thinking-models-target="model">
+                    <label for="kano-model" class="inline-flex items-center justify-center px-2 py-1 text-sm font-medium text-gray-500 bg-white border-4 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 peer-checked:border-4">
+                      卡诺模型分析
+                    </label>
+                  </div>
+                  <div>
+                    <input type="checkbox" id="mvp-judgment" value="mvp" class="hidden peer" data-thinking-models-target="model">
+                    <label for="mvp-judgment" class="inline-flex items-center justify-center px-2 py-1 text-sm font-medium text-gray-500 bg-white border-4 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 peer-checked:border-4">
+                      MVP 功能判断
+                    </label>
+                  </div>
+                  <div>
+                    <input type="checkbox" id="pmf-path" value="pmf" class="hidden peer" data-thinking-models-target="model">
+                    <label for="pmf-path" class="inline-flex items-center justify-center px-2 py-1 text-sm font-medium text-gray-500 bg-white border-4 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 peer-checked:border-4">
+                      寻找 PMF 思路
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <label for="chat-input" class="sr-only">请描述你遇到的产品问题</label>
               <div class="flex gap-x-2">
                 <input
+                  data-thinking-models-target="input"
                   id="chat-input"
                   type="text"
                   class="w-full rounded-lg border border-slate-300 bg-slate-200 p-3 text-sm text-slate-800 shadow-md focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600 dark:border-slate-200/10 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-400 dark:focus:border-blue-600 sm:text-base"
-                  placeholder="Enter prompt"
+                  placeholder="请描述你遇到的产品问题"
                   rows="1"
                   required
                   />
@@ -302,7 +290,7 @@
                       d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"
                     ></path>
                   </svg>
-                  <span class="sr-only">Enter prompt</span>
+                  <span class="sr-only">请描述你遇到的产品问题</span>
                 </button>
               </div>
             </form>

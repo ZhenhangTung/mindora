@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   post 'resumes/:id/analyze_interview_questions', to: 'resumes#analyze_interview_questions'
 
   resources :chat, only: [:index, :create]
+  post 'chat/thinking_models', to: 'chat#thinking_models'
 
   namespace :api do
     post '/chatgpt/inspirations', to: 'chat_gpt#inspirations'
