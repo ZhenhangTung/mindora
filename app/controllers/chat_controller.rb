@@ -66,16 +66,18 @@ class ChatController < ApplicationController
         ],
       }
     )
-    response.dig("choices", 0, "message", "content")
-
+    content = response.dig("choices", 0, "message", "content")
+    render json: { message: "ok", content: content, "role": "assistant" }
+  rescue => e
+    render json: { error: e.message }, status: :internal_server_error
   end
 
   private
 
   def build_prompt(user_input, models)
-    "问题：#{user_input}\n\n
-请用下面的产品经理的思维模型来分析：#{models.join(', ')}\n\n
-分析的结果和对应的原因：
+    "请用下面的思维模型来拆解分析问题并给出解决方案思路以及原因，如果没有提供思维模型，汪汪会分析最适合你当前需求的适用于产品经理的思维模型。
+问题：#{user_input}
+思维模型：#{models.join('、')}
 "
   end
 
