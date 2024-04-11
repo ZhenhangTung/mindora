@@ -67,7 +67,7 @@ class ChatController < ApplicationController
       }
     )
     content = response.dig("choices", 0, "message", "content")
-    render json: { message: "ok", content: content, "role": "assistant" }
+    render json: { message: content, "role": "assistant" }
   rescue => e
     render json: { error: e.message }, status: :internal_server_error
   end
