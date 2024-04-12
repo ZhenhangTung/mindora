@@ -10,11 +10,17 @@ export default class extends Controller {
     }
 
     restoreChatFromLocalStorage() {
-        let chatHistory = JSON.parse(localStorage.getItem(localStorageKey)) || [];
+        let chatHistory = this.getRecentChatHistory(-1);
 
         chatHistory.forEach(chat => {
-            this.appendMessage(chat.message, chat.type);
+            this.appendMessage(chat.role, chat.content);
         });
+    }
+
+    getRecentChatHistory(count = 10) {
+        let chatHistory = JSON.parse(localStorage.getItem(localStorageKey)) || [];
+
+        return count > 0 ? chatHistory.slice(-count) : chatHistory;
     }
 
     submit(event) {
@@ -22,18 +28,19 @@ export default class extends Controller {
         const selectedModels = this.modelTargets.filter(checkbox => checkbox.checked).map(checkbox => checkbox.value)
         const userInput = this.inputTarget.value
 
+        const recentMessages = this.getRecentChatHistory(6);
+
         const data = {
             models: selectedModels,
-            user_input: userInput
+            user_input: userInput,
+            chat_history: recentMessages
         }
 
         console.log(data)
 
         this.saveChatToLocalStorage("user", userInput)
-        this.appendMessage(data.user_input, "user")
+        this.appendMessage("user", userInput)
         this.clearInput()
-
-        // TODO: also send chat history to the server
 
         fetch("/chat/thinking_models", {
             method: "POST",
@@ -46,18 +53,18 @@ export default class extends Controller {
             .then(response => response.json())
             .then(data => {
                 console.log("Success:", data)
-                this.appendMessage(data.message, "assistant")
-                this.saveChatToLocalStorage("assistant", data.message);
+                this.appendMessage("assistant", data.content)
+                this.saveChatToLocalStorage("assistant", data.content);
             })
             .catch((error) => {
                 console.error("Error:", error)
             })
     }
 
-    appendMessage(message, type) {
+    appendMessage(role, message) {
         const div = document.createElement("div")
         div.classList.add("flex", "items-start")
-        if (type === "user") {
+        if (role === "user") {
             div.classList.add("flex-row-reverse")
             div.innerHTML = `
         <img class="ml-2 h-8 w-8 rounded-full" src="https://dummyimage.com/128x128/354ea1/ffffff&text=我" />
@@ -77,10 +84,10 @@ export default class extends Controller {
         this.messagesTarget.appendChild(div)  // 确保你的 HTML 里有 data-thinking-model-target="messages"
     }
 
-    saveChatToLocalStorage(type, message) {
+    saveChatToLocalStorage(role, content) {
         let chatHistory = JSON.parse(localStorage.getItem(localStorageKey)) || [];
 
-        chatHistory.push({ type, message });
+        chatHistory.push({ role, content });
 
         localStorage.setItem(localStorageKey, JSON.stringify(chatHistory));
     }

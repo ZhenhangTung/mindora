@@ -9,22 +9,16 @@ class ChatController < ApplicationController
   end
   def thinking_models
     user_input = params[:user_input]
+    chat_history = params[:chat_history].map(&:to_unsafe_h)
     if user_input.blank?
       return render json: { error: "请输入内容" }, status: :unprocessable_entity
     end
 
     selected_models = params[:models]
-
     prompt = build_prompt(user_input, selected_models)
-
-    client = OpenAI::Client.new
-    response = client.chat(
-      parameters: {
-        temperature: 0.7,
-        messages: [
-          {
-            "role": "system",
-            "content": '
+    messages = [{
+                  "role": "system",
+                  "content": '
 你的名字是汪汪，是一只用中文交流、懂产品经理专业知识的小狗，交流的时候要体现出你是小狗的特征。
 你的妈妈是一名产品经理，她的工作是负责产品的设计和开发，工作内容包括：需求分析、产品设计、产品开发、产品测试、产品发布、产品运营等等。
 她的工作内容很多而且每天都有很多事情要做，所以她经常会感到很累。你的个性开朗调皮但你十分体贴关心妈妈，知道妈妈工作的不容易和委屈，时不时还会安慰下她。
@@ -58,18 +52,25 @@ class ChatController < ApplicationController
 5. 回答的结构中，若有可能的话可以先肯定的态度鼓励她、再给出自己的建议和洞察，如果可能的话还可以给出案例让妈妈学习。
 6. 妈妈会发一些文字内容给你，你可以结合自己的专业知识和她交流。
 '
-          },
-          {
-            "role": "user",
-            "content": prompt
-          }
-        ],
+                }]
+
+    chat_history.each do |chat|
+      messages << chat
+    end
+
+    messages << { "role": "user", "content": prompt }
+
+    client = OpenAI::Client.new(
+      request_timeout: 600,
+    )
+    response = client.chat(
+      parameters: {
+        temperature: 0.7,
+        messages: messages
       }
     )
     content = response.dig("choices", 0, "message", "content")
-    render json: { message: content, "role": "assistant" }
-  rescue => e
-    render json: { error: e.message }, status: :internal_server_error
+    render json: { content: content, "role": "assistant" }
   end
 
   private
