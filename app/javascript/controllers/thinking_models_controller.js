@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 const localStorageKey = "PMWW_ChatHistory"
 
 export default class extends Controller {
-    static targets = ["model", "input", "messages"]
+    static targets = ["model", "input", "messages", "submitButton"]
 
     connect() {
         this.restoreChatFromLocalStorage()
@@ -25,6 +25,8 @@ export default class extends Controller {
 
     submit(event) {
         event.preventDefault()
+        this.disableButton()
+
         const selectedModels = this.modelTargets.filter(checkbox => checkbox.checked).map(checkbox => checkbox.value)
         const userInput = this.inputTarget.value
 
@@ -58,7 +60,10 @@ export default class extends Controller {
             })
             .catch((error) => {
                 console.error("Error:", error)
-            })
+                alert("发生错误:", error)
+            }).finally(() => {
+                this.enableButton()
+            });
     }
 
     appendMessage(role, message) {
@@ -82,6 +87,7 @@ export default class extends Controller {
         }
 
         this.messagesTarget.appendChild(div)  // 确保你的 HTML 里有 data-thinking-model-target="messages"
+        this.scrollToBottom();
     }
 
     saveChatToLocalStorage(role, content) {
@@ -94,5 +100,28 @@ export default class extends Controller {
 
     clearInput() {
         this.inputTarget.value = ""
+    }
+
+    scrollToBottom() {
+        const messagesContainer = this.messagesTarget;
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    disableButton() {
+        const icon = this.submitButtonTarget.querySelector('svg');
+        icon.outerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+    </svg>`;
+        this.submitButtonTarget.disabled = true;
+    }
+
+    enableButton() {
+        const icon = this.submitButtonTarget.querySelector('svg');
+        icon.outerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+      <path d="M10 14l11 -11"></path>
+      <path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"></path>
+    </svg>`;
+        this.submitButtonTarget.disabled = false;
     }
 }
