@@ -33,7 +33,13 @@ class ResumesController < ApplicationController
         Rails.logger.error "Resume upload failed for user #{current_user.id}: #{e.message}"
         Rails.logger.error e.backtrace.join("\n")
 
-        flash[:error] = "简历上传失败！错误信息: #{e.message}"
+        if e.message.match?(/unexpected token/)
+          friendly_message = "简历内容识别失败，建议上传 word 文档版本重试。"
+        else
+          friendly_message = e.message
+        end
+
+        flash[:error] = "简历上传失败！错误信息: #{friendly_message}"
         redirect_to new_resume_path
       end
     else
