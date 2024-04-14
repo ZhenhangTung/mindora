@@ -646,10 +646,6 @@ JD 内容：
     "Failed to read .pdf file: #{e.message}"
   end
 
-  def authenticate_user
-    redirect_to login_path unless current_user
-  end
-
 
   def process_experience_dates(experience)
     # Handle "至今" for end_date
