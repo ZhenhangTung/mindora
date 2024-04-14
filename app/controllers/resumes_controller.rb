@@ -33,7 +33,13 @@ class ResumesController < ApplicationController
         Rails.logger.error "Resume upload failed for user #{current_user.id}: #{e.message}"
         Rails.logger.error e.backtrace.join("\n")
 
-        flash[:error] = "简历上传失败！错误信息: #{e.message}"
+        if e.message.match?(/unexpected token/)
+          friendly_message = "简历内容识别失败，建议上传 word 文档版本重试。"
+        else
+          friendly_message = e.message
+        end
+
+        flash[:error] = "简历上传失败！错误信息: #{friendly_message}"
         redirect_to new_resume_path
       end
     else
@@ -49,12 +55,13 @@ class ResumesController < ApplicationController
     modified_params = adjust_date_params(resume_params)
     if @resume.update(modified_params)
       Rails.logger.debug { "After update: #{@resume.work_experiences.inspect}" }
-      redirect_to @resume, notice: 'Resume was successfully updated.'
+      flash[:success] = '简历更新成功！'
+      redirect_to @resume
     else
       # Log error messages if update fails
       Rails.logger.error { "Update failed for Resume ID: #{@resume.id}. Errors: #{@resume.errors.full_messages.join(", ")}" }
-
-      redirect_to @resume, notice: 'Resume was failed to update.'
+      flash[:error] = '简历更新失败，请重新尝试。'
+      redirect_to @resume
     end
   end
 
