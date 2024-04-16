@@ -1,5 +1,5 @@
 class ChatController < ApplicationController
-  before_action :authenticate_user, only: [:index]
+  before_action :authenticate_user, only: [:index, :switch_view, :five_whys]
 
   def index
 
@@ -72,6 +72,14 @@ class ChatController < ApplicationController
     )
     content = response.dig("choices", 0, "message", "content")
     render json: { content: content, "role": "assistant" }
+  end
+
+  def five_whys
+
+  end
+
+  def switch_view
+
   end
 
   private
