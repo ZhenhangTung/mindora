@@ -1,5 +1,5 @@
 class ChatController < ApplicationController
-  before_action :authenticate_user, only: [:index]
+  before_action :authenticate_user, only: [:index, :switch_view, :five_whys]
 
   def index
 
