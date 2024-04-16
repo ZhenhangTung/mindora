@@ -28,6 +28,8 @@ Rails.application.routes.draw do
   post 'resumes/:id/analyze_interview_questions', to: 'resumes#analyze_interview_questions'
 
   resources :chat, only: [:index, :create]
+  get 'chat/thinking_models/five_whys', to: 'chat#five_whys', as: 'five_whys'
+  get 'chat/thinking_models/switch_view', to: 'chat#switch_view', as: 'switch_view'
   post 'chat/thinking_models', to: 'chat#thinking_models'
 
   namespace :api do
