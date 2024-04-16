@@ -74,6 +74,14 @@ class ChatController < ApplicationController
     render json: { content: content, "role": "assistant" }
   end
 
+  def five_whys
+
+  end
+
+  def switch_view
+
+  end
+
   private
 
   def build_prompt(user_input, models)
