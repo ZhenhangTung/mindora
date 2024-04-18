@@ -31,16 +31,16 @@ class Resume < ApplicationRecord
         # raise "Educations data is missing" unless data.key?(:educations) && data[:educations].present?
 
         # Assuming `data` is a hash with :work_experiences and :educations keys
-        work_experiences_attributes = data[:work_experiences].each do |we_data|
+        work_experiences_attributes = data[:work_experiences]&.map do |we_data|
           parse_date_fields(we_data)
         end
 
-        educations_attributes = data[:educations].each do |ed_data|
+        educations_attributes = data[:educations]&.map do |ed_data|
           parse_date_fields(ed_data)
         end
 
-        self.work_experiences_attributes = work_experiences_attributes
-        self.educations_attributes = educations_attributes
+        self.work_experiences_attributes = work_experiences_attributes if work_experiences_attributes
+        self.educations_attributes = educations_attributes if educations_attributes
 
         # Save changes or raise an exception if validations fail
         self.save!
