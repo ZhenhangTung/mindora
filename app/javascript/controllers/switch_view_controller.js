@@ -19,7 +19,7 @@ export default class extends Controller {
 
     submit(event) {
         event.preventDefault()
-        const userInput = `产品想法：${this.thoughtsTarget.value}；\n目标用户：${this.targetUserTarget.value}；\n当下挑战：${this.challengesTarget.value}\n`
+        const userInput = `产品想法：${this.thoughtsTarget.value}\n目标用户：${this.targetUserTarget.value}\n当下挑战：${this.challengesTarget.value}\n`
         const data = {
             models: ["切换至用户视角分析问题"],
             user_input: userInput,
