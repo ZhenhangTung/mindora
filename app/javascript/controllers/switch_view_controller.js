@@ -1,12 +1,14 @@
 import { Controller } from "@hotwired/stimulus"
 
 const localStorageKey = "PMWW_ChatHistory_SwitchView"
+const targetUserLocalStorageKey = "PMWW_SwitchView_TargetUser"
 
 export default class extends Controller {
     static targets = ["thoughts", "targetUser", "challenges", "analysisResponse", "analysisButton", "analysisButtonContainer", "messages", "submitButton", "submitButtonContainer", "input"]
 
     connect() {
         this.restoreChatFromLocalStorage()
+        this.loadTargetUser()
     }
 
     restoreChatFromLocalStorage() {
@@ -185,5 +187,16 @@ export default class extends Controller {
         this.submitButtonContainerTarget.classList.remove("hidden")
     }
 
+    saveTargetUser(event) {
+        const value = this.targetUserTarget.value;
+        localStorage.setItem(targetUserLocalStorageKey, value);
+    }
+
+    loadTargetUser(event) {
+        const value = localStorage.getItem(targetUserLocalStorageKey);
+        if (value) {
+            this.targetUserTarget.value = value;
+        }
+    }
 
 }
