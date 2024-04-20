@@ -142,15 +142,23 @@ class ChatController < ApplicationController
   end
 
   def submit_five_whys
+    required_keys = ['who', 'what', 'when', 'where', 'why', 'how']
     form_data = params[:form_data]
 
-    prompt = build_five_whys_prompt(form_data)
-    pp prompt
+    all_keys_present = required_keys.all? { |key| form_data[key].present? }
 
-    client = OpenAI::Client.new(
-      request_timeout: 300,
-      uri_base: gpt35_deployment_uri
-    )
+    prompt = build_five_whys_prompt(form_data)
+
+    if all_keys_present
+      client = OpenAI::Client.new(
+        request_timeout: 300
+      )
+    else
+      client = OpenAI::Client.new(
+        request_timeout: 300,
+        uri_base: gpt35_deployment_uri
+      )
+    end
     response = client.chat(
       parameters: {
         temperature: 0.5,

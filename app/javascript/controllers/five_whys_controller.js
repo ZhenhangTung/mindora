@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static targets = ["step", "progressBar", "textarea", "promptDisplay", "stepDescription", "previousButton", "nextButton"];
+    static targets = ["step", "progressBar", "textarea", "stepDescription", "previousButton", "nextButton"];
     static values = { index: Number }
 
     stepData = {};
@@ -26,6 +26,11 @@ export default class extends Controller {
 
         if (this.indexValue < this.stepTargets.length - 1) {
             this.indexValue++;
+
+            const nextStepDescription = this.stepDescriptionTargets[this.indexValue];
+            if (nextStepDescription) {
+                nextStepDescription.innerText = "🐶：汪汪思考中...";
+            }
         }
 
         this.submitData(); // Submit data and update view based on the backend response
