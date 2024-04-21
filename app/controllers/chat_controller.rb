@@ -224,7 +224,7 @@ class ChatController < ApplicationController
 "
   end
 
-  def build_five_whys_prompt(form_data)
+  def build_five_whys_prompt(form_data, all_keys_present = false)
     # 定义 5W1H 的键值对应关系
     elements = {
       "who" => "Who",
@@ -235,8 +235,9 @@ class ChatController < ApplicationController
       "how" => "How"
     }
 
-    # 初始化 prompt 字符串
-    prompt = "请用 5W1H 分析问题。"
+
+    prompt = all_keys_present ? "基于已经提供的 5W1H 元素分析问题并给出解决方案思路以及原因。\n" : "请基于已经提供的 5W1H 内容生成引导提问，引导妈妈分析问题。\n如果没有提供某个元素，汪汪会在下一步中引导妈妈补充。\n"
+    
 
     # 迭代 5W1H 的键值，动态生成 prompt 的内容
     elements.each do |key, label|
