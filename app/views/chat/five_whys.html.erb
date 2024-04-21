@@ -12,83 +12,140 @@
   <main class="py-10 lg:pl-72" data-controller="thinking-models">
     <div class="overflow-hidden rounded-lg bg-white shadow">
       <div class="px-4 py-5 sm:p-6">
-        <div class="px-4 sm:px-6 lg:px-8">
-          <!-- Prompt Messages Container - Modify the height according to your need -->
-          <div class="flex h-[97vh] w-full flex-col">
-            <!-- Prompt Messages -->
-            <div
-              class="flex-1 space-y-6 overflow-y-auto rounded-xl bg-slate-200 p-4 text-sm leading-6 text-slate-900 shadow-sm dark:bg-slate-900 dark:text-slate-300 sm:text-base sm:leading-7"
-              data-thinking-models-target="messages"
-            >
-              <!-- Prompt message list -->
+        <div class="px-4 sm:px-6 lg:px-8" data-controller="five-whys">
+          <div>
+            <h4 class="sr-only">Status</h4>
+            <p class="text-sm font-medium text-gray-900">5W1H 分析</p>
+            <div class="mt-6" aria-hidden="true">
+              <div class="overflow-hidden rounded-full bg-gray-200">
+                <div class="h-2 rounded-full bg-indigo-600" style="width: 16.6%" data-five-whys-target="progressBar"></div>
+              </div>
             </div>
-            <!-- Prompt message input -->
-            <form class="mt-2" data-action="thinking-models#submit">
-              <div class="mb-2 flex gap-x-2 overflow-x-auto whitespace-nowrap text-xs text-slate-600 dark:text-slate-300 sm:text-sm">
-                <div class="flex items-center space-x-4">
-                  <div>
-                    <input type="checkbox" id="switch-to-user-view" value="切换至用户视角分析问题" class="hidden peer" data-thinking-models-target="model">
-                    <label for="switch-to-user-view" class="inline-flex items-center justify-center px-2 py-1 text-sm font-medium text-gray-500 bg-white border-4 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 peer-checked:border-4">
-                      切换至用户视角
-                    </label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="kano-model" value="卡诺模型" class="hidden peer" data-thinking-models-target="model">
-                    <label for="kano-model" class="inline-flex items-center justify-center px-2 py-1 text-sm font-medium text-gray-500 bg-white border-4 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 peer-checked:border-4">
-                      卡诺模型分析
-                    </label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="mvp-judgment" value="判断 MVP 功能" class="hidden peer" data-thinking-models-target="model">
-                    <label for="mvp-judgment" class="inline-flex items-center justify-center px-2 py-1 text-sm font-medium text-gray-500 bg-white border-4 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 peer-checked:border-4">
-                      MVP 功能判断
-                    </label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="pmf-path" value="寻找 PMF 思路" class="hidden peer" data-thinking-models-target="model">
-                    <label for="pmf-path" class="inline-flex items-center justify-center px-2 py-1 text-sm font-medium text-gray-500 bg-white border-4 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 peer-checked:border-4">
-                      寻找 PMF 思路
-                    </label>
+          </div>
+
+          <form class="mt-12">
+            <div class="space-y-12">
+              <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3" data-five-whys-target="step" data-index="0">
+                <div>
+                  <h2 class="text-base font-semibold leading-7 text-gray-900">Who（谁）</h2>
+                  <p class="mt-1 text-sm leading-6 text-gray-600">输入目标客户群体、利益相关者、团队成员等。</p>
+                </div>
+
+                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
+                  <div class="col-span-full">
+                    <label for="who" class="block text-sm font-medium leading-6 text-gray-900 hidden">Who</label>
+                    <div class="mt-2">
+                      <textarea required data-five-whys-target="textarea" id="who" name="who" rows="6" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                    </div>
+                    <p data-five-whys-target="stepDescription" class="mt-3 text-sm leading-6 text-gray-600">列出可能涉及的各种用户角色和团队成员。</p>
                   </div>
                 </div>
               </div>
-              <label for="chat-input" class="sr-only">请描述你遇到的产品问题</label>
-              <div class="flex gap-x-2">
-                <input
-                  data-thinking-models-target="input"
-                  id="chat-input"
-                  type="text"
-                  class="w-full rounded-lg border border-slate-300 bg-slate-200 p-3 text-sm text-slate-800 shadow-md focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600 dark:border-slate-200/10 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-400 dark:focus:border-blue-600 sm:text-base"
-                  placeholder="请描述你遇到的产品问题"
-                  rows="1"
-                  required
-                  />
-                <button
-                  type="submit"
-                  class="rounded-lg border border-transparent bg-blue-600 px-3 py-1 text-slate-200 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
-                  data-thinking-models-target="submitButton"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
-                    viewBox="0 0 24 24"
-                    stroke-width="2"
-                    stroke="currentColor"
-                    fill="none"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                    <path d="M10 14l11 -11"></path>
-                    <path
-                      d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"
-                    ></path>
-                  </svg>
-                  <span class="sr-only">请描述你遇到的产品问题</span>
-                </button>
+
+              <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 cursor-not-allowed opacity-50" data-five-whys-target="step" data-five-whys-index-value="1">
+                <div>
+                  <h2 class="text-base font-semibold leading-7 text-gray-900">What（什么）</h2>
+                  <p class="mt-1 text-sm leading-6 text-gray-600">可以详细描述产品功能、特性或项目任务。</p>
+                </div>
+
+                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
+                  <div class="col-span-full">
+                    <label for="who" class="block text-sm font-medium leading-6 text-gray-900 hidden">What</label>
+                    <div class="mt-2">
+                      <textarea data-five-whys-target="textarea" id="who" name="who" rows="6" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                    </div>
+                    <p data-five-whys-target="stepDescription" class="mt-3 text-sm leading-6 text-gray-600"></p>
+                  </div>
+                </div>
               </div>
-            </form>
-          </div>
+
+              <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 cursor-not-allowed opacity-50" data-five-whys-target="step" data-five-whys-index-value="2">
+                <div>
+                  <h2 class="text-base font-semibold leading-7 text-gray-900">When（何时）</h2>
+                  <p class="mt-1 text-sm leading-6 text-gray-600">输入产品的预计时间线、关键里程碑或使用时间。</p>
+                </div>
+
+                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
+                  <div class="col-span-full">
+                    <label for="when" class="block text-sm font-medium leading-6 text-gray-900 hidden">When</label>
+                    <div class="mt-2">
+                      <textarea data-five-whys-target="textarea" id="when" name="when" rows="6" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                    </div>
+                    <p data-five-whys-target="stepDescription" class="mt-3 text-sm leading-6 text-gray-600"></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 cursor-not-allowed opacity-50" data-five-whys-target="step" data-five-whys-index-value="3">
+                <div>
+                  <h2 class="text-base font-semibold leading-7 text-gray-900">Where（哪里）</h2>
+                  <p class="mt-1 text-sm leading-6 text-gray-600">产品使用的环境或市场。</p>
+                </div>
+
+                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
+                  <div class="col-span-full">
+                    <label for="where" class="block text-sm font-medium leading-6 text-gray-900 hidden">Where</label>
+                    <div class="mt-2">
+                      <textarea data-five-whys-target="textarea" id="where" name="where" rows="6" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                    </div>
+                    <p data-five-whys-target="stepDescription" class="mt-3 text-sm leading-6 text-gray-600"></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 cursor-not-allowed opacity-50" data-five-whys-target="step" data-five-whys-index-value="4">
+                <div>
+                  <h2 class="text-base font-semibold leading-7 text-gray-900">Why（为什么）</h2>
+                  <p class="mt-1 text-sm leading-6 text-gray-600">产品存在的理由、解决的问题或其价值提案。</p>
+                </div>
+
+                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2 cursor-not-allowed opacity-50">
+                  <div class="col-span-full">
+                    <label for="why" class="block text-sm font-medium leading-6 text-gray-900 hidden">Why</label>
+                    <div class="mt-2">
+                      <textarea data-five-whys-target="textarea" id="why" name="why" rows="6" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                    </div>
+                    <p data-five-whys-target="stepDescription" class="mt-3 text-sm leading-6 text-gray-600"></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 cursor-not-allowed opacity-50" data-five-whys-target="step" data-five-whys-index-value="5">
+                <div>
+                  <h2 class="text-base font-semibold leading-7 text-gray-900">How（如何）</h2>
+                  <p class="mt-1 text-sm leading-6 text-gray-600">详述将如何实现产品功能、解决问题或达成目标。</p>
+                </div>
+
+                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
+                  <div class="col-span-full">
+                    <label for="why" class="block text-sm font-medium leading-6 text-gray-900 hidden">Why</label>
+                    <div class="mt-2">
+                      <textarea data-five-whys-target="textarea" id="why" name="why" rows="6" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                    </div>
+                    <p data-five-whys-target="stepDescription" class="mt-3 text-sm leading-6 text-gray-600"></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 cursor-not-allowed opacity-50" data-five-whys-target="step" data-five-whys-index-value="6">
+                <div>
+                  <h2 class="text-base font-semibold leading-7 text-gray-900">分析结果</h2>
+                  <p class="mt-1 text-sm leading-6 text-gray-600">汪汪给出的 5W1H 分析结果。</p>
+                </div>
+
+                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
+                  <div class="col-span-full">
+                    <p data-five-whys-target="stepDescription" class="mt-3 text-sm leading-6 text-gray-600"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex items-center justify-end gap-x-6">
+              <button type="button" data-action="five-whys#previous" data-five-whys-target="previousButton" class="text-sm font-semibold leading-6 text-gray-900">上一步</button>
+              <button type="button" data-action="five-whys#next" data-five-whys-target="nextButton" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">下一步</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
