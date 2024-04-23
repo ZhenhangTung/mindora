@@ -23,10 +23,6 @@ Rails.application.routes.draw do
   get 'resumes/:id/customize', to: 'resumes#customize', as: 'customize_resume'
   post 'resumes/work_experiences/optimize', to: 'resumes#optimize'
   post 'resumes/:id/job_match', to: 'resumes#job_match'
-  get 'resumes/:id/prepare_interviews', to: 'resumes#prepare_interviews'
-  post 'resumes/:id/potential_interview_questions', to: 'resumes#potential_interview_questions'
-  post 'resumes/:id/self_introduction', to: 'resumes#self_introduction'
-  post 'resumes/:id/analyze_interview_questions', to: 'resumes#analyze_interview_questions'
 
   get 'interviews/new', to: 'interviews#new', as: 'new_interviews'
   post 'interviews/self_introduction', to: 'interviews#self_introduction', as: 'self_introduction'

@@ -2,6 +2,7 @@ class InterviewsController < ApplicationController
   include ResumesHelper
 
   before_action :authenticate_user, :set_resume, only: [:new]
+  before_action :get_resume_from_form, only: [:self_introduction, :potential_interview_questions, :analyze_interview_questions]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def new
@@ -12,10 +13,7 @@ class InterviewsController < ApplicationController
   end
 
   def self_introduction
-    resume_text = read_pdf_content(params[:resume_file]) if params[:resume_file]
-    resume = Resume.find(params[:resume_id]) if params[:resume_id]
-
-    prompt = build_self_introduction_prompt(resume, resume_text)
+    prompt = build_self_introduction_prompt(@resume, @resume_text)
 
     client = OpenAI::Client.new(
       request_timeout: 300,
@@ -57,20 +55,9 @@ class InterviewsController < ApplicationController
   end
 
   def potential_interview_questions
-    resume = Resume.find(params[:id])
-    prompt = "
-简历内容：
-基本信息：
-姓名：#{resume.name}
-性别：#{resume.gender}
-教育背景：#{resume.educations.map { |edu| "#{edu.school} - #{edu.major}" }.join("\n")}
+    prompt = build_potential_interview_questions(@resume, @resume_text)
+    pp prompt
 
-项目经验：
-#{resume.work_experiences.map(&:project_experience).join("\n")}
-
-    #{params[:company_description] ? "公司介绍：#{params[:company_description]}" : ""}
-    #{params[:job_description] ? "职位介绍：#{params[:job_description]}" : ""}
-"
     client = OpenAI::Client.new(
       request_timeout: 300,
       )
@@ -101,15 +88,8 @@ class InterviewsController < ApplicationController
   end
 
   def analyze_interview_questions
-    resume = Resume.find(params[:id])
-    interview_questions = params[:interview_questions]
-    prompt = "
-简历内容：
-#{resume.work_experiences.map(&:project_experience).join("\n")}
+    prompt = build_analyze_interview_questions(@resume, @resume_text)
 
-面试问题：
-#{interview_questions}
-    "
     client = OpenAI::Client.new(
       request_timeout: 300,
       )
@@ -174,11 +154,70 @@ class InterviewsController < ApplicationController
       prompt = "
 简历内容（未格式化）：
 #{resume_text}
+公司介绍：#{params[:company_description]}
+职位介绍：#{params[:job_description]}
 "
     else
       raise "resume is required"
     end
     prompt
+  end
+
+  def build_potential_interview_questions(resume, resume_text)
+    if resume
+      prompt = "
+简历内容：
+基本信息：
+姓名：#{resume.name}
+性别：#{resume.gender}
+教育背景：#{resume.educations.map { |edu| "#{edu.school} - #{edu.major}" }.join("\n")}
+
+项目经验：
+#{resume.work_experiences.map(&:project_experience).join("\n")}
+
+    #{params[:company_description] ? "公司介绍：#{params[:company_description]}" : ""}
+    #{params[:job_description] ? "职位介绍：#{params[:job_description]}" : ""}
+"
+    elsif resume_text
+      prompt = "
+简历内容（未格式化）：
+#{resume_text}
+公司介绍：#{params[:company_description]}
+职位介绍：#{params[:job_description]}
+"
+    else
+      raise "resume is required"
+    end
+    prompt
+  end
+
+  def build_analyze_interview_questions(resume, resume_text)
+    interview_questions = params[:interview_questions]
+    if resume
+      prompt = "
+简历内容：
+#{resume.work_experiences.map(&:project_experience).join("\n")}
+
+面试问题：
+#{interview_questions}
+    "
+    elsif resume_text
+      prompt = "
+简历内容（未格式化）：
+#{resume_text}
+
+面试问题：
+#{interview_questions}
+    "
+    else
+      raise "resume is required"
+    end
+    prompt
+  end
+
+  def get_resume_from_form
+    @resume_text = read_pdf_content(params[:resume_file]) if params[:resume_file]
+    @resume = Resume.find(params[:resume_id]) if params[:resume_id]
   end
 
 end
