@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'interviews/new'
+  get 'interviews/create'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   mount ActionCable.server => '/cable'
 
@@ -18,14 +20,18 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "resumes#new"
   resources :resumes, only: [:index, :new, :create, :show, :update]
-  get 'resumes/:id/customize', to: 'resumes#customize'
+  get 'resumes/:id/customize', to: 'resumes#customize', as: 'customize_resume'
   post 'resumes/work_experiences/optimize', to: 'resumes#optimize'
   post 'resumes/:id/job_match', to: 'resumes#job_match'
   get 'resumes/:id/prepare_interviews', to: 'resumes#prepare_interviews'
   post 'resumes/:id/potential_interview_questions', to: 'resumes#potential_interview_questions'
   post 'resumes/:id/self_introduction', to: 'resumes#self_introduction'
-  post 'resumes/:id/project_experience_stories', to: 'resumes#project_experience_stories'
   post 'resumes/:id/analyze_interview_questions', to: 'resumes#analyze_interview_questions'
+
+  get 'interviews/new', to: 'interviews#new', as: 'new_interviews'
+  post 'interviews/self_introduction', to: 'interviews#self_introduction', as: 'self_introduction'
+  post 'interviews/potential_interview_questions', to: 'interviews#potential_interview_questions'
+  post 'interviews/analyze_interview_questions', to: 'interviews#analyze_interview_questions'
 
   resources :chat, only: [:index, :create]
   get 'chat/thinking_models/five_whys', to: 'chat#five_whys', as: 'five_whys'

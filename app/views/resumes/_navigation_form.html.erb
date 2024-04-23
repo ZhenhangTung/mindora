@@ -87,34 +87,6 @@
           </div>
         </div>
       </li>
-      <li class="relative overflow-hidden lg:flex-1">
-        <div class="overflow-hidden border border-gray-200 lg:border-0">
-          <a href="#" class="group">
-            <span class="<%= step_indicator_class('prepare_interviews', current_step) %>" aria-hidden="true"></span>
-            <span class="flex items-start px-6 py-5 text-sm font-medium lg:pl-9">
-              <% if step_completed?('prepare_interviews', current_step) %>
-                <%= render partial: "checkmark" %>
-              <% else %>
-                <span class="flex-shrink-0">
-                  <span class="<%= step_indicator_border_class('prepare_interviews', current_step) %>">
-                    <span class="<%= step_indicator_text_class('prepare_interviews', current_step) %>">04</span>
-                  </span>
-                </span>
-              <% end %>
-              <span class="ml-4 mt-0.5 flex min-w-0 flex-col">
-                <span class="text-sm font-medium <%= step_indicator_text_class('prepare_interviews', current_step) %>">面试通关</span>
-                <span class="text-sm font-medium text-gray-500">从自我介绍到深度问题，我会陪你一步步准备🐾</span>
-              </span>
-            </span>
-          </a>
-          <!-- Separator -->
-          <div class="absolute inset-0 left-0 top-0 hidden w-3 lg:block" aria-hidden="true">
-            <svg class="h-full w-full text-gray-300" viewBox="0 0 12 82" fill="none" preserveAspectRatio="none">
-              <path d="M0.5 0V31L10.5 41L0.5 51V82" stroke="currentcolor" vector-effect="non-scaling-stroke" />
-            </svg>
-          </div>
-        </div>
-      </li>
     </ol>
   </nav>
 </div>
@@ -415,7 +387,7 @@
             <%= render partial: "preview", locals: { resume: @resume, show_job_match: true } %>
           </div>
           <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-            <a href="/resumes/<%= @resume.id %>/prepare_interviews" class="text-sm font-semibold leading-6 text-gray-900">准备面试</a>
+            <a href="<%= new_interviews_path %>?resume_id=<%= @resume.id %>" class="text-sm font-semibold leading-6 text-gray-900">准备面试</a>
             <button type="button" data-action="resume#downloadPDF" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">下载简历</button>
           </div>
         </div>
@@ -492,13 +464,6 @@
                   </div>
                 </div>
               </div>
-
-<!--              <div class="col-span-full">-->
-<!--                <label for="company-description" class="block text-sm font-medium leading-6 text-gray-900">价值观领域</label>-->
-<!--                <div class="mt-2">-->
-<!--                  <textarea rows="8" name="job-description" id="company-description" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>-->
-<!--                </div>-->
-<!--              </div>-->
             </div>
           </div>
           <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">

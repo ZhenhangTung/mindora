@@ -1,4 +1,6 @@
 class ResumesController < ApplicationController
+  include ResumesHelper
+
   before_action :set_resume, only: [:show, :update, :customize, :prepare_interviews]
   before_action :authenticate_user, only: [:index, :show, :customize]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
@@ -77,6 +79,10 @@ class ResumesController < ApplicationController
   def prepare_interviews
     @current_step = 'prepare_interviews'
     render 'show'
+  end
+
+  def new_interviews
+    render 'interviews'
   end
 
   def extract_resume_from_file(file_content)
@@ -455,7 +461,6 @@ JD 内容：
     )
 
     interview_questions = response.dig("choices", 0, "message", "content")
-    pp interview_questions
     render json: { interview_questions: interview_questions }
   end
 
@@ -474,7 +479,6 @@ JD 内容：
 #{params[:company_description] ? "公司介绍：#{params[:company_description]}" : ""}
 #{params[:job_description] ? "职位介绍：#{params[:job_description]}" : ""}
     "
-    pp prompt
 
     client = OpenAI::Client.new(
       request_timeout: 300,
@@ -512,13 +516,6 @@ JD 内容：
 
     self_introduction = response.dig("choices", 0, "message", "content")
     render json: { self_introduction: self_introduction }
-
-  end
-
-  # TODO: Implement the following methods
-
-  def project_experience_stories
-    resume = Resume.find(params[:id])
 
   end
 
@@ -575,11 +572,6 @@ JD 内容：
       flash[:warning] = "请先登录"
       redirect_to login_path
     end
-  end
-
-  def record_not_found
-    flash[:error] = "未找到该简历"
-    redirect_to root_url
   end
 
   def resume_params
@@ -640,17 +632,6 @@ JD 内容：
   rescue StandardError => e
     Rails.logger.error "Failed to read .docx file: #{e.message}"
     "Failed to read .docx file: #{e.message}"
-  end
-
-  def read_pdf_content(uploaded_file)
-    # Process PDF file
-    PDF::Reader.new(uploaded_file.path).pages.map(&:text).join("\n")
-  rescue PDF::Reader::MalformedPDFError => e
-    Rails.logger.error "Failed to read .pdf file: #{e.message}"
-    "Failed to read .pdf file: #{e.message}"
-  rescue StandardError => e
-    Rails.logger.error "Failed to read .pdf file: #{e.message}"
-    "Failed to read .pdf file: #{e.message}"
   end
 
 
