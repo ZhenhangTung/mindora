@@ -38,4 +38,20 @@ module ResumesHelper
     steps_order = ['new_resume', 'show_resume', 'customize_resume', 'prepare_interviews']
     steps_order.index(step) < steps_order.index(current_step)
   end
+
+  def record_not_found
+    flash[:error] = "未找到该简历"
+    redirect_to root_url
+  end
+
+  def read_pdf_content(uploaded_file)
+    # Process PDF file
+    PDF::Reader.new(uploaded_file.path).pages.map(&:text).join("\n")
+  rescue PDF::Reader::MalformedPDFError => e
+    Rails.logger.error "Failed to read .pdf file: #{e.message}"
+    "Failed to read .pdf file: #{e.message}"
+  rescue StandardError => e
+    Rails.logger.error "Failed to read .pdf file: #{e.message}"
+    "Failed to read .pdf file: #{e.message}"
+  end
 end

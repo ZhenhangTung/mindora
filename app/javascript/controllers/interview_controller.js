@@ -1,35 +1,41 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static targets = ["companyDescription", "jobDescription", "interviewQuestions", "analysisButton", "selfIntroductionButton", "potentialInterviewQuestionsButton", "selfIntroductionResponse", "potentialInterviewQuestionsResponse", "interviewQuestionsAnalysisResponse"]
+    static targets = ["companyDescription", "jobDescription", "interviewQuestions", "analysisButton", "selfIntroductionButton", "potentialInterviewQuestionsButton", "selfIntroductionResponse", "potentialInterviewQuestionsResponse", "interviewQuestionsAnalysisResponse", "resumeFile"]
 
-    analyzeInterviewQuestions() {
-        const companyDescription = this.companyDescriptionTarget.value
-        const jobDescription = this.jobDescriptionTarget.value
+    analyzeInterviewQuestions(event) {
+        event.preventDefault()
+        const resumeId = this.data.get("id");
+        let resumeFile = null
+        if (this.hasResumeFileTarget) {
+            resumeFile = this.resumeFileTarget.files[0];  // Get the file from the file input
+        }
+        if (!resumeId && !resumeFile) {
+            alert("请上传你的 PDF 简历")
+            return
+        };
+
+        const formData = this.buildBasicForm(resumeId, resumeFile)
+
         const interviewQuestions = this.interviewQuestionsTarget.value
         if (!interviewQuestions) {
             alert("请填写面试问题");
             return;
         }
-        const button = this.analysisButtonTarget
+        formData.append('interview_questions', interviewQuestions);
 
-        const resumeId = this.data.get("id");
+        const button = this.analysisButtonTarget
 
         // Disable the button and add animation
         button.classList.add('cursor-not-allowed', 'animate-bounce');
         button.setAttribute('disabled', true);
 
-        fetch(`/resumes/${resumeId}/analyze_interview_questions`, {
+        fetch(`/interviews/analyze_interview_questions`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'X-CSRF-Token': document.querySelector("[name='csrf-token']").content
             },
-            body: JSON.stringify({
-                company_description: companyDescription,
-                job_description: jobDescription,
-                interview_questions: interviewQuestions
-            })
+            body: formData
         })
             .then(response => {
                 if (!response.ok) {
@@ -53,34 +59,38 @@ export default class extends Controller {
             });
     }
 
-    selfIntroduction() {
-        const companyDescription = this.companyDescriptionTarget.value
-        const jobDescription = this.jobDescriptionTarget.value
+    selfIntroduction(event) {
+        event.preventDefault()
+        const resumeId = this.data.get("id");
+        let resumeFile = null
+        if (this.hasResumeFileTarget) {
+            resumeFile = this.resumeFileTarget.files[0];  // Get the file from the file input
+        }
+        if (!resumeId && !resumeFile) {
+            alert("请上传你的 PDF 简历")
+            return
+        };  // Exit if no file is selected
         const button = this.selfIntroductionButtonTarget
 
-        const resumeId = this.data.get("id");
+        const formData = this.buildBasicForm(resumeId, resumeFile)
 
         // Disable the button and add animation
         button.classList.add('cursor-not-allowed', 'animate-bounce');
         button.setAttribute('disabled', true);
 
-        fetch(`/resumes/${resumeId}/self_introduction`, {
+
+        fetch(`/interviews/self_introduction`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'X-CSRF-Token': document.querySelector("[name='csrf-token']").content
             },
-            body: JSON.stringify({
-                company_description: companyDescription,
-                job_description: jobDescription,
-            })
+            body: formData
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
             .then(data => {
                 this.selfIntroductionResponseTarget.innerText = data.self_introduction;
             })
@@ -97,28 +107,33 @@ export default class extends Controller {
             });
     }
 
-    potentialInterviewQuestions() {
-        const companyDescription = this.companyDescriptionTarget.value
-        const jobDescription = this.jobDescriptionTarget.value
-        const interviewQuestions = this.interviewQuestionsTarget.value
+    potentialInterviewQuestions(event) {
+        event.preventDefault()
+        const resumeId = this.data.get("id");
+        let resumeFile = null
+        if (this.hasResumeFileTarget) {
+            resumeFile = this.resumeFileTarget.files[0];  // Get the file from the file input
+        }
+        if (!resumeId && !resumeFile) {
+            alert("请上传你的 PDF 简历")
+            return
+        };
+
+        const formData = this.buildBasicForm(resumeId, resumeFile)
+
         const button = this.potentialInterviewQuestionsButtonTarget
 
-        const resumeId = this.data.get("id");
 
         // Disable the button and add animation
         button.classList.add('cursor-not-allowed', 'animate-bounce');
         button.setAttribute('disabled', true);
 
-        fetch(`/resumes/${resumeId}/potential_interview_questions`, {
+        fetch(`/interviews/potential_interview_questions`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'X-CSRF-Token': document.querySelector("[name='csrf-token']").content
             },
-            body: JSON.stringify({
-                company_description: companyDescription,
-                job_description: jobDescription,
-            })
+            body: formData
         })
             .then(response => {
                 if (!response.ok) {
@@ -140,5 +155,21 @@ export default class extends Controller {
                 button.classList.remove('cursor-not-allowed', 'animate-bounce');
                 button.removeAttribute('disabled');
             });
+    }
+
+    buildBasicForm(resumeId, resumeFile) {
+        const companyDescription = this.companyDescriptionTarget.value
+        const jobDescription = this.jobDescriptionTarget.value
+
+        const formData = new FormData();
+        formData.append('company_description', companyDescription);
+        formData.append('job_description', jobDescription);
+        if (resumeFile) {
+            formData.append('resume_file', resumeFile);
+        }
+        if (resumeId) {
+            formData.append('resume_id', resumeId);
+        }
+        return formData
     }
 }
