@@ -7,10 +7,17 @@ export default class extends Controller {
         event.preventDefault()
 
         const scene = this.sceneTarget.textContent.trim(); // 获取场景文本
-        const challenge = event.target.textContent.trim(); // 获取按钮的文本
 
-        console.log(scene)
-        console.log(challenge)
+        const buttonElement = event.currentTarget;
+        let challenge = buttonElement.dataset.value;
+        if (!challenge) {
+            // 如果 data-value 为空，退回到使用按钮文本
+            challenge = buttonElement.textContent.trim();
+        }
+
+
+        event.target.classList.add('cursor-not-allowed', 'animate-bounce');
+        event.target.setAttribute('disabled', true);
 
         const data = { scene, challenge };
         fetch("/chat/challenges", {
@@ -23,7 +30,6 @@ export default class extends Controller {
         })
             .then(response => response.json())
             .then(data => {
-                console.log("Success:", data);
                 const event = new CustomEvent("chat-data-received", {
                     detail: { data }, // 将数据包装在detail属性中
                     bubbles: true, // 事件冒泡
@@ -32,6 +38,10 @@ export default class extends Controller {
             })
             .catch((error) => {
                 console.error("Error:", error);
+            })
+            .finally(() => {
+                event.target.classList.remove('cursor-not-allowed', 'animate-bounce');
+                event.target.removeAttribute('disabled');
             });
     }
 }
