@@ -215,6 +215,10 @@ class ChatController < ApplicationController
 
   end
 
+  def challenges
+    
+  end
+
   private
 
   def build_prompt(user_input, models)
