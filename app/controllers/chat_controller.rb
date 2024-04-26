@@ -79,7 +79,8 @@ class ChatController < ApplicationController
     end
 
     selected_models = params[:models]
-    prompt = build_prompt(user_input, selected_models)
+    instructions = params[:instructions]
+    prompt = build_models_prompt(user_input, selected_models, instructions)
     messages = [{
                   "role": "system",
                   "content": '
@@ -281,11 +282,13 @@ class ChatController < ApplicationController
 
   private
 
-  def build_prompt(user_input, models)
-    "请用下面的思维模型来拆解分析问题并给出解决方案思路以及原因，如果没有提供思维模型，汪汪会分析最适合你当前需求的适用于产品经理的思维模型。
-问题：#{user_input}
-思维模型：#{models.join('、')}
+  def build_models_prompt(user_input, models, instructions = nil)
+    prompt = "请用下面的思维模型来拆解分析问题并给出解决方案思路，如果没有提供思维模型，汪汪会分析最适合你当前需求的适用于产品经理的思维模型。
+问题：#{user_input}\n
+思维模型：#{models.join('、')}\n
 "
+    prompt += "需求：#{instructions}" if instructions
+    prompt
   end
 
   def build_five_whys_prompt(form_data, all_keys_present = false)

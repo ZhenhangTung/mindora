@@ -23,7 +23,8 @@ export default class extends Controller {
         event.preventDefault()
         const userInput = `产品想法：${this.thoughtsTarget.value}\n目标用户：${this.targetUserTarget.value}\n当下挑战：${this.challengesTarget.value}\n`
         const data = {
-            models: ["切换至用户视角分析问题"],
+            models: ["用户体验地图"],
+            instructions: "在用户体验地图的每个关键点上给出你的分析供参考",
             user_input: userInput,
             chat_history: []
         }
