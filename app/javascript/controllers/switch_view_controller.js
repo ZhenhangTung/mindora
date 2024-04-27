@@ -24,7 +24,7 @@ export default class extends Controller {
         const userInput = `产品想法：${this.thoughtsTarget.value}\n目标用户：${this.targetUserTarget.value}\n当下挑战：${this.challengesTarget.value}\n`
         const data = {
             models: ["用户体验地图"],
-            instructions: "在用户体验地图的每个关键点上给出你的分析供参考",
+            instructions: "在用户体验地图的每个关键点（用户目标、行为、接触点、情绪与想法、痛点、机会点）上给出你的分析供参考。最后提供 3 个参考解决方案的时候，要求同时提供解决方案和设计此方案的原因。",
             user_input: userInput,
             chat_history: []
         }
