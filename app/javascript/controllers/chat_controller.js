@@ -6,7 +6,6 @@ export default class extends Controller {
   static targets = ["model", "input", "messages", "submitButton"]
 
   connect() {
-    // alert('ok')
     this.restoreChatFromLocalStorage()
     document.addEventListener("chat-data-received", this.handleDataReceived);
   }
