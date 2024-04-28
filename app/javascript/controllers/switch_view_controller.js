@@ -34,8 +34,6 @@ export default class extends Controller {
         this.saveChatToLocalStorage("user", userInput)
         this.appendMessage("user", userInput)
 
-        console.log(data)
-
         fetch("/chat/thinking_models", {
             method: "POST",
             headers: {
