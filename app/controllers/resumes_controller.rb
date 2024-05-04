@@ -2,7 +2,7 @@ class ResumesController < ApplicationController
   include ResumesHelper
 
   before_action :set_resume, only: [:show, :update, :customize, :prepare_interviews]
-  before_action :authenticate_user, only: [:index, :show, :customize]
+  before_action :authenticate_user, only: [:index, :new, :show, :customize]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def index
