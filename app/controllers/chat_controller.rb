@@ -180,6 +180,22 @@ class ChatController < ApplicationController
     render json: { content: content }
   end
 
+  def user_interview_questions_analysis
+
+  end
+
+  def new_user_interview_questions_analysis
+
+  end
+
+  def submit_user_interview_questions_analysis
+
+  end
+
+  def get_user_interview_questions_analysis
+
+  end
+
   private
 
   def build_models_prompt(user_input, models, instructions = nil)
