@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
     if user&.authenticate(params[:password])
       # Log the user in and redirect to the user's show page
       log_in user  # `log_in` is a helper method you'll need to create in sessions_helper.rb
-      flash[:success] = "你已经成功登录！"
+      # flash[:success] = "你已经成功登录！" # TODO: display a flash message
       Rails.logger.info "User #{user.id} logged in at #{Time.current}"
       redirect_to root_path(user)
     else
@@ -16,14 +16,6 @@ class SessionsController < ApplicationController
       flash[:warning] = '手机号或者密码错误' # Not quite right!
       Rails.logger.warn "Failed login attempt for phone number: #{params[:phone_number]}"
       redirect_to new_session_path
-      # FIXME: Using turbo_stream to render flash message
-      # flash.now[:warning] = "Invalid phone number or password"
-      # respond_to do |format|
-      #   format.turbo_stream {
-      #     render turbo_stream: turbo_stream.update('flash-messages', partial: 'layout/flash_message', locals: { warning: 'Invalid phone number or password' })
-      #   }
-      #   format.html { render :new, status: :unprocessable_entity }
-      # end
     end
   end
 
@@ -31,7 +23,7 @@ class SessionsController < ApplicationController
   def destroy
     Rails.logger.info "User #{current_user.id} logged out at #{Time.current}" if logged_in?
     log_out if logged_in?  # `log_out` and `logged_in?` are helper methods to be defined in sessions_helper.rb
-    flash[:success] = "你已经成功退出！"
+    # flash[:success] = "你已经成功退出！" # TODO: display a flash message
     redirect_to root_url
   end
 end
