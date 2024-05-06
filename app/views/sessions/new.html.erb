@@ -17,7 +17,10 @@
       </div>
 
       <div>
-        <%= form.label :password, "秘密狗窝密码", class: "block text-sm font-medium text-gray-900" %>
+        <div class="flex">
+          <%= form.label :password, "秘密狗窝密码", class: "block text-sm font-medium text-gray-900" %>
+          <span class="block text-sm font-medium text-gray-900 ml-auto">忘记密码？<%= link_to "点我重置", reset_password_path, class: "font-medium text-indigo-600 hover:text-indigo-500" %></span>
+        </div>
         <div class="mt-1">
           <%= form.password_field :password, autocomplete: "current-password", required: true,
                                   placeholder: "不少于8个字符哦，记得藏点数字在里面", pattern: "(?=.*\\d).{8,}",
