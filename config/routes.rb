@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  get 'interviews/new'
-  get 'interviews/create'
+  # Defines the root path route ("/")
+  root 'homepage#index'
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   mount ActionCable.server => '/cable'
 
@@ -17,8 +18,6 @@ Rails.application.routes.draw do
   post 'login', to: 'sessions#create'
   get 'logout', to: 'sessions#destroy'
 
-  # Defines the root path route ("/")
-  root "resumes#new"
   resources :resumes, only: [:index, :new, :create, :show, :update]
   get 'resumes/:id/customize', to: 'resumes#customize', as: 'customize_resume'
   post 'resumes/work_experiences/optimize', to: 'resumes#optimize'
