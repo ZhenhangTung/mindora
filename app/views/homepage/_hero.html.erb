@@ -8,7 +8,11 @@
         <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">产品经理的 AI 小伙伴</h1>
         <p class="mt-6 text-lg leading-8 text-gray-600">产品汪汪是一位散发着小狗般热情和陪伴感的 AI 小伙伴，通过提供温暖的鼓励和智能的建议，为产品经理提供用户洞察、职业发展建议，并帮助克服各种职业挑战。</p>
         <div class="mt-10 flex items-center justify-center gap-x-6">
-          <%= link_to "注册试用", signup_path, class: "rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+          <% if logged_in? %>
+            <%= link_to "开始使用", switch_view_path, class: "rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+          <% else %>
+            <%= link_to "注册试用", signup_path, class: "rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+          <% end %>
           <!--              <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Learn more <span aria-hidden="true">→</span></a>-->
         </div>
       </div>
