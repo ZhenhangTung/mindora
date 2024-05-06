@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { marked } from "marked"
 
 const localStorageKey = "PMWW_ChatHistory_SwitchView"
 const targetUserLocalStorageKey = "PMWW_SwitchView_TargetUser"
@@ -118,19 +119,21 @@ export default class extends Controller {
     appendMessage(role, message) {
         const div = document.createElement("div")
         div.classList.add("flex", "items-start")
+        const parsedMessage = marked(message);
+
         if (role === "user") {
             div.classList.add("flex-row-reverse")
             div.innerHTML = `
         <img class="ml-2 h-8 w-8 rounded-full" src="https://dummyimage.com/128x128/354ea1/ffffff&text=我" />
-        <div class="min-h-[85px] rounded-b-xl rounded-tl-xl bg-slate-50 p-4 dark:bg-slate-800 sm:min-h-0 sm:max-w-md md:max-w-2xl">
-            <p>${message.split("\n\n").join("</p><p>").split("\n").join("<br>")}</p>
+        <div class="min-h-[85px] rounded-b-xl rounded-tl-xl bg-indigo-50 p-4 dark:bg-indigo-800 sm:min-h-0 sm:max-w-md md:max-w-2xl">
+            <p>${parsedMessage}</p>
         </div>
       `
         } else {  // assistant
             div.innerHTML = `
         <img class="mr-2 h-8 w-8 rounded-full" src="https://dummyimage.com/128x128/363536/ffffff&text=汪" />
         <div class="rounded-b-xl rounded-tr-xl bg-slate-50 p-4 dark:bg-slate-800 sm:max-w-md md:max-w-2xl">
-            <p>${message.split("\n\n").join("</p><p>").split("\n").join("<br>")}</p>
+            <p>${parsedMessage}</p>
         </div>
       `
         }
