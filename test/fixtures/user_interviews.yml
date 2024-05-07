@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  topic: MyString
+  interviewee: MyString
+  transcript: MyText
+  summary: MyText
+
+two:
+  topic: MyString
+  interviewee: MyString
+  transcript: MyText
+  summary: MyText
