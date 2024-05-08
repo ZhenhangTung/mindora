@@ -55,7 +55,7 @@ export default class extends Controller {
                 console.error("Error:", error)
                 alert("发生错误:", error)
             }).finally(() => {
-                this.enableAnalysisButton()
+                this.removeBounceAnimation()
                 this.enableSubmitButton()
             });
 
@@ -161,6 +161,12 @@ export default class extends Controller {
         const button = this.analysisButtonTarget
         button.classList.remove('cursor-not-allowed', 'animate-bounce');
         button.removeAttribute('disabled');
+    }
+
+    // prevent the button from being submitted multiple times
+    removeBounceAnimation() {
+        const button = this.analysisButtonTarget
+        button.classList.remove('animate-bounce');
     }
 
     disableSubmitButton() {
