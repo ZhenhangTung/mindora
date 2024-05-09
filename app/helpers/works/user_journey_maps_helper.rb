@@ -1,0 +1,2 @@
+module Works::UserJourneyMapsHelper
+end

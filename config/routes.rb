@@ -41,6 +41,12 @@ Rails.application.routes.draw do
   get 'chat/challenges', to: 'chat#challenges', as: 'challenges'
   post 'chat/challenges', to: 'chat#submit_challenges'
 
+  namespace :works do
+    get 'user_journey_maps/index'
+    get 'user_journey_maps/new'
+    get 'user_journey_maps/show'
+  end
+
   namespace :api do
     post '/chatgpt/inspirations', to: 'chat_gpt#inspirations'
     get '/chatgpt/messages', to: 'chat_gpt#index'
