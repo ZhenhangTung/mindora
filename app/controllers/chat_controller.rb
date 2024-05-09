@@ -180,6 +180,7 @@ class ChatController < ApplicationController
     render json: { content: content }
   end
 
+  # TODO: restful actions for user interview questions analysis
   def user_interview_questions_analysis
 
   end

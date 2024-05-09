@@ -37,7 +37,7 @@ Rails.application.routes.draw do
   post 'chat/user_interview_questions', to: 'chat#create_user_interview_questions'
   get 'chat/user_interview_questions/analysis', to: 'chat#user_interview_questions_analysis', as: 'user_interview_questions_analysis'
   get 'chat/user_interview_questions/analysis/new', to: 'chat#new_user_interview_questions_analysis', as: 'new_user_interview_questions_analysis'
-  post 'chat/user_interview_questions/analysis', to: 'chat#submit_user_interview_questions_analysis'
+  post 'chat/user_interview_questions/analysis', to: 'chat#submit_user_interview_questions_analysis', as: 'submit_user_interview_questions_analysis'
   get 'chat/user_interview_questions/analysis/:id', to: 'chat#get_user_interview_questions_analysis', as: 'get_user_interview_questions_analysis'
   get 'chat/challenges', to: 'chat#challenges', as: 'challenges'
   post 'chat/challenges', to: 'chat#submit_challenges'

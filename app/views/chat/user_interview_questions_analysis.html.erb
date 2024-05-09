@@ -70,7 +70,7 @@
                 To: "translate-x-full"
             -->
             <div class="pointer-events-auto w-screen max-w-2xl transform transition ease-in-out duration-500 sm:duration-700" data-slide-over-target="panel">
-              <form class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+              <%= form_with(url: submit_user_interview_questions_analysis_path, local: true, class: "flex h-full flex-col overflow-y-scroll bg-white shadow-xl") do |form| %>
                 <div class="flex-1">
                   <!-- Header -->
                   <div class="bg-gray-50 px-4 py-6 sm:px-6">
@@ -95,10 +95,10 @@
                   <div class="space-y-6 py-6 sm:space-y-0 sm:divide-y sm:divide-gray-200 sm:py-0">
                     <div class="space-y-2 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
                       <div>
-                        <label for="project-name" class="block text-sm font-medium leading-6 text-gray-900 sm:mt-1.5">主题</label>
+                        <label for="subject" class="block text-sm font-medium leading-6 text-gray-900 sm:mt-1.5">主题</label>
                       </div>
                       <div class="sm:col-span-2">
-                        <input type="text" name="project-name" id="project-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <%= form.text_field :subject, id: "subject", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
                       </div>
                     </div>
 
@@ -107,19 +107,16 @@
                         <h3 class="text-sm font-medium leading-6 text-gray-900">采访对象</h3>
                       </div>
                       <div class="sm:col-span-2">
-                        <div class="flex space-x-2">
-                          <input type="text" name="project-name" id="project-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                        </div>
+                        <%= form.text_field :interviewee, id: "interviewee", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
                       </div>
                     </div>
 
                     <div class="space-y-2 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
                       <div>
-                        <label for="project-description" class="block text-sm font-medium leading-6 text-gray-900 sm:mt-1.5">采访音频</label>
+                        <label for="audio" class="block text-sm font-medium leading-6 text-gray-900 sm:mt-1.5">采访音频</label>
                       </div>
                       <div class="sm:col-span-2">
-                        <input type="file" accept="audio/mp4" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                        <%#= form.file_field :original_file, required: true, direct_upload: true, accept: '.pdf,.docx', class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white" %>
+                        <%= form.file_field :audio, id: "audio", accept: "audio/*", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
                       </div>
                     </div>
                   </div>
@@ -129,10 +126,10 @@
                 <div class="flex-shrink-0 border-t border-gray-200 px-4 py-5 sm:px-6">
                   <div class="flex justify-end space-x-3">
                     <button type="button" data-action="slide-over#hide" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">取消</button>
-                    <button type="submit" class="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">新增</button>
+                    <%= form.submit "新增", class: "inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
                   </div>
                 </div>
-              </form>
+              <% end %>
             </div>
           </div>
         </div>
