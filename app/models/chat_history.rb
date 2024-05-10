@@ -1,2 +1,0 @@
-class ChatHistory < ApplicationRecord
-end
