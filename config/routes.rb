@@ -42,9 +42,7 @@ Rails.application.routes.draw do
   post 'chat/challenges', to: 'chat#submit_challenges'
 
   namespace :works do
-    get 'user_journey_maps/index'
-    get 'user_journey_maps/new'
-    get 'user_journey_maps/show'
+    resources :user_journey_maps, only: [:index, :new, :show]
   end
 
   namespace :api do
