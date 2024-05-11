@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_10_155107) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_11_044405) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -54,7 +55,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_155107) do
 
   create_table "chat_histories", force: :cascade do |t|
     t.jsonb "message"
-    t.bigint "session_id", null: false
+    t.uuid "session_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["message"], name: "index_chat_histories_on_message", using: :gin
@@ -208,9 +209,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_155107) do
     t.index ["chat_session_id"], name: "index_service_sessions_on_chat_session_id"
   end
 
-  create_table "sessions", force: :cascade do |t|
-    t.string "sessionable_type", null: false
-    t.bigint "sessionable_id", null: false
+  create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "sessionable_type"
+    t.uuid "sessionable_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["sessionable_type", "sessionable_id"], name: "index_sessions_on_sessionable"
