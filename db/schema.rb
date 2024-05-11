@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_20_000132) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_10_155107) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,6 +50,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_20_000132) do
     t.text "instructions"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "chat_histories", force: :cascade do |t|
+    t.jsonb "message"
+    t.bigint "session_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["message"], name: "index_chat_histories_on_message", using: :gin
+    t.index ["session_id"], name: "index_chat_histories_on_session_id"
   end
 
   create_table "chat_messages", force: :cascade do |t|
@@ -158,6 +167,26 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_20_000132) do
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
   end
 
+  create_table "products", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.string "target_user"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "prompt_forms", force: :cascade do |t|
+    t.json "content"
+    t.string "formable_type", null: false
+    t.bigint "formable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "user_journey_map_type", null: false
+    t.bigint "user_journey_map_id", null: false
+    t.index ["formable_type", "formable_id"], name: "index_prompt_forms_on_formable"
+    t.index ["user_journey_map_type", "user_journey_map_id"], name: "index_prompt_forms_on_user_journey_map"
+  end
+
   create_table "resumes", force: :cascade do |t|
     t.string "name"
     t.string "gender"
@@ -177,6 +206,21 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_20_000132) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["chat_session_id"], name: "index_service_sessions_on_chat_session_id"
+  end
+
+  create_table "sessions", force: :cascade do |t|
+    t.string "sessionable_type", null: false
+    t.bigint "sessionable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sessionable_type", "sessionable_id"], name: "index_sessions_on_sessionable"
+  end
+
+  create_table "user_journey_maps", force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_user_journey_maps_on_product_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -203,10 +247,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_20_000132) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "chat_histories", "sessions"
   add_foreign_key "chat_messages", "chat_sessions"
   add_foreign_key "chat_sessions", "assistants"
   add_foreign_key "educations", "resumes"
   add_foreign_key "resumes", "users"
   add_foreign_key "service_sessions", "chat_sessions"
+  add_foreign_key "user_journey_maps", "products"
   add_foreign_key "work_experiences", "resumes"
 end

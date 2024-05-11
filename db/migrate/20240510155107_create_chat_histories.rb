@@ -5,6 +5,8 @@ class CreateChatHistories < ActiveRecord::Migration[7.0]
       t.references :session, index: true, null: false, foreign_key: true
 
       t.timestamps
+
+      t.index :message, using: :gin
     end
   end
 end
