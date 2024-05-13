@@ -56,8 +56,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_11_044405) do
   create_table "chat_histories", force: :cascade do |t|
     t.jsonb "message"
     t.uuid "session_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }
     t.index ["message"], name: "index_chat_histories_on_message", using: :gin
     t.index ["session_id"], name: "index_chat_histories_on_session_id"
   end
@@ -215,6 +215,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_11_044405) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["sessionable_type", "sessionable_id"], name: "index_sessions_on_sessionable"
+  end
+
+  create_table "user_interviews", force: :cascade do |t|
+    t.string "topic"
+    t.string "interviewee"
+    t.text "transcript"
+    t.text "summary"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "user_journey_maps", force: :cascade do |t|
