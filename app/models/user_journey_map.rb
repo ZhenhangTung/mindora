@@ -4,6 +4,7 @@ class UserJourneyMap < ApplicationRecord
 
   # Polymorphic association with PromptForm
   has_many :prompt_forms, as: :formable, dependent: :destroy
+  accepts_nested_attributes_for :product
   accepts_nested_attributes_for :prompt_forms
 
   has_one :session, as: :sessionable, dependent: :destroy

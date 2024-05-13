@@ -12,51 +12,54 @@
             </div>
           </div>
 
-          <%= form_with(model: @product, url: works_user_journey_maps_path, local: true, class: 'space-y-12') do |form| %>
+          <%= form_with(model: @user_journey_map, url: works_user_journey_maps_path, local: true) do |form| %>
             <div class="space-y-12">
               <div class="border-b border-gray-900/10 pb-12">
                 <h2 class="text-base font-semibold leading-7 text-gray-900">产品背景</h2>
                 <p class="mt-1 text-sm leading-6 text-gray-600">请填写产品的基本信息和目标用户</p>
-
-                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                  <div class="col-span-full">
-                    <%= form.label :description, "产品简介", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                    <div class="mt-2">
-                      <%= form.text_area :description, required: true, rows: 2, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                <%= form.fields_for :product do |product_form| %>
+                  <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="col-span-full">
+                      <%= product_form.label :description, "产品简介", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                      <div class="mt-2">
+                        <%= product_form.text_area :description, required: true, rows: 2, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                      </div>
+                      <p class="mt-3 text-sm leading-6 text-gray-600">想了解妈妈目前负责的产品介绍</p>
                     </div>
-                    <p class="mt-3 text-sm leading-6 text-gray-600">想了解妈妈目前负责的产品介绍</p>
-                  </div>
-                  <div class="col-span-full">
-                    <%= form.label :target_user, "目标用户", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                    <div class="mt-2">
-                      <%= form.text_area :target_user, required: true, rows: 2, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                    <div class="col-span-full">
+                      <%= product_form.label :target_user, "目标用户", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                      <div class="mt-2">
+                        <%= product_form.text_area :target_user, required: true, rows: 2, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                      </div>
+                      <p class="mt-3 text-sm leading-6 text-gray-600">妈妈的产品是为谁服务的呢？</p>
                     </div>
-                    <p class="mt-3 text-sm leading-6 text-gray-600">妈妈的产品是为谁服务的呢？</p>
                   </div>
-                </div>
+                <% end %>
               </div>
 
               <div class="border-b border-gray-900/10 pb-12">
                 <h2 class="text-base font-semibold leading-7 text-gray-900">分析内容</h2>
                 <p class="mt-1 text-sm leading-6 text-gray-600">请分享目前对产品的想法还有当前存在的挑战和困惑</p>
 
-                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                  <div class="col-span-full">
-                    <%= form.label :ideas, "产品想法", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                    <div class="mt-2">
-                      <%= form.text_area :ideas, required: true, rows: 3, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                <%= form.fields_for :prompt_forms do |pf_form| %>
+                  <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="col-span-full">
+                      <%= pf_form.label :ideas, "产品想法", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                      <div class="mt-2">
+                        <%= pf_form.text_area :ideas, required: true, rows: 3, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                      </div>
+                      <p class="mt-3 text-sm leading-6 text-gray-600">妈妈有什么产品灵感💡？（好奇脸）</p>
                     </div>
-                    <p class="mt-3 text-sm leading-6 text-gray-600">妈妈有什么产品灵感💡？（好奇脸）</p>
-                  </div>
 
-                  <div class="col-span-full">
-                    <%= form.label :challenges, "当下挑战", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                    <div class="mt-2">
-                      <%= form.text_area :challenges, required: true, rows: 3, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                    <div class="col-span-full">
+                      <%= pf_form.label :challenges, "当下挑战", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                      <div class="mt-2">
+                        <%= pf_form.text_area :challenges, required: true, rows: 3, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                      </div>
+                      <p class="mt-3 text-sm leading-6 text-gray-600">汪汪想听听妈妈分享目前的挑战和困惑喔！</p>
                     </div>
-                    <p class="mt-3 text-sm leading-6 text-gray-600">汪汪想听听妈妈分享目前的挑战和困惑喔！</p>
                   </div>
-                </div>
+                <% end %>
               </div>
             </div>
 

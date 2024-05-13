@@ -182,10 +182,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_11_044405) do
     t.bigint "formable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "user_journey_map_type", null: false
-    t.bigint "user_journey_map_id", null: false
     t.index ["formable_type", "formable_id"], name: "index_prompt_forms_on_formable"
-    t.index ["user_journey_map_type", "user_journey_map_id"], name: "index_prompt_forms_on_user_journey_map"
   end
 
   create_table "resumes", force: :cascade do |t|
@@ -215,15 +212,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_11_044405) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["sessionable_type", "sessionable_id"], name: "index_sessions_on_sessionable"
-  end
-
-  create_table "user_interviews", force: :cascade do |t|
-    t.string "topic"
-    t.string "interviewee"
-    t.text "transcript"
-    t.text "summary"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "user_journey_maps", force: :cascade do |t|
