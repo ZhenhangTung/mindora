@@ -1,5 +1,8 @@
 class Works::UserJourneyMapsController < ApplicationController
+  before_action :set_user_journey_map, only: [:show, :update]
+
   def index
+    @user_journey_maps = UserJourneyMap.includes(:product).all
   end
 
   def new
@@ -9,14 +12,10 @@ class Works::UserJourneyMapsController < ApplicationController
   end
 
   def create
-    # pp user_journey_map_params
-
     @user_journey_map = UserJourneyMap.new(user_journey_map_params)
-    pp @user_journey_map.product
-    pp @user_journey_map.prompt_forms
-
     if @user_journey_map.save
-      redirect_to works_user_journey_maps_path, notice: 'User Journey Map was successfully created.'
+      # TODO: flash message
+      redirect_to works_user_journey_maps_path(@user_journey_map)
     else
       render :new
     end
@@ -36,5 +35,9 @@ class Works::UserJourneyMapsController < ApplicationController
       product_attributes: [:description, :target_user],
       prompt_forms_attributes: [:ideas, :challenges]
     )
+  end
+
+  def set_user_journey_map
+    @user_journey_map = UserJourneyMap.find(params[:id])
   end
 end

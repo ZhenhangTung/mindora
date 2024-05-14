@@ -28,15 +28,16 @@
                     </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                    <tr>
-                      <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0 overflow-hidden max-w-xs">产品汪汪是一位散发着小狗般热情和陪伴感的 AI 小伙伴，通过提供温暖的鼓励和智能的建议，为产品经理提供用户洞察、职业发展建议，并帮助克服各种职业挑战。</td>
-                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">0-5 岁产品经理</td>
-                      <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                        <a href="#" class="text-indigo-600 hover:text-indigo-900">查看</a>
-                      </td>
-                    </tr>
+                    <% @user_journey_maps.each do |user_journey_map| %>
+                      <tr>
+                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0 overflow-hidden max-w-xs"><%= user_journey_map.product.description %></td>
+                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= user_journey_map.product.target_user %></td>
+                        <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                          <%= link_to '查看', works_user_journey_map_path(user_journey_map), class: 'text-indigo-600 hover:text-indigo-900' %>
+                        </td>
+                      </tr>
+                    <% end %>
 
-                    <!-- More people... -->
                     </tbody>
                   </table>
                 </div>

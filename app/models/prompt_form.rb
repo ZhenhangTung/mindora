@@ -5,23 +5,23 @@ class PromptForm < ApplicationRecord
     self.content ||= {}
   end
 
-  # 设置和获取 ideas
-  def ideas
-    content['ideas']
+  def method_missing(method_name, *arguments, &block)
+    method_name_string = method_name.to_s
+    if method_name_string.end_with?('=')
+      # Setter: Remove the '=' and set the value
+      key = method_name_string.chomp('=')
+      self.content[key] = arguments.first
+    elsif self.content.has_key?(method_name_string)
+      # Getter
+      self.content[method_name_string]
+    else
+      super
+    end
   end
 
-  def ideas=(value)
-    self.content ||= {}
-    self.content['ideas'] = value
+  def respond_to_missing?(method_name, include_private = false)
+    method_name_string = method_name.to_s
+    self.content.has_key?(method_name_string) || self.content.has_key?(method_name_string.chomp('=')) || super
   end
-
-  # 设置和获取 challenges
-  def challenges
-    self.content ||= {}
-    content['challenges']
-  end
-
-  def challenges=(value)
-    self.content['challenges'] = value
-  end
+  
 end
