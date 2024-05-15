@@ -8,7 +8,7 @@ class Works::UserJourneyMapsController < ApplicationController
   def new
     @user_journey_map = UserJourneyMap.new
     @user_journey_map.build_product
-    @user_journey_map.prompt_forms.build
+    @user_journey_map.prompt_forms.build(type: PromptForm::UserJourneyMap.to_s)
   end
 
   def create
@@ -33,8 +33,20 @@ class Works::UserJourneyMapsController < ApplicationController
   def user_journey_map_params
     params.require(:user_journey_map).permit(
       product_attributes: [:description, :target_user],
-      prompt_forms_attributes: [:ideas, :challenges]
-    )
+      prompt_forms_attributes: [
+        :id, :type, :ideas, :challenges, :_destroy
+      ]
+    ).tap do |whitelisted|
+      if whitelisted[:prompt_forms_attributes]
+        whitelisted[:prompt_forms_attributes].each do |key, form_attrs|
+          form_attrs[:type] ||= PromptForm::UserJourneyMap.to_s
+          form_attrs[:content] = {
+            ideas: form_attrs.delete(:ideas),
+            challenges: form_attrs.delete(:challenges)
+          }
+        end
+      end
+    end
   end
 
   def set_user_journey_map

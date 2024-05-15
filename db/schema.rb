@@ -178,6 +178,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_11_044405) do
 
   create_table "prompt_forms", force: :cascade do |t|
     t.json "content"
+    t.string "type"
     t.string "formable_type", null: false
     t.bigint "formable_id", null: false
     t.datetime "created_at", null: false
