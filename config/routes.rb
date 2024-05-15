@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'reports/weekly_growth'
   # Defines the root path route ("/")
   root 'homepage#index'
 
@@ -43,5 +44,9 @@ Rails.application.routes.draw do
     get '/chatgpt/messages', to: 'chat_gpt#index'
     post '/chatgpt/messages', to: 'chat_gpt#create'
     post '/chatgpt/discussions', to: 'chat_gpt#discuss'
+  end
+
+  namespace :admin do
+    get 'reports/weekly_growth', to: 'reports#weekly_growth', as: :weekly_growth_report
   end
 end

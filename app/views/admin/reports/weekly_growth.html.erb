@@ -1,0 +1,16 @@
+<h1>周度用户增长报告</h1>
+
+<table>
+  <tr>
+    <th>周</th>
+    <th>用户注册数量</th>
+    <th>增长率 (%)</th>
+  </tr>
+  <% @report.each do |data| %>
+    <tr>
+      <td><%= data[:week].strftime("%Y-%m-%d") %></td>
+      <td><%= data[:users_count] %></td>
+      <td><%= data[:growth_rate] %></td>
+    </tr>
+  <% end %>
+</table>
