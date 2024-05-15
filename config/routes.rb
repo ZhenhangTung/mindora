@@ -56,4 +56,7 @@ Rails.application.routes.draw do
     get 'reports/weekly_growth', to: 'reports#weekly_growth', as: :weekly_growth_report
     mount Sidekiq::Web => "/sidekiq"
   end
+
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
 end

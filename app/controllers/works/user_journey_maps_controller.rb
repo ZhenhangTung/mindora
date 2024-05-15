@@ -14,8 +14,9 @@ class Works::UserJourneyMapsController < ApplicationController
   def create
     @user_journey_map = UserJourneyMap.new(user_journey_map_params)
     if @user_journey_map.save
+      UserJourneyMapConversationsJob.perform_later(@user_journey_map.id)
       # TODO: flash message
-      redirect_to works_user_journey_maps_path(@user_journey_map)
+      redirect_to works_user_journey_map_path(@user_journey_map)
     else
       render :new
     end
