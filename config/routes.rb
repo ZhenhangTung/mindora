@@ -42,7 +42,11 @@ Rails.application.routes.draw do
   post 'chat/challenges', to: 'chat#submit_challenges'
 
   namespace :works do
-    resources :user_journey_maps, except: [:edit, :destroy]
+    resources :user_journey_maps, except: [:edit, :update, :destroy] do
+      member do
+        post :create_prompt_form
+      end
+    end
     resources :products, only: [:edit, :update]
   end
 

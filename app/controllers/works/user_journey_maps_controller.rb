@@ -1,5 +1,5 @@
 class Works::UserJourneyMapsController < ApplicationController
-  before_action :set_user_journey_map, only: [:show, :update]
+  before_action :set_user_journey_map, only: [:show, :create_prompt_form]
 
   def index
     @user_journey_maps = UserJourneyMap.includes(:product).all
@@ -23,12 +23,22 @@ class Works::UserJourneyMapsController < ApplicationController
   end
 
   def show
-    @user_journey_map = UserJourneyMap.find(params[:id])
     @product = @user_journey_map.product
+    @prompt_form = @user_journey_map.prompt_forms.new(type: 'PromptForm::UserJourneyMap')
   end
 
-  def update
+  def create_prompt_form
+    pp 'xxx'
+    pp params
+    @prompt_form = @user_journey_map.prompt_forms.new(prompt_form_params)
+    # @prompt_form.type = PromptForm::UserJourneyMap.to_s
 
+    if @prompt_form.save
+      redirect_to works_user_journey_map_path(@user_journey_map), notice: '新的产品想法分析已提交。'
+    else
+      @product = @user_journey_map.product
+      render :show
+    end
   end
 
   private
@@ -54,5 +64,9 @@ class Works::UserJourneyMapsController < ApplicationController
 
   def set_user_journey_map
     @user_journey_map = UserJourneyMap.find(params[:id])
+  end
+
+  def prompt_form_params
+    params.require(:prompt_form_user_journey_map).permit(:ideas, :challenges)
   end
 end

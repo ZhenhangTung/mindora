@@ -148,7 +148,7 @@
                 To: "translate-x-full"
             -->
             <div class="pointer-events-auto w-screen max-w-md">
-              <form class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
+              <%= form_with model: @prompt_form, url: create_prompt_form_works_user_journey_map_path(@user_journey_map), local: true, class: "flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl" do |form| %>
                 <div class="h-0 flex-1 overflow-y-auto">
                   <div class="bg-indigo-700 px-4 py-6 sm:px-6">
                     <div class="flex items-center justify-between">
@@ -171,15 +171,15 @@
                     <div class="divide-y divide-gray-200 px-4 sm:px-6">
                       <div class="space-y-6 pb-5 pt-6">
                         <div>
-                          <label for="thoughts" class="block text-sm font-medium leading-6 text-gray-900">产品想法</label>
+                          <%= form.label :ideas, "产品想法", class: "block text-sm font-medium leading-6 text-gray-900" %>
                           <div class="mt-2">
-                            <textarea name="thoughts" id="thoughts" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                            <%= form.text_area :ideas, required: true, rows: 2, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
                           </div>
                         </div>
                         <div>
-                          <label for="challenges" class="block text-sm font-medium leading-6 text-gray-900">当下挑战</label>
+                          <%= form.label :challenges, "当下挑战", class: "block text-sm font-medium leading-6 text-gray-900" %>
                           <div class="mt-2">
-                            <textarea id="challenges" name="challenges" rows="4" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                            <%= form.text_area :challenges, required: true, rows: 4, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
                           </div>
                         </div>
                       </div>
@@ -188,9 +188,9 @@
                 </div>
                 <div class="flex flex-shrink-0 justify-end px-4 py-4">
                   <button type="button" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" data-action="slide-over#hide">取消</button>
-                  <button type="submit" class="ml-4 inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">分析</button>
+                  <%= form.submit "分析", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
                 </div>
-              </form>
+              <% end %>
             </div>
           </div>
         </div>
