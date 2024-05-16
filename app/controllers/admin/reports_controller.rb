@@ -6,16 +6,32 @@ class Admin::ReportsController < ApplicationController
     start_date = User.minimum(:created_at)&.at_beginning_of_week || Time.zone.now.beginning_of_week
     end_date = Time.current.at_end_of_week
 
-    # 从数据库中获取数据
-    weekly_data = User.where(created_at: start_date..end_date)
-                      .group(Arel.sql("DATE_TRUNC('week', created_at)"))
-                      .order(Arel.sql("DATE_TRUNC('week', created_at)"))
-                      .count
+    # 从数据库中获取每周的用户注册数量
+    weekly_counts = User.where(created_at: start_date..end_date)
+                        .group(Arel.sql("DATE_TRUNC('week', created_at)"))
+                        .order(Arel.sql("DATE_TRUNC('week', created_at)"))
+                        .count
 
-    # 确保所有周都有数据
+    # 格式化键并转换为日期对象
+    formatted_weekly_counts = weekly_counts.transform_keys { |date| date.to_date }
+
+    # 初始化变量用于存储上一周的累积用户数
+    cumulative_users = 0
+    last_week_cumulative = 0
+
+    # 计算每周的累积用户数并计算增长率
     @weekly_growth = (start_date.to_date..end_date.to_date).step(7).map do |date|
       week_start = date.beginning_of_week
-      [week_start, weekly_data[week_start] || 0]
+      weekly_count = formatted_weekly_counts[week_start] || 0
+      cumulative_users += weekly_count
+      growth_rate = if last_week_cumulative.zero?
+                      0
+                    else
+                      ((cumulative_users - last_week_cumulative) / last_week_cumulative.to_f * 100).round(2)
+                    end
+      last_week_cumulative = cumulative_users  # 更新上一周的累积用户数
+
+      { week_start: week_start, cumulative_users: cumulative_users, weekly_users: weekly_count, growth_rate: "#{growth_rate} %" }
     end
   end
 end
