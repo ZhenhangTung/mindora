@@ -24,15 +24,11 @@ class Works::UserJourneyMapsController < ApplicationController
 
   def show
     @product = @user_journey_map.product
-    @prompt_form = @user_journey_map.prompt_forms.new(type: 'PromptForm::UserJourneyMap')
+    @prompt_form = @user_journey_map.prompt_forms.new(type: PromptForm::UserJourneyMap.to_s)
   end
 
   def create_prompt_form
-    pp 'xxx'
-    pp params
-    @prompt_form = @user_journey_map.prompt_forms.new(prompt_form_params)
-    # @prompt_form.type = PromptForm::UserJourneyMap.to_s
-
+    @prompt_form = @user_journey_map.prompt_forms.new(processed_prompt_form_params)
     if @prompt_form.save
       redirect_to works_user_journey_map_path(@user_journey_map), notice: '新的产品想法分析已提交。'
     else
@@ -52,11 +48,7 @@ class Works::UserJourneyMapsController < ApplicationController
     ).tap do |whitelisted|
       if whitelisted[:prompt_forms_attributes]
         whitelisted[:prompt_forms_attributes].each do |key, form_attrs|
-          form_attrs[:type] ||= PromptForm::UserJourneyMap.to_s
-          form_attrs[:content] = {
-            ideas: form_attrs.delete(:ideas),
-            challenges: form_attrs.delete(:challenges)
-          }
+          form_attrs.merge!(process_prompt_form_attributes(form_attrs, PromptForm::UserJourneyMap))
         end
       end
     end
@@ -68,5 +60,19 @@ class Works::UserJourneyMapsController < ApplicationController
 
   def prompt_form_params
     params.require(:prompt_form_user_journey_map).permit(:ideas, :challenges)
+  end
+
+  def processed_prompt_form_params
+    process_prompt_form_attributes(prompt_form_params, PromptForm::UserJourneyMap)
+  end
+
+  def process_prompt_form_attributes(attributes, type_class)
+    attributes.tap do |attrs|
+      attrs[:type] ||= type_class.to_s
+      attrs[:content] = {
+        ideas: attrs.delete(:ideas),
+        challenges: attrs.delete(:challenges)
+      }
+    end
   end
 end
