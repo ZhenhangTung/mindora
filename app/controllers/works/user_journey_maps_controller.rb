@@ -23,6 +23,8 @@ class Works::UserJourneyMapsController < ApplicationController
   end
 
   def show
+    @user_journey_map = UserJourneyMap.find(params[:id])
+    @product = @user_journey_map.product
   end
 
   def update

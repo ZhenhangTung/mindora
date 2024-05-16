@@ -43,6 +43,7 @@ Rails.application.routes.draw do
 
   namespace :works do
     resources :user_journey_maps, except: [:edit, :destroy]
+    resources :products, only: [:edit, :update]
   end
 
   namespace :api do
