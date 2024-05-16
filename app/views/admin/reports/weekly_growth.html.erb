@@ -1,0 +1,22 @@
+<h2>周度用户增长报告</h2>
+
+<table class="min-w-full divide-y divide-gray-300">
+  <thead>
+  <tr>
+    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">周（时间）</th>
+    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">累积用户数量</th>
+    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">用户注册数量</th>
+    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">增长率 (%)</th>
+  </tr>
+  </thead>
+  <tbody class="bg-white divide-y divide-gray-200">
+  <% @weekly_growth.each do |data| %>
+    <tr>
+      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= data[:week_start] %></td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= data[:cumulative_users] %></td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= data[:weekly_users] %></td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= data[:growth_rate] %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
