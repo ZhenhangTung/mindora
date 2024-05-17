@@ -169,11 +169,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_11_044405) do
   end
 
   create_table "products", force: :cascade do |t|
+    t.bigint "user_id", null: false
     t.string "name"
     t.string "description"
     t.string "target_user"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_products_on_user_id"
   end
 
   create_table "prompt_forms", force: :cascade do |t|
@@ -250,6 +252,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_11_044405) do
   add_foreign_key "chat_messages", "chat_sessions"
   add_foreign_key "chat_sessions", "assistants"
   add_foreign_key "educations", "resumes"
+  add_foreign_key "products", "users"
   add_foreign_key "resumes", "users"
   add_foreign_key "service_sessions", "chat_sessions"
   add_foreign_key "user_journey_maps", "products"
