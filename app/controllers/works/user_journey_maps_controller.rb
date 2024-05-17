@@ -1,23 +1,26 @@
 class Works::UserJourneyMapsController < ApplicationController
   before_action :set_user_journey_map, only: [:show, :create_prompt_form]
+  before_action :authenticate_user, only: [:index, :new, :create, :show, :create_prompt_form]
 
   def index
-    @user_journey_maps = UserJourneyMap.includes(:product).all
+    @user_journey_maps = UserJourneyMap.joins(:product).where(products: { user_id: current_user.id }).includes(:product)
   end
 
   def new
     @user_journey_map = UserJourneyMap.new
-    @user_journey_map.build_product
+    @user_journey_map.build_product(user: current_user)
     @user_journey_map.prompt_forms.build(type: PromptForm::UserJourneyMap.to_s)
   end
 
   def create
     @user_journey_map = UserJourneyMap.new(user_journey_map_params)
+    @user_journey_map.product.user = current_user
     if @user_journey_map.save
       UserJourneyMapConversationsJob.perform_later(@user_journey_map.id)
       # TODO: flash message
       redirect_to works_user_journey_map_path(@user_journey_map)
     else
+      # TODO: error message
       render :new
     end
   end
