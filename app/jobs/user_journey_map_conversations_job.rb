@@ -6,14 +6,22 @@ class UserJourneyMapConversationsJob < ApplicationJob
     return unless user_journey_map
 
     prompt_form = user_journey_map.prompt_forms.first
-    # session = user_journey_map.create_session(sessionable: user_journey_map)
-    # content = "产品想法：#{prompt_form.ideas}\n当下挑战：#{prompt_form.challenges}"
-    # session.store_human_message()
 
-
+    session = user_journey_map.create_session(sessionable: user_journey_map)
     content = "产品想法：#{prompt_form.ideas}\n当下挑战：#{prompt_form.challenges}"
+    session.store_human_message(content)
 
-    pp content
+
+    # response = {
+    #   type: 'human',  # example role, you can change it based on your requirement
+    #   content: "产品想法：#{prompt_form.ideas}\n当下挑战：#{prompt_form.challenges}"
+    # }
+
+
+    # ActionCable.server.broadcast(
+    #   "user_journey_map_#{user_journey_map_id}",
+    #   response
+    # )
 
   end
 

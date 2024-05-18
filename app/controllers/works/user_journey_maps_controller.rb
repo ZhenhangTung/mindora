@@ -33,6 +33,8 @@ class Works::UserJourneyMapsController < ApplicationController
   def create_prompt_form
     @prompt_form = @user_journey_map.prompt_forms.new(processed_prompt_form_params)
     if @prompt_form.save
+      # TODO: using prompt id
+      UserJourneyMapConversationsJob.perform_later(@user_journey_map.id)
       redirect_to works_user_journey_map_path(@user_journey_map), notice: '新的产品想法分析已提交。'
     else
       @product = @user_journey_map.product

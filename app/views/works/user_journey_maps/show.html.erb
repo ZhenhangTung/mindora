@@ -38,7 +38,7 @@
               </div>
             </div>
 
-            <form data-tabs-target="panel" data-controller="switch-view">
+            <form data-tabs-target="panel" data-controller="user-journey-map" data-user-journey-map-user-journey-map-id-value="<%= @user_journey_map.id %>">
               <div class="space-y-6">
                 <div class="border-b border-gray-900/10 pb-12">
                   <h2 class="text-base font-semibold leading-7 text-gray-900 mt-4">汪汪黑板</h2>
@@ -50,7 +50,7 @@
                           <!-- Prompt Messages -->
                           <div
                             class="flex-1 space-y-6 overflow-y-auto rounded-xl bg-slate-200 p-4 text-sm leading-6 text-slate-900 shadow-sm dark:bg-slate-900 dark:text-slate-300 sm:text-base sm:leading-7"
-                            data-switch-view-target="messages"
+                            data-user-journey-map-target="messages"
                           >
                             <!-- Prompt message list -->
                           </div>
