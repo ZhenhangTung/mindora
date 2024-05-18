@@ -27,17 +27,40 @@ class UserJourneyMapConversationsJob < ApplicationJob
 
     prompt = PromptManager.get_template_prompt(:user_journey_map, prompt_params)
 
-    ai_response = ChatGptService.get_response(prompt, :default, 0.7)
-    session.store_ai_message(ai_response)
 
-    response = {
-      type: ChatHistory::MESSAGE_TYPES[:ai],
-      content: ai_response
-    }
-    ActionCable.server.broadcast(
-      "user_journey_map_#{user_journey_map_id}",
-      response
-    )
+    # ai_response = ChatGptService.get_response(prompt, :default, 0.7)
+    # session.store_ai_message(ai_response)
+    # response = {
+    #   type: ChatHistory::MESSAGE_TYPES[:ai],
+    #   content: ai_response
+    # }
+    # ActionCable.server.broadcast(
+    #   "user_journey_map_#{user_journey_map_id}",
+    #   response
+    # )
+
+    complete_response = ""
+    response_uuid = SecureRandom.uuid
+
+    ChatGptService.stream_response(prompt, :default, 0.7) do |chunk|
+      ai_response = chunk.dig("choices", 0, "delta", "content")
+      next unless ai_response
+
+      complete_response += ai_response
+
+      response = {
+        type: ChatHistory::MESSAGE_TYPES[:ai],
+        content: ai_response,
+        uuid: response_uuid
+      }
+
+      ActionCable.server.broadcast(
+        "user_journey_map_#{user_journey_map_id}",
+        response
+      )
+    end
+
+    session.store_ai_message(complete_response)
 
   end
 

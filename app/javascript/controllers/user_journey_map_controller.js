@@ -17,7 +17,14 @@ export default class extends Controller {
     }
 
     handleReceived(data) {
-        this.appendMessage(data.type, data.content);
+        const { type, content, uuid } = data;
+        const existingMessage = document.querySelector(`[data-uuid='${uuid}']`);
+
+        if (existingMessage) {
+            this.updateMessage(existingMessage, content);
+        } else {
+            this.appendMessage(type, content, uuid);
+        }
     }
 
     disconnect() {
@@ -26,9 +33,10 @@ export default class extends Controller {
         }
     }
 
-    appendMessage(type, message) {
+    appendMessage(type, message, uuid) {
         const div = document.createElement("div")
         div.classList.add("flex", "items-start")
+        div.dataset.uuid = uuid;
         const parsedMessage = marked(message);
 
         if (type === "human") {
@@ -50,6 +58,15 @@ export default class extends Controller {
 
         this.messagesTarget.appendChild(div)  // 确保你的 HTML 里有 data-thinking-model-target="messages"
         this.scrollToBottom();
+    }
+
+    updateMessage(element, content) {
+        // Append the new content to the original content
+        const originalContent = element.querySelector('p').innerHTML;
+        const newContent = originalContent + content;
+
+        // Update the element with the combined content using marked
+        element.querySelector('p').innerHTML = marked(newContent);
     }
 
     scrollToBottom() {
