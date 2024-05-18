@@ -53,6 +53,23 @@
                             data-user-journey-map-target="messages"
                           >
                             <!-- Prompt message list -->
+                            <% @chat_histories.each do |chat_history| %>
+                              <% if chat_history.message_type == ChatHistory::MESSAGE_TYPES[:human] %>
+                                <div class="flex items-start flex-row-reverse">
+                                  <img class="ml-2 h-8 w-8 rounded-full" src="https://dummyimage.com/128x128/354ea1/ffffff&text=我" />
+                                  <div class="min-h-[85px] rounded-b-xl rounded-tl-xl bg-indigo-50 p-4 dark:bg-indigo-800 sm:min-h-0 sm:max-w-md md:max-w-2xl">
+                                    <p><%= chat_history.rendered_message_content %></p>
+                                  </div>
+                                </div>
+                              <% else %>
+                                <div class="flex items-start">
+                                  <img class="mr-2 h-8 w-8 rounded-full" src="https://dummyimage.com/128x128/363536/ffffff&text=汪" />
+                                  <div class="rounded-b-xl rounded-tr-xl bg-slate-50 p-4 dark:bg-slate-800 sm:max-w-md md:max-w-2xl">
+                                    <p><%= chat_history.rendered_message_content %></p>
+                                  </div>
+                                </div>
+                              <% end %>
+                            <% end %>
                           </div>
                         </div>
                       </div>

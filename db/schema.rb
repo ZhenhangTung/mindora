@@ -210,8 +210,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_11_044405) do
   end
 
   create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "sessionable_type"
-    t.uuid "sessionable_id"
+    t.string "sessionable_type", null: false
+    t.bigint "sessionable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["sessionable_type", "sessionable_id"], name: "index_sessions_on_sessionable"

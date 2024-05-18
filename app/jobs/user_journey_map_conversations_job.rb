@@ -2,30 +2,43 @@ class UserJourneyMapConversationsJob < ApplicationJob
   queue_as :default
 
   def perform(user_journey_map_id)
-    user_journey_map = UserJourneyMap.includes(:prompt_forms).find_by(id: user_journey_map_id)
+    user_journey_map = UserJourneyMap.find_by(id: user_journey_map_id)
+
     return unless user_journey_map
 
-    prompt_form = user_journey_map.prompt_forms.first
+    product = user_journey_map.product
+    session = user_journey_map.session
 
-    session = user_journey_map.create_session(sessionable: user_journey_map)
-    content = "产品想法：#{prompt_form.ideas}\n当下挑战：#{prompt_form.challenges}"
-    session.store_human_message(content)
+    recent_messages = session.chat_histories.order(created_at: :desc).limit(6).reverse
 
+    latest_message = recent_messages.pop
 
-    # response = {
-    #   type: 'human',  # example role, you can change it based on your requirement
-    #   content: "产品想法：#{prompt_form.ideas}\n当下挑战：#{prompt_form.challenges}"
-    # }
+    history_messages = recent_messages.map do |msg|
+      role = msg.message.dig('data', 'type') == ChatHistory::MESSAGE_TYPES[:human] ? '用户' : '助手'
+      "#{role}: #{msg.message_content}"
+    end.join("\n")
 
+    prompt_params = {
+      description: product.description,
+      target_user: product.target_user,
+      history_messages: history_messages,
+      current_message: latest_message&.message_content || ''
+    }
 
-    # ActionCable.server.broadcast(
-    #   "user_journey_map_#{user_journey_map_id}",
-    #   response
-    # )
+    prompt = PromptManager.get_template_prompt(:user_journey_map, prompt_params)
+
+    ai_response = ChatGptService.get_response(prompt, :default, 0.7)
+    session.store_ai_message(ai_response)
+
+    response = {
+      type: ChatHistory::MESSAGE_TYPES[:ai],
+      content: ai_response
+    }
+    ActionCable.server.broadcast(
+      "user_journey_map_#{user_journey_map_id}",
+      response
+    )
 
   end
-
-  private
-
 
 end

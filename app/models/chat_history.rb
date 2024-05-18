@@ -21,6 +21,12 @@ class ChatHistory < ApplicationRecord
     message.dig('data', 'content')
   end
 
+  def rendered_message_content
+    renderer = Redcarpet::Render::HTML.new
+    markdown = Redcarpet::Markdown.new(renderer, extensions = {})
+    markdown.render(message_content).html_safe
+  end
+
   # Scope to filter messages by type
   scope :of_type, ->(type) { where("message ->> 'type' = ?", type) }
   scope :of_data_type, ->(data_type) { where("message -> 'data' ->> 'type' = ?", data_type) }

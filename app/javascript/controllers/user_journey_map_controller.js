@@ -13,10 +13,10 @@ export default class extends Controller {
                 received: this.handleReceived.bind(this)
             }
         );
+        this.scrollToBottom();
     }
 
     handleReceived(data) {
-        alert('ok')
         this.appendMessage(data.type, data.content);
     }
 
