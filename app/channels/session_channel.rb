@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-class UserJourneyMapChannel < ApplicationCable::Channel
+class SessionChannel < ApplicationCable::Channel
   def subscribed
-    stream_from "user_journey_map_#{params[:user_journey_map_id]}"
+    stream_from "session_#{params[:session_id]}"
   end
 
   def unsubscribed

@@ -46,7 +46,8 @@ class PromptManager
 产品简介：%{description}\n目标用户：%{target_user}\n%{current_message}\n
 思维模型：用户旅程地图\n
 额外要求：在用户旅程地图的每个关键点（用户目标、行为、接触点、情绪与想法、痛点、机会点）上给出你的分析供参考。最后提供 3 个参考解决方案的时候，要求同时提供解决方案和设计此方案的原因。
-" # 用户旅程地图
+", # 用户旅程地图
+    product_chat: "产品简介：%{description}\n目标用户：%{target_user}\n沟通内容：%{message}"
   }.freeze
 
   def self.get_system_prompt(name)

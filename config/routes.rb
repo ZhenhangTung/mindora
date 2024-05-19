@@ -48,6 +48,9 @@ Rails.application.routes.draw do
       end
     end
     resources :products, only: [:edit, :update]
+    resources :sessions, only: [] do
+      resources :chats, only: [:create]
+    end
   end
 
   namespace :api do

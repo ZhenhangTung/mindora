@@ -34,7 +34,8 @@ class Works::UserJourneyMapsController < ApplicationController
   def show
     @product = @user_journey_map.product
     @prompt_form = @user_journey_map.prompt_forms.new(type: PromptForm::UserJourneyMap.to_s)
-    @chat_histories = @user_journey_map.session&.chat_histories || []
+    @session = @user_journey_map.session
+    @chat_histories = @user_journey_map.session&.chat_histories.order(:created_at) || []
   end
 
   def create_prompt_form
