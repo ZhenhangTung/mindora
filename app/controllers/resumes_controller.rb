@@ -274,35 +274,4 @@ JD 内容：
     end
   end
 
-
-  def process_experience_dates(experience)
-    # Handle "至今" for end_date
-    experience[:end_date] = nil if experience[:end_date] == "至今"
-
-    # Convert start_date and end_date from String to Date
-    begin
-      experience[:start_date] = Date.parse("#{experience[:start_date]}-01").strftime("%Y-%m") if experience[:start_date]&.match(/\A\d{4}-\d{2}\z/)
-      experience[:end_date] = Date.parse(experience[:end_date]).strftime("%Y-%m") unless experience[:end_date].nil?
-    rescue ArgumentError
-      experience[:end_date] = nil # Handle parsing error for end_date
-    end
-
-    experience
-  end
-
-  def process_project_experience(project_experience)
-    experience_entry = {
-      position: "", # No position info, set as empty or handle accordingly
-      company: "", # No company info, set as empty or handle accordingly
-      start_date: project_experience[:start_date],
-      end_date: project_experience[:end_date],
-      project_experience: project_experience[:project_experience],
-      experience_type: project_experience[:experience_type], # 'project'
-      project_name: project_experience[:project_name]
-    }
-
-    # Process dates for project experience
-    process_experience_dates(experience_entry)
-  end
-
 end

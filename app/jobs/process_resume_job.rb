@@ -1,18 +1,19 @@
 # frozen_string_literal: true
 
 class ProcessResumeJob < ApplicationJob
-  queue_as :default
+  queue_as :resume
 
   def perform(resume_id)
     resume = Resume.find(resume_id)
+    return unless resume
     begin
       ActiveRecord::Base.transaction do
         uploaded_file = resume.original_file
         file_content = read_resume_file_content(uploaded_file)
-        Rails.logger.debug "Resume file content for user #{current_user.id}: #{file_content}"
-        # json_data = extract_resume_from_file(file_content)
-        # @resume.update_with_extracted_data(json_data)
-        # @resume.save!
+        Rails.logger.debug "Resume file content for user #{resume.user.id}: #{file_content}"
+        json_data = extract_resume_from_file(file_content)
+        resume.update_with_extracted_data(json_data)
+        resume.save!
       end
     rescue => e
       # Log error with detailed information
@@ -31,8 +32,8 @@ class ProcessResumeJob < ApplicationJob
     # Check if the file exists and is not nil
     if uploaded_file.attached?
       case uploaded_file.blob.filename.extension.downcase
-      when "docx"
-        read_docx_resume(uploaded_file)
+      # when "docx"
+      #   read_docx_resume(uploaded_file)
       when "pdf"
         read_pdf_resume(uploaded_file)
       else
@@ -60,23 +61,24 @@ class ProcessResumeJob < ApplicationJob
     tempfile.unlink
   end
 
-  def read_docx_resume(uploaded_file)
-    # Download the file and read its content
-    tempfile = Tempfile.new
-    tempfile.binmode
-    tempfile.write(uploaded_file.download)
-    tempfile.rewind
-
-    Docx::Document.open(tempfile.path) do |doc|
-      doc.paragraphs.map(&:text).join("\n")
-    end
-  rescue StandardError => e
-    Rails.logger.error "Failed to read .docx file: #{e.message}"
-    "Failed to read .docx file: #{e.message}"
-  ensure
-    tempfile.close
-    tempfile.unlink
-  end
+  # TODO: implement me later
+  # def read_docx_resume(uploaded_file)
+  #   # Download the file and read its content
+  #   tempfile = Tempfile.new
+  #   tempfile.binmode
+  #   tempfile.write(uploaded_file.download)
+  #   tempfile.rewind
+  #
+  #   Docx::Document.open(tempfile.path) do |doc|
+  #     doc.paragraphs.map(&:text).join("\n")
+  #   end
+  # rescue StandardError => e
+  #   Rails.logger.error "Failed to read .docx file: #{e.message}"
+  #   "Failed to read .docx file: #{e.message}"
+  # ensure
+  #   tempfile.close
+  #   tempfile.unlink
+  # end
 
   def extract_resume_from_file(file_content)
     client = OpenAI::Client.new(
@@ -250,5 +252,35 @@ Document: #{file_content}",
     end
 
     resume_data
+  end
+
+  def process_project_experience(project_experience)
+    experience_entry = {
+      position: "", # No position info, set as empty or handle accordingly
+      company: "", # No company info, set as empty or handle accordingly
+      start_date: project_experience[:start_date],
+      end_date: project_experience[:end_date],
+      project_experience: project_experience[:project_experience],
+      experience_type: project_experience[:experience_type], # 'project'
+      project_name: project_experience[:project_name]
+    }
+
+    # Process dates for project experience
+    process_experience_dates(experience_entry)
+  end
+
+  def process_experience_dates(experience)
+    # Handle "至今" for end_date
+    experience[:end_date] = nil if experience[:end_date] == "至今"
+
+    # Convert start_date and end_date from String to Date
+    begin
+      experience[:start_date] = Date.parse("#{experience[:start_date]}-01").strftime("%Y-%m") if experience[:start_date]&.match(/\A\d{4}-\d{2}\z/)
+      experience[:end_date] = Date.parse(experience[:end_date]).strftime("%Y-%m") unless experience[:end_date].nil?
+    rescue ArgumentError
+      experience[:end_date] = nil # Handle parsing error for end_date
+    end
+
+    experience
   end
 end
