@@ -19,29 +19,20 @@ class ResumesController < ApplicationController
     if @resume.original_file.attached?
       # TODO: Any space for improvement?
       begin
-        ActiveRecord::Base.transaction do
-          uploaded_file = resume_params[:original_file]
-          file_content = read_uploaded_file_content(uploaded_file)
-          Rails.logger.debug "Resume file content for user #{current_user.id}: #{file_content}"
-          json_data = extract_resume_from_file(file_content)
-          @resume.update_with_extracted_data(json_data)
-          @resume.save!
-        end
+        # Save the resume record first
+        @resume.save!
 
-        flash[:success] = '简历上传成功！若简历的智能解析内容不准确，你可以手动修改简历。'
+        # Enqueue the processing job
+        ProcessResumeJob.perform_later(@resume.id)
+
+        flash[:success] = '简历上传成功！正在后台处理，稍后可查看解析结果。'
         redirect_to @resume
       rescue => e
         # Log error with detailed information
         Rails.logger.error "Resume upload failed for user #{current_user.id}: #{e.message}"
         Rails.logger.error e.backtrace.join("\n")
 
-        if e.message.match?(/unexpected token/)
-          friendly_message = "简历内容识别失败，建议上传 word 文档版本重试。"
-        else
-          friendly_message = e.message
-        end
-
-        flash[:error] = "简历上传失败！错误信息: #{friendly_message}"
+        flash[:error] = "简历上传失败！错误信息: #{e.message}"
         redirect_to new_resume_path
       end
     else
@@ -75,195 +66,6 @@ class ResumesController < ApplicationController
     @current_step = 'customize_resume'
     render 'show'
   end
-
-  def extract_resume_from_file(file_content)
-    client = OpenAI::Client.new(
-      request_timeout: 600,
-    )
-    response = client.chat(
-      parameters: {
-        temperature: 0.1,
-        messages: [
-          {
-            "role": "system",
-            "content": "请处理以下简历，将信息提取并分类为两个主要部分：工作经历和项目经历。对于工作经历，准确识别职位、公司、开始和结束日期，并描述任何具体的项目经历，确保使用项目符号清晰地格式化这些描述。对于项目经历，准确识别项目名称、开始和结束日期，并描述任何具体的项目经历，确保使用项目符号清晰地格式化这些描述。至关重要的是，尤其对于个人信息、教育、工作经历、项目经历等部分，必须逐字捕获所有细节。根据提供的JSON模式结构化输出，确保每一条信息的完整性和精确性，准确地将它们放置在JSON模式的相应字段中。如果任何细节与模式不完全对应，或者出现歧义，请清楚地标记这些实例以供人工审查，而不是省略或总结。目标是在将原始信息组织成提供的结构化JSON格式的同时，保持原始信息的完整性，确保详尽地提取每个模式键的具体信息，不遗漏任何细节。",
-          },
-          {
-            "role": "user",
-            "content": "Task: I have a resume document that I would like to extract information from and fill out the JSON schema.
-Document: #{file_content}",
-          },
-        ],
-        functions: [
-          {
-            name: "extract_resume_content",
-            description: "Extract information from a resume and fill out the JSON schema",
-            parameters: {
-              type: :object,
-              properties: {
-                name: { type: :string },
-                gender: {
-                  type: :string,
-                  enum: ["女", "男"],
-                },
-                phone_number: { type: :string },
-                email: { type: :string },
-                work_experiences: {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "position": {
-                        "type": "string",
-                        "description": "从工作经历中提取的职位名称"
-                      },
-                      "company": {
-                        "type": "string",
-                        "description": "从工作经历中提取的公司名称"
-                      },
-                      "start_date": {
-                        "type": "string",
-                        "format": "date",
-                        "description": "The start date in yyyy-mm-dd format (e.g. 2023-02-13)"
-                      },
-                      "end_date": {
-                        "type": "string",
-                        "format": "date",
-                        "description": "The end date in yyyy-mm-dd format (e.g. 2023-02-13)"
-                      },
-                      "project_experience": {
-                        "type": "string",
-                        "description": "Extract the project experiences listed under each work experience from the resume, and present them using bullet points (•) for clear distinction. "
-                      },
-                      "experience_type": {
-                        "type": "string",
-                        "description": "The type of experience, either 'work' or 'project'. 如果是工作经历将它定义为'work'，如果是项目经历将它定义为'project'。"
-                      }
-                    },
-                    "required": ["position", "company", "start_date", "end_date", "project_experience", "experience_type"]
-                  }
-                },
-                project_experiences: {
-                  "type": "array",
-                  "description": "项目经历或者项目经验部分下的多条内容",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "start_date": {
-                        "type": "string",
-                        "format": "date",
-                        "description": "The start date in yyyy-mm-dd format (e.g. 2023-02-13)"
-                      },
-                      "end_date": {
-                        "type": "string",
-                        "format": "date",
-                        "description": "The end date in yyyy-mm-dd format (e.g. 2023-02-13)"
-                      },
-                      "project_experience": {
-                        "type": "string",
-                        "description": "详细描述项目经历，使用项目符号（•）进行清晰区分 "
-                      },
-                      "experience_type": {
-                        "type": "string",
-                        "description": "经历类型，'work'表示工作经历，'project'表示项目经历。"
-                      },
-                      "project_name": {
-                        "type": "string",
-                        "description": "项目名称"
-                      }
-                    },
-                    "required": ["start_date", "end_date", "project_experience", "experience_type"]
-                  }
-                },
-                educations: {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "school": { "type": "string" },
-                      "major": { "type": "string" },
-                      "start_date": {
-                        "type": "string",
-                        "format": "date",
-                        "description": "The start date in yyyy-mm-dd format (e.g. 2023-02-13)"
-                      },
-                      "end_date": {
-                        "type": "string",
-                        "format": "date",
-                        "description": "The end date in yyyy-mm-dd format (e.g. 2023-02-13)"
-                      },
-                      "degree": { "type": "string" }
-                    },
-                    "required": ["school", "major", "start_date", "end_date", "degree"]
-                  }
-                },
-              },
-              required: ["name", "gender", "phone_number", "email", "work_experiences", "educations"],
-            },
-          },
-        ]
-      }
-    )
-
-    message = response.dig("choices", 0, "message")
-    resume = {}
-    if message["role"] == "assistant" && message["function_call"]
-      function_name = message.dig("function_call", "name")
-      args =
-        JSON.parse(
-          message.dig("function_call", "arguments"),
-          { symbolize_names: true },
-          )
-
-      case function_name
-      when "extract_resume_content"
-        resume = extract_resume_content(**args)
-      end
-    end
-    resume
-  end
-
-  def extract_resume_content(content)
-    # Parse the JSON data into a Ruby hash, if not already done
-    resume_data = content.is_a?(String) ? JSON.parse(content, symbolize_names: true) : content
-     content
-
-    # Ensure work experiences are processed for date formatting and any other adjustments
-    processed_work_experiences = resume_data[:work_experiences]&.map do |we_data|
-      process_experience_dates(we_data)
-    end || []
-
-
-
-    # Combine project experiences into work experiences if project experiences are present
-    if resume_data[:project_experiences]
-      processed_project_experiences = resume_data[:project_experiences].map do |project_experience|
-        process_project_experience(project_experience)
-      end
-      # Combine work experiences and project experiences
-      combined_experiences = processed_work_experiences + processed_project_experiences
-      resume_data[:work_experiences] = combined_experiences
-    else
-      resume_data[:work_experiences] = processed_work_experiences
-    end
-
-    resume_data
-  end
-
-  def read_uploaded_file_content(uploaded_file)
-    # Check if the file exists and is not nil
-    if uploaded_file.present?
-      case File.extname(uploaded_file.original_filename).downcase
-      when ".docx"
-        read_docx_content(uploaded_file)
-      when ".pdf"
-        read_pdf_content(uploaded_file)
-      else
-        "Unsupported file type"
-      end
-    end
-  end
-
 
   def optimize
     # Check for required parameters
@@ -470,16 +272,6 @@ JD 内容：
         end
       end
     end
-  end
-
-  def read_docx_content(uploaded_file)
-    # Process DOCX file
-    Docx::Document.open(uploaded_file.path) do |doc|
-      doc.paragraphs.map(&:text).join("\n") # Assuming you want to return the text as a string
-    end
-  rescue StandardError => e
-    Rails.logger.error "Failed to read .docx file: #{e.message}"
-    "Failed to read .docx file: #{e.message}"
   end
 
 

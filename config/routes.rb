@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   get 'reports/weekly_growth'
   # Defines the root path route ("/")
@@ -48,5 +50,6 @@ Rails.application.routes.draw do
 
   namespace :admin do
     get 'reports/weekly_growth', to: 'reports#weekly_growth', as: :weekly_growth_report
+    mount Sidekiq::Web => "/sidekiq"
   end
 end
