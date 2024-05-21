@@ -15,10 +15,12 @@ class ProcessResumeJob < ApplicationJob
         resume.update_with_extracted_data(json_data)
         resume.save!
       end
+      resume.save_redis_status(Resume::STATUS_COMPLETED)
     rescue => e
       # Log error with detailed information
       Rails.logger.error "Resume processing failed for user #{resume.user.id}: #{e.message}"
       Rails.logger.error e.backtrace.join("\n")
+      resume.save_redis_status(Resume::STATUS_FAILED)
       resume.destroy
       # Optionally, update the resume status or notify the user about the failure
       # TODO: notify failure to user
