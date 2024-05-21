@@ -80,14 +80,15 @@
               <button data-switch-view-target="analysisButton" data-action="switch-view#submit" type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">分析</button>
             </div>
             <div class="flex gap-x-2 hidden" data-switch-view-target="submitButtonContainer">
-              <input
+              <textarea
                 data-switch-view-target="input"
+                data-controller="textarea-autogrow"
                 id="chat-input"
                 type="text"
                 class="w-full rounded-lg border border-slate-300 bg-slate-200 p-3 text-sm text-slate-800 shadow-md focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600 dark:border-slate-200/10 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-400 dark:focus:border-blue-600 sm:text-base"
                 placeholder="汪汪正在认真听妈妈说喔"
                 rows="1"
-                />
+              ></textarea>
               <button
                 class="rounded-lg border border-transparent bg-blue-600 px-3 py-1 text-slate-200 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
                 data-switch-view-target="submitButton"
