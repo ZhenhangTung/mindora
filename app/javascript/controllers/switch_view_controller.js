@@ -192,7 +192,7 @@ export default class extends Controller {
     }
 
     displaySubmitButtonContainer() {
-        this.submitButtonContainerTarget.classList.remove("hidden")
+        this.submitButtonContainerTarget.classList.remove("invisible")
     }
 
     saveTargetUser(event) {
