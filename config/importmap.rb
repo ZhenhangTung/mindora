@@ -13,3 +13,4 @@ pin "buffer" # @2.0.1
 pin "@stimulus-components/rails-nested-form", to: "@stimulus-components--rails-nested-form.js" # @5.0.0
 pin "@stimulus-components/popover", to: "@stimulus-components--popover.js" # @7.0.0
 pin "marked" # @12.0.2
+pin "stimulus-textarea-autogrow" # @4.1.0

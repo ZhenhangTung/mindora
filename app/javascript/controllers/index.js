@@ -12,6 +12,8 @@ eagerLoadControllersFrom("controllers", application)
 
 import RailsNestedForm from "@stimulus-components/rails-nested-form"
 import Popover from "@stimulus-components/popover"
+import TextareaAutogrow from "stimulus-textarea-autogrow"
 
 application.register('nested-form', RailsNestedForm)
 application.register('popover', Popover)
+application.register('textarea-autogrow', TextareaAutogrow)
