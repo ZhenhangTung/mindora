@@ -10,15 +10,16 @@
   <form class="mt-2" data-action="chat#submit">
     <label for="chat-input" class="sr-only">请描述你遇到的产品问题</label>
     <div class="flex gap-x-2">
-      <input
+      <textarea
         data-chat-target="input"
+        data-controller="textarea-autogrow"
         id="chat-input"
         type="text"
         class="w-full rounded-lg border border-slate-300 bg-slate-200 p-3 text-sm text-slate-800 shadow-md focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600 dark:border-slate-200/10 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-400 dark:focus:border-blue-600 sm:text-base"
         placeholder="汪汪正在倾听喔"
         rows="1"
         required
-        />
+      ></textarea>
       <button
         type="submit"
         class="rounded-lg border border-transparent bg-blue-600 px-3 py-1 text-slate-200 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
