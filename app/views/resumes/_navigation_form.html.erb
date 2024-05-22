@@ -144,10 +144,9 @@
   <% elsif current_step == 'show_resume' %>
 
     <% if @resume.completed? || @resume.status_not_available? %>
-      <%= render 'resume_status', resume: @resume %>
-      <%#= render 'show_resume', resume: @resume %>
+      <%= render 'show_resume', resume: @resume %>
     <% elsif @resume.processing? %>
-
+      <%= render 'resume_status', resume: @resume %>
     <% elsif @resume.failed? %>
 
     <% else %>

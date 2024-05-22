@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 class ProcessResumeJob < ApplicationJob
+  include GptHelper
+
   queue_as :resume
 
   def perform(resume_id)
     resume = Resume.find(resume_id)
     return unless resume
+    broadcast_status(resume_id, Resume::STATUS_PROCESSING, "简历正在处理中...")
     begin
       ActiveRecord::Base.transaction do
         uploaded_file = resume.original_file
@@ -16,14 +19,14 @@ class ProcessResumeJob < ApplicationJob
         resume.save!
       end
       resume.save_processing_status(Resume::STATUS_COMPLETED)
+      broadcast_status(resume_id, Resume::STATUS_COMPLETED, "简历处理完成！")
     rescue => e
       # Log error with detailed information
       Rails.logger.error "Resume processing failed for user #{resume.user.id}: #{e.message}"
       Rails.logger.error e.backtrace.join("\n")
       resume.save_processing_status(Resume::STATUS_FAILED)
+      broadcast_status(resume_id, Resume::STATUS_FAILED, "简历处理失败: #{e.message}")
       resume.destroy
-      # Optionally, update the resume status or notify the user about the failure
-      # TODO: notify failure to user
     end
   end
 
@@ -83,8 +86,11 @@ class ProcessResumeJob < ApplicationJob
   # end
 
   def extract_resume_from_file(file_content)
+    # improve me
     client = OpenAI::Client.new(
-      request_timeout: 600,
+      request_timeout: 60,
+      uri_base: gpt4o_deployment_uri,
+      access_token: ENV["AZURE_EASTUS2_OPENAI_API_KEY"]
       )
     response = client.chat(
       parameters: {
@@ -284,5 +290,12 @@ Document: #{file_content}",
     end
 
     experience
+  end
+
+  def broadcast_status(resume_id, status, message)
+    ActionCable.server.broadcast(
+      "resume_status_channel_#{resume_id}",
+      { status: status, message: message }
+    )
   end
 end

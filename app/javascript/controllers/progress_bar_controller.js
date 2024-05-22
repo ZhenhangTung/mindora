@@ -32,7 +32,7 @@ export default class extends Controller {
     }
 
     updateProgress(progress) {
-        const progressPercentage = `${progress.toFixed(2)}%`;
+        const progressPercentage = `${progress.toFixed(0)}%`;
         this.progressBarTarget.style.width = progressPercentage;
         this.progressTextTarget.textContent = progressPercentage;
     }

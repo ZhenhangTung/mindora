@@ -92,13 +92,15 @@ class Resume < ApplicationRecord
   end
 
   def processing_status
-    pp 'xxxx'
-    pp status_key
-    Redis.current.get(status_key) || STATUS_NOT_AVAILABLE
+    REDIS_POOL.with do |conn|
+      conn.get(status_key) || STATUS_NOT_AVAILABLE
+    end
   end
 
   def save_processing_status(new_status)
-    Redis.current.setex(status_key, STATUS_EXPIRATION_TIME, new_status)
+    REDIS_POOL.with do |conn|
+      conn.setex(status_key, STATUS_EXPIRATION_TIME, new_status)
+    end
   end
 
   private
