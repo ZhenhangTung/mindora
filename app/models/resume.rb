@@ -17,7 +17,7 @@ class Resume < ApplicationRecord
 
 
   STATUS_KEY_PREFIX = "resume_status_"
-  STATUS_PENDING = 'pending'.freeze
+  STATUS_NOT_AVAILABLE = 'not_available'.freeze
   STATUS_PROCESSING = 'processing'.freeze
   STATUS_COMPLETED = 'completed'.freeze
   STATUS_FAILED = 'failed'.freeze
@@ -75,22 +75,29 @@ class Resume < ApplicationRecord
   end
 
   def processing?
-    redis_status == STATUS_PROCESSING
+    processing_status == STATUS_PROCESSING
   end
 
   def completed?
-    redis_status == STATUS_COMPLETED
+    processing_status == STATUS_COMPLETED
   end
 
   def failed?
-    redis_status == STATUS_FAILED
+    processing_status == STATUS_FAILED
   end
 
-  def redis_status
-    Redis.current.get(status_key) || STATUS_PENDING
+  # status expired in the redis
+  def status_not_available?
+    processing_status == STATUS_NOT_AVAILABLE
   end
 
-  def save_redis_status(new_status)
+  def processing_status
+    pp 'xxxx'
+    pp status_key
+    Redis.current.get(status_key) || STATUS_NOT_AVAILABLE
+  end
+
+  def save_processing_status(new_status)
     Redis.current.setex(status_key, STATUS_EXPIRATION_TIME, new_status)
   end
 

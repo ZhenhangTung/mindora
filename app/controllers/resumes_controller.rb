@@ -22,7 +22,7 @@ class ResumesController < ApplicationController
         # Save the resume record first
         @resume.save!
 
-        @resume.save_redis_status(Resume::STATUS_PROCESSING)
+        @resume.save_processing_status(Resume::STATUS_PROCESSING)
 
         # Enqueue the processing job
         ProcessResumeJob.perform_later(@resume.id)
