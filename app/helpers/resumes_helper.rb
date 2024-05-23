@@ -41,7 +41,7 @@ module ResumesHelper
 
   def record_not_found
     flash[:error] = "未找到该简历"
-    redirect_to root_url
+    redirect_to resumes_url
   end
 
   def read_pdf_content(uploaded_file)

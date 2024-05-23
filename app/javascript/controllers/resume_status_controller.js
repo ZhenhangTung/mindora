@@ -17,6 +17,9 @@ export default class extends Controller {
         this.updateStatus(data.status, data.message);
         if (data.status === "completed") {
             window.location.reload(); // Refresh the page to show updated resume details
+        } else if (data.status === "failed") {
+            // TODO: improve me
+            document.getElementById("progress-bar-container").classList.add("hidden")
         }
     }
 

@@ -6,13 +6,16 @@
       <%= render "layouts/career_menu" %>
       
       <div class="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
-        <div class="my-4 flex md:ml-4 md:mt-0 justify-end">
-          <button type="button" class="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm ml-auto mr-6" data-action="click->dialog#showDialog">删除简历</button>
-        </div>
+        <% unless @resume.processing? %>
+          <div class="my-4 flex md:ml-4 md:mt-0 justify-end">
+            <button type="button" class="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm ml-auto mr-6" data-action="click->dialog#showDialog">删除简历</button>
+          </div>
+        <%  end %>
         <!-- Your content -->
         <%= render "navigation_form", current_step: @current_step, resume: @resume %>
 
-        <div data-dialog-target="dialog" class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Deleting resume confirmation dialog -->
+        <div data-dialog-target="dialog" class="relative z-10 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
           <!--
             Background backdrop, show/hide based on modal state.
 

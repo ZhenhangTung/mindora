@@ -2,7 +2,7 @@
   <div class="text-center w-full max-w-md mx-auto">
     <h1 class="mt-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">正在解析简历</h1>
     <p class="mt-6 text-base leading-7 text-gray-600" data-resume-status-target="status">预计等待 1 分钟</p>
-    <div class="mt-6 relative mb-5 h-5 w-3/4 mx-auto rounded-full bg-gray-200">
+    <div class="mt-6 relative mb-5 h-5 w-3/4 mx-auto rounded-full bg-gray-200" id="progress-bar-container">
       <div
         class="h-full animate-pulse rounded-full bg-indigo-500"
         data-controller="progress-bar"
@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="mt-10 flex items-center justify-center gap-x-6">
-      <a href="<%= root_path %>" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">回到主页</a>
+      <a href="<%= resumes_path %>" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">返回简历列表</a>
     </div>
   </div>
 </div>
