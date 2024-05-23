@@ -88,9 +88,7 @@ class ProcessResumeJob < ApplicationJob
   def extract_resume_from_file(file_content)
     # improve me
     client = OpenAI::Client.new(
-      request_timeout: 60,
-      uri_base: gpt4o_deployment_uri,
-      access_token: ENV["AZURE_EASTUS2_OPENAI_API_KEY"]
+      request_timeout: 60
       )
     response = client.chat(
       parameters: {
