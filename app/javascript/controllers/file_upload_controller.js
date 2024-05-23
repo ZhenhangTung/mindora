@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static targets = ["fileInput"]
+    static targets = ["fileInput", "loading", "hiddenElement"]
 
     connect() {
         this.fileInputTarget.addEventListener('change', this.submitForm.bind(this));
@@ -15,5 +15,7 @@ export default class extends Controller {
         if (this.fileInputTarget.files.length > 0) {
             this.fileInputTarget.form.submit();
         }
+        this.hiddenElementTarget.classList.add("hidden")
+        this.loadingTarget.classList.remove("hidden")
     }
 }
