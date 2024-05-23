@@ -28,6 +28,17 @@ worker = "bundle exec sidekiq"
   guest_path = "/rails/public"
   url_prefix = "/"
 
+[[vm]]
+size = "shared-cpu-1x"
+
+[[vm]]
+memory = "1024MB"
+processes = ["app"]
+
+[[vm]]
+memory = "512MB"
+processes = ["worker"]
+
 [env]
 RAILS_ENV = "production"
 TENCENT_CLOUD_COS_ENDPOINT = "https://cos.ap-singapore.myqcloud.com"
