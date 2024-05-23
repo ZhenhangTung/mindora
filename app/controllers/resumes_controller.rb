@@ -64,8 +64,17 @@ class ResumesController < ApplicationController
   end
 
   def destroy
-    @resume.destroy
-    flash[:success] = "已成功删除简历"
+    if @resume.destroy
+      flash[:success] = "已成功删除简历"
+    else
+      flash[:error] = "删除简历时出现问题，请稍后再试。"
+    end
+  rescue => e
+    # 捕获异常并记录错误日志
+    Rails.logger.error "删除简历时出现异常：#{e.message}"
+    Rails.logger.error e.backtrace.join("\n")
+    flash[:error] = "删除简历时出现异常。请稍后再试。"
+  ensure
     redirect_to resumes_path
   end
 
