@@ -1,7 +1,7 @@
 class ResumesController < ApplicationController
   include ResumesHelper
 
-  before_action :set_resume, only: [:show, :update, :customize, :prepare_interviews]
+  before_action :set_resume, only: [:show, :update, :destroy, :customize, :prepare_interviews]
   before_action :authenticate_user, only: [:index, :new, :show, :customize]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
@@ -17,11 +17,10 @@ class ResumesController < ApplicationController
     @resume = current_user.resumes.build(resume_params)
 
     if @resume.original_file.attached?
-      # TODO: Any space for improvement?
       begin
         # Save the resume record first
         @resume.save!
-
+        # Update the resume's status
         @resume.save_processing_status(Resume::STATUS_PROCESSING)
 
         # Enqueue the processing job
@@ -62,6 +61,12 @@ class ResumesController < ApplicationController
 
   def show
     @current_step = 'show_resume'
+  end
+
+  def destroy
+    @resume.destroy
+    flash[:success] = "已成功删除简历"
+    redirect_to resumes_path
   end
 
   def customize
