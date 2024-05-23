@@ -35,3 +35,4 @@
 
 .idea
 .env.development.local
+dump.rdb

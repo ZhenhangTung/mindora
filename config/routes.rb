@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   get 'reports/weekly_growth'
   # Defines the root path route ("/")
@@ -19,7 +21,7 @@ Rails.application.routes.draw do
   post 'login', to: 'sessions#create'
   get 'logout', to: 'sessions#destroy'
 
-  resources :resumes, only: [:index, :new, :create, :show, :update]
+  resources :resumes, except: [:edit]
   get 'resumes/:id/customize', to: 'resumes#customize', as: 'customize_resume'
   post 'resumes/work_experiences/optimize', to: 'resumes#optimize'
   post 'resumes/:id/job_match', to: 'resumes#job_match'
@@ -48,5 +50,6 @@ Rails.application.routes.draw do
 
   namespace :admin do
     get 'reports/weekly_growth', to: 'reports#weekly_growth', as: :weekly_growth_report
+    mount Sidekiq::Web => "/sidekiq"
   end
 end

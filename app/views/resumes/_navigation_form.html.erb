@@ -99,7 +99,7 @@
         <h2 class="text-base font-semibold leading-7 text-gray-900">简历文件</h2>
         <p class="mt-1 text-sm leading-6 text-gray-600">轻轻把简历扔过来，让我整理得光鲜亮丽！（摇尾期待）</p>
       </div>
-      <%= form_with model: @resume, url: resumes_path, local: true, class: "bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2", html: { multipart: true } do |form| %>
+      <%= form_with model: @resume, url: resumes_path, local: true, class: "bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2", html: { multipart: true }, data: { controller: "file-upload" } do |form| %>
         <div class="px-4 py-6 sm:p-8">
           <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
@@ -114,7 +114,7 @@
                     <% if logged_in? %>
                       <label for="file-upload" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
                         <span>上传简历</span>
-                        <%= form.file_field :original_file, required: true, direct_upload: true, accept: '.pdf,.docx', class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white" %>
+                        <%= form.file_field :original_file, required: true, direct_upload: true, accept: '.pdf', data: { target: "file-upload.fileInput" }, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white" %>
                       </label>
                     <% else %>
                       <div class="cursor-not-allowed opacity-50">
@@ -130,208 +130,19 @@
             </div>
           </div>
         </div>
-        <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-          <% if logged_in? %>
-            <%= form.submit "上传", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
-          <% else %>
-            <button type="button" disabled class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm opacity-50 cursor-not-allowed">
-              上传
-            </button>
-          <% end %>
-        </div>
       <% end %>
     </div>
   <% elsif current_step == 'show_resume' %>
-    <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
-      <div class="px-4 sm:px-0">
-        <h2 class="text-base font-semibold leading-7 text-gray-900 flex items-center">
-          <span>简历编辑</span>
-          <span data-controller="popover" class="ml-1 relative">
-            <a href="#" data-action="mouseenter->popover#show mouseleave->popover#hide">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-yellow-400">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
-              </svg>
-            </a>
-            <template data-popover-target="content">
-              <div data-popover-target="card">
-                <div id="tooltip2" role="tooltip" class="z-20 -mt-20 w-64 absolute transition duration-150 ease-in-out left-0 ml-8 shadow-lg bg-indigo-500 p-4 rounded">
-                  <svg class="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                      <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#4c51bf">
-                        <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
-                          <g id="Group-2" transform="translate(24.000000, 0.000000)">
-                            <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5"></polygon>
-                          </g>
-                        </g>
-                      </g>
-                    </g>
-                  </svg>
-                  <p class="text-sm font-bold text-white pb-1 flex">汪汪
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-                      <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
-                    </svg>
-                    提示
-                  </p>
-                  <p class="text-xs leading-6 text-white pb-1">如果发现智能解析哪里不够完美，就跟我汪一声，改正它就像追球一样认真！</p>
-                  <p class="text-xs leading-6 text-white pb-3">但嘿，<span class="text-red-400 text-sm"><b>保持真实</b></span>哦，因为真诚的简历能带你找到最棒的工作！</p>
-                </div>
-              </div>
-            </template>
-          </span>
-        </h2>
-        <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-1 overflow-y-auto max-h-screen">
-          <% if @resume.original_file.attached? && @resume.original_file.content_type == "application/pdf" %>
-            <iframe src="<%= cdn_url_for(@resume.original_file) %>" class="w-full h-[600px] border-0" frameborder="0"></iframe>
-          <% elsif @resume.original_file.attached? %>
-            <div class="flex items-center justify-center h-[600px]">
-              <p class="text-gray-500">WORD 版本的原始简历暂不支持预览</p>
-            </div>
-          <% else %>
-          <% end %>
-        </div>
-      </div>
-      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2 overflow-y-auto max-h-screen">
-        <%= form_with model: @resume, local: true do |form| %>
-          <div class="px-4 py-6 sm:p-8">
-            <div class="border-b border-gray-200 pb-5 my-4">
-              <h3 class="text-base font-semibold leading-6 text-gray-900">基本信息</h3>
-            </div>
-            <!-- personal info -->
-            <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-              <div class="sm:col-span-3">
-                <%= form.label :name, "姓名", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                <div class="mt-2">
-                  <%= form.text_field :name, autocomplete: "full-name", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-                </div>
-              </div>
 
-              <div class="sm:col-span-3">
-                <%= form.label :gender, "性别", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                <div class="mt-2">
-                  <%= form.select :gender, ['女', '男'], {}, { autocomplete: "gender", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" } %>
-                </div>
-              </div>
+    <% if @resume.completed? || @resume.status_not_available? %>
+      <%= render 'show_resume', resume: @resume %>
+    <% elsif @resume.processing? %>
+      <%= render 'resume_status', resume: @resume %>
+    <% elsif @resume.failed? %>
 
-              <div class="sm:col-span-3">
-                <%= form.label :email, "邮箱", class: "block text-sm font-medium leading-6 text-gray-900" %>
-                <div class="mt-2">
-                  <%= form.email_field :email, autocomplete: "email", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
-                </div>
-                <% if @resume.email&.ends_with?("@qq.com") %>
-                  <p class="mt-3 text-sm leading-6 text-yellow-400">请注册新邮箱来替换 QQ 邮箱</p>
-                <% end %>
-              </div>
-            </div>
+    <% else %>
 
-            <div data-controller="nested-form" data-nested-form-wrapper-selector-value=".nested-form-wrapper" class="mt-12">
-              <div class="border-b border-gray-200 pb-5 my-4 flex justify-between items-center">
-                <h3 class="text-base font-semibold leading-6 text-gray-900">工作经历</h3>
-                <button type="button" class="rounded bg-indigo-50 px-2 py-1 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100" data-action="nested-form#add">新增</button>
-              </div>
-
-              <!-- working exps -->
-              <template data-nested-form-target="template">
-                <%= form.fields_for :work_experiences, WorkExperience.new, child_index: "NEW_RECORD" do |work_experience_form| %>
-                  <%= render "work_experiences_fields", work_experience_form: work_experience_form %>
-                <% end %>
-              </template>
-
-              <!-- Inserted elements will be injected before that target. -->
-              <div data-nested-form-target="target"></div>
-
-              <%= form.fields_for :work_experiences, @resume.non_project_work_experiences do |work_experience_form| %>
-                <%= render "work_experiences_fields", work_experience_form: work_experience_form %>
-              <% end %>
-            </div>
-
-
-            <div data-controller="nested-form" data-nested-form-wrapper-selector-value=".nested-form-wrapper" class="mt-12">
-              <div class="border-b border-gray-200 pb-5 my-4" data-controller="resume">
-                <div class="flex justify-between items-center">
-                  <h3 class="text-base font-semibold leading-6 text-gray-900">项目经验</h3>
-                  <button type="button" class="rounded bg-indigo-50 px-2 py-1 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100" data-action="nested-form#add">新增</button>
-                </div>
-                <div class="flex items-center justify-between mt-2">
-              <span class="flex flex-grow flex-col">
-                <span class="text-sm font-medium leading-6 text-gray-900" id="highlight_project_experience-label">置顶</span>
-                <span class="text-sm text-gray-500" id="highlight_project_experience-description">若无产品工作经验，置顶你的产品项目让面试官看到</span>
-              </span>
-                  <%= form.check_box :highlight_project_experience,
-                                     class: "hidden",
-                                     "data-resume-target": "highlight",
-                                     "data-action": "change->resume#toggleHighlightSwitch",
-                                     id: "highlight_project_experience",
-                                     checked: @resume.highlight_project_experience %>
-                  <label for="highlight_project_experience"
-                         class="bg-gray-200 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
-                         role="switch"
-                         aria-checked="false"
-                         aria-labelledby="highlight_project_experience-label"
-                         aria-describedby="highlight_project_experience-description"
-                         data-resume-target="switchButton"
-                         data-action="click->resume#toggleHighlightSwitch">
-                    <span aria-hidden="true" class="translate-x-0 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
-                  </label>
-                </div>
-              </div>
-
-              <!-- project exps -->
-              <template data-nested-form-target="template">
-                <%= form.fields_for :work_experiences, WorkExperience.new, child_index: "NEW_RECORD" do |project_experience_form| %>
-                  <%= render "project_experiences_fields", project_experience_form: project_experience_form %>
-                <% end %>
-              </template>
-
-              <!-- Inserted elements will be injected before that target. -->
-              <div data-nested-form-target="target"></div>
-
-              <%= form.fields_for :work_experiences, @resume.project_work_experiences do |project_experience_form| %>
-                <%= render "project_experiences_fields", project_experience_form: project_experience_form %>
-              <% end %>
-            </div>
-
-            <!-- educations -->
-            <div data-controller="nested-form" data-nested-form-wrapper-selector-value=".nested-form-wrapper" class="mt-12">
-              <div class="border-b border-gray-200 pb-5 my-4 flex justify-between items-center">
-                <h3 class="text-base font-semibold leading-6 text-gray-900">教育背景</h3>
-                <button type="button" class="rounded bg-indigo-50 px-2 py-1 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100" data-action="nested-form#add">新增</button>
-              </div>
-
-              <template data-nested-form-target="template">
-                <%= form.fields_for :educations, Education.new, child_index: "NEW_RECORD" do |edu_form| %>
-                  <%= render "education_fields", edu_form: edu_form %>
-                <% end %>
-              </template>
-
-              <!-- Inserted elements will be injected before that target. -->
-              <div data-nested-form-target="target"></div>
-
-              <%= form.fields_for :educations do |edu_form| %>
-                <%= render "education_fields", edu_form: edu_form %>
-              <% end %>
-            </div>
-          </div>
-          <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-            <%= form.submit "保存", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
-          </div>
-        <% end %>
-      </div>
-    </div>
-
-<!--    Resume Preview Section -->
-    <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
-      <div class="px-4 sm:px-0">
-        <h2 class="text-base font-semibold leading-7 text-gray-900">简历预览</h2>
-        <p class="mt-1 text-sm leading-6 text-gray-600"></p>
-      </div>
-
-      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
-        <%= render partial: "preview", locals: { resume: @resume, show_job_match: false } %>
-        <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-          <a href="/resumes/<%= @resume.id %>/customize" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">下一步</a>
-        </div>
-      </div>
-    </div>
+    <% end %>
   <% elsif current_step == 'customize_resume' %>
     <div data-controller="resume" data-resume-id="<%= @resume.id %>" data-resume-name-value="<%= @resume.name %>">
       <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
