@@ -16,6 +16,15 @@ class Resume < ApplicationRecord
             size: { less_than: 5.megabytes, message: 'is too large' }
 
 
+  STATUS_KEY_PREFIX = "resume_status_"
+  STATUS_NOT_AVAILABLE = 'not_available'.freeze
+  STATUS_PROCESSING = 'processing'.freeze
+  STATUS_COMPLETED = 'completed'.freeze
+  STATUS_FAILED = 'failed'.freeze
+
+  STATUS_EXPIRATION_TIME = 20.minutes.to_i
+
+
   # Method to update resume with extracted data
   def update_with_extracted_data(data)
     self.class.transaction do
@@ -65,6 +74,35 @@ class Resume < ApplicationRecord
     work_experiences.where(experience_type: WorkExperience::EXPERIENCE_TYPES[1]).order(start_date: :desc)
   end
 
+  def processing?
+    processing_status == STATUS_PROCESSING
+  end
+
+  def completed?
+    processing_status == STATUS_COMPLETED
+  end
+
+  def failed?
+    processing_status == STATUS_FAILED
+  end
+
+  # status expired in the redis
+  def status_not_available?
+    processing_status == STATUS_NOT_AVAILABLE
+  end
+
+  def processing_status
+    REDIS_POOL.with do |conn|
+      conn.get(status_key) || STATUS_NOT_AVAILABLE
+    end
+  end
+
+  def save_processing_status(new_status)
+    REDIS_POOL.with do |conn|
+      conn.setex(status_key, STATUS_EXPIRATION_TIME, new_status)
+    end
+  end
+
   private
 
   def parse_date_fields(record)
@@ -95,5 +133,9 @@ class Resume < ApplicationRecord
     true
   rescue ArgumentError
     false
+  end
+
+  def status_key
+    "#{STATUS_KEY_PREFIX}#{id}"
   end
 end
