@@ -30,7 +30,14 @@ worker = "bundle exec sidekiq"
 
 [[vm]]
 size = "shared-cpu-1x"
-memory = "1GB"
+
+[[vm]]
+memory = "1024MB"
+processes = ["app"]
+
+[[vm]]
+memory = "512MB"
+processes = ["worker"]
 
 [env]
 RAILS_ENV = "production"
