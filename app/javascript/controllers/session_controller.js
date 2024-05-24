@@ -80,7 +80,13 @@ export default class extends Controller {
 
     scrollToBottom() {
         const messagesContainer = this.messagesTarget;
+        messagesContainer.style.scrollBehavior = "smooth";
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        // restore the behavior
+        setTimeout(() => {
+            messagesContainer.style.scrollBehavior = "auto";
+        }, 500);
     }
 
     chat(event) {
