@@ -41,6 +41,18 @@ Rails.application.routes.draw do
   get 'chat/challenges', to: 'chat#challenges', as: 'challenges'
   post 'chat/challenges', to: 'chat#submit_challenges'
 
+  namespace :works do
+    resources :user_journey_maps, except: [:edit, :update, :destroy] do
+      member do
+        post :create_prompt_form
+      end
+    end
+    resources :products, only: [:edit, :update]
+    resources :sessions, only: [] do
+      resources :chats, only: [:create]
+    end
+  end
+
   namespace :api do
     post '/chatgpt/inspirations', to: 'chat_gpt#inspirations'
     get '/chatgpt/messages', to: 'chat_gpt#index'
@@ -52,4 +64,7 @@ Rails.application.routes.draw do
     get 'reports/weekly_growth', to: 'reports#weekly_growth', as: :weekly_growth_report
     mount Sidekiq::Web => "/sidekiq"
   end
+
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
 end
