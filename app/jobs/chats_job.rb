@@ -32,18 +32,30 @@ class ChatsJob < ApplicationJob
 
     prompt = PromptManager.get_template_prompt(:product_chat, prompt_params)
 
-    ai_response = ChatGptService.get_response(prompt, :default, 0.7, nil, message_history)
-    session.store_ai_message(ai_response)
-    response_uuid = SecureRandom.uuid
-    response = {
-      type: ChatHistory::MESSAGE_TYPES[:ai],
-      content: ai_response,
-      uuid: response_uuid
-    }
 
-    ActionCable.server.broadcast(
-      "session_#{session.id}",
-      response
-    )
+    response_uuid = SecureRandom.uuid
+    complete_response = ""
+
+    ChatGptService.stream_response(prompt, :default, 0.7, nil, message_history) do |chunk|
+      ai_response = chunk.dig("choices", 0, "delta", "content")
+      next unless ai_response
+
+      complete_response += ai_response
+
+      response = {
+        type: ChatHistory::MESSAGE_TYPES[:ai],
+        content: ai_response,
+        uuid: response_uuid,
+      }
+
+      ActionCable.server.broadcast(
+        "session_#{session.id}",
+        response
+      )
+
+      sleep(0.1) # 100ms延迟，避免并发问题
+    end
+
+    session.store_ai_message(complete_response)
   end
 end
