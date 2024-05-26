@@ -14,3 +14,4 @@ pin "@stimulus-components/rails-nested-form", to: "@stimulus-components--rails-n
 pin "@stimulus-components/popover", to: "@stimulus-components--popover.js" # @7.0.0
 pin "marked" # @12.0.2
 pin "stimulus-textarea-autogrow" # @4.1.0
+pin "tailwindcss-stimulus-components" # @5.1.1
