@@ -2,6 +2,9 @@ class User < ApplicationRecord
   has_secure_password
   has_many :resumes, dependent: :destroy
   has_many :products, dependent: :destroy
+  has_one :setting, dependent: :destroy
+
+  accepts_nested_attributes_for :setting
 
   def self.weekly_growth_report
     weekly_users = User.group("DATE_TRUNC('week', created_at)").count
