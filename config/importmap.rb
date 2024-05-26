@@ -15,3 +15,4 @@ pin "@stimulus-components/popover", to: "@stimulus-components--popover.js" # @7.
 pin "marked" # @12.0.2
 pin "stimulus-textarea-autogrow" # @4.1.0
 pin "tailwindcss-stimulus-components" # @5.1.1
+pin "async" # @3.2.5

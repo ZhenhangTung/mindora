@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 import consumer from "../channels/consumer";
 import { marked } from "marked";
+import async from "async";
 
 export default class extends Controller {
     static values = { sessionId: String, productId: Number }
@@ -20,21 +21,28 @@ export default class extends Controller {
             }
         );
         this.scrollToBottom();
+
+        // 创建一个异步队列，限制并发数为1
+        this.messageQueue = async.queue((task, callback) => {
+            this.processMessage(task.data);
+            setTimeout(callback, 50); // 处理完成后延迟50ms，避免竞争条件
+        }, 1); // 限制并发数为1
     }
 
     handleReceived(data) {
-        const { type, content, uuid } = data;
-        const existingMessage = document.querySelector(`[data-uuid='${uuid}']`);
+        this.messageQueue.push({ data });
+    }
+
+    processMessage(data) {
+        const existingMessage = document.querySelector(`[data-uuid="${data.uuid}"]`);
 
         if (existingMessage) {
-            this.updateMessage(existingMessage, content);
+            this.updateMessage(existingMessage, data.content);
         } else {
-            this.appendMessage(type, content, uuid);
+            this.appendMessage(data.type, data.content, data.uuid);
         }
-        this.scrollToBottom()
-        if (type === "ai") {
-            this.enableSubmitButton()
-        }
+
+        this.scrollToBottom();
     }
 
     disconnect() {
@@ -54,14 +62,14 @@ export default class extends Controller {
             div.innerHTML = `
         <img class="ml-2 h-8 w-8 rounded-full" src="https://dummyimage.com/128x128/354ea1/ffffff&text=我" />
         <div class="min-h-[85px] rounded-b-xl rounded-tl-xl bg-indigo-50 p-4 dark:bg-indigo-800 sm:min-h-0 sm:max-w-md md:max-w-2xl">
-            <p>${parsedMessage}</p>
+            <p data-original-content="${message}">${parsedMessage}</p>
         </div>
       `
         } else {  // assistant
             div.innerHTML = `
         <img class="mr-2 h-8 w-8 rounded-full" src="https://dummyimage.com/128x128/363536/ffffff&text=汪" />
         <div class="rounded-b-xl rounded-tr-xl bg-slate-50 p-4 dark:bg-slate-800 sm:max-w-md md:max-w-2xl">
-            <p>${parsedMessage}</p>
+            <p data-original-content="${message}">${parsedMessage}</p>
         </div>
       `
         }
@@ -71,8 +79,11 @@ export default class extends Controller {
 
     updateMessage(element, content) {
         // Append the new content to the original content
-        const originalContent = element.querySelector('p').innerHTML;
+        const originalContent = element.querySelector('p').dataset.originalContent || "";
         const newContent = originalContent + content;
+
+        // Update the data-original-content attribute with the combined content
+        element.querySelector('p').dataset.originalContent = newContent;
 
         // Update the element with the combined content using marked
         element.querySelector('p').innerHTML = marked(newContent);
@@ -97,8 +108,6 @@ export default class extends Controller {
         if (message === "") {
             return;
         }
-
-        this.disableSubmitButton()
 
         // Send the message via AJAX
         fetch(`/works/sessions/${this.sessionIdValue}/chats`, {
