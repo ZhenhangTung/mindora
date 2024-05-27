@@ -9,6 +9,8 @@ class UserJourneyMapConversationsJob < ApplicationJob
     product = user_journey_map.product
     session = user_journey_map.session
 
+    user = product.user
+
     recent_messages = session.chat_histories.order(created_at: :desc).limit(6).reverse
 
     latest_message = recent_messages.pop
@@ -27,8 +29,7 @@ class UserJourneyMapConversationsJob < ApplicationJob
 
     prompt = PromptManager.get_template_prompt(:user_journey_map, prompt_params)
 
-
-    ai_response = ChatGptService.get_response(prompt, :default, 0.7)
+    ai_response = ChatGptService.get_response(prompt, user.id, :default, 0.7)
     session.store_ai_message(ai_response)
     response_uuid = SecureRandom.uuid
     response = {

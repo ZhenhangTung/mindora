@@ -21,4 +21,8 @@ class User < ApplicationRecord
       }
     end
   end
+
+  def nickname
+    setting&.nickname || ""
+  end
 end
