@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class ChatGptService
-  def self.get_response(user_prompt, system_prompt_name = :default, temperature = 0.7, uri_base = nil, history_messages = [])
+  def self.get_response(user_prompt, user_id, system_prompt_name = :default, temperature = 0.7, uri_base = nil, history_messages = [])
+    user = User.find(user_id)
+    nickname = user.nickname
+
     client = if uri_base
                OpenAI::Client.new(
                  request_timeout: 600,
@@ -13,7 +16,7 @@ class ChatGptService
                )
              end
 
-    system_prompt = PromptManager.get_system_prompt(system_prompt_name)
+    system_prompt = PromptManager.get_system_prompt(system_prompt_name, nickname)
 
     # 构建消息列表
     messages = [
@@ -39,7 +42,9 @@ class ChatGptService
     response.dig("choices", 0, "message", "content")
   end
 
-  def self.stream_response(user_prompt, system_prompt_name = :default, temperature = 0.7, uri_base = nil, history_messages = [], &block)
+  def self.stream_response(user_prompt, user_id, system_prompt_name = :default, temperature = 0.7, uri_base = nil, history_messages = [], &block)
+    user = User.find(user_id)
+    nickname = user.nickname
     client = if uri_base
                OpenAI::Client.new(
                  request_timeout: 600,
@@ -51,7 +56,7 @@ class ChatGptService
                )
              end
 
-    system_prompt = PromptManager.get_system_prompt(system_prompt_name)
+    system_prompt = PromptManager.get_system_prompt(system_prompt_name, nickname)
 
     # 构建消息列表
     messages = [

@@ -12,6 +12,8 @@ class ChatsJob < ApplicationJob
     product = Product.find(product_id)
     return unless product
 
+    user = product.user
+
     recent_messages = session.chat_histories.order(created_at: :desc).limit(6).reverse
 
     message_history = recent_messages.map do |msg|
@@ -36,7 +38,7 @@ class ChatsJob < ApplicationJob
     response_uuid = SecureRandom.uuid
     complete_response = ""
 
-    ChatGptService.stream_response(prompt, :default, 0.7, nil, message_history) do |chunk|
+    ChatGptService.stream_response(prompt, user.id, :default, 0.7, nil, message_history) do |chunk|
       ai_response = chunk.dig("choices", 0, "delta", "content")
       next unless ai_response
 
