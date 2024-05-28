@@ -14,8 +14,10 @@
         <span data-progress-bar-target="progressText" class="absolute inset-0 flex items-center justify-center text-xs font-semibold text-white">0%</span>
       </div>
     </div>
-    <div class="mt-10 flex items-center justify-center gap-x-6">
-      <a href="<%= resumes_path %>" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">返回简历列表</a>
-    </div>
+    <% if has_other_resumes %>
+      <div class="mt-10 flex items-center justify-center gap-x-6">
+        <a href="<%= resumes_path %>" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">返回简历列表</a>
+      </div>
+    <% end %>
   </div>
 </div>
