@@ -61,6 +61,7 @@ class ResumesController < ApplicationController
 
   def show
     @current_step = 'show_resume'
+    @has_other_resumes = current_user.resumes.where.not(id: @resume.id).exists?
   end
 
   def destroy
