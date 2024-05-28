@@ -3,8 +3,10 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
     static targets = ["progressBar", "progressText"]
     static values = { duration: Number, startTime: String }
+    static classes = ["completed"]
 
     connect() {
+        this.completed = false;
         this.startProgress();
     }
 
@@ -32,6 +34,10 @@ export default class extends Controller {
     }
 
     updateProgress(progress) {
+        if (this.completed) return;
+        if (progress === 100) {
+            this.completed = true;
+        }
         const progressPercentage = `${progress.toFixed(0)}%`;
         this.progressBarTarget.style.width = progressPercentage;
         this.progressTextTarget.textContent = progressPercentage;
