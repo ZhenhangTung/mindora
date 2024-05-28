@@ -144,7 +144,7 @@
     <% if @resume.completed? || @resume.status_not_available? %>
       <%= render 'show_resume', resume: @resume %>
     <% elsif @resume.processing? %>
-      <%= render 'resume_status', resume: @resume %>
+      <%= render 'resume_status', resume: @resume, has_other_resumes: @has_other_resumes %>
     <% elsif @resume.failed? %>
 
     <% else %>
