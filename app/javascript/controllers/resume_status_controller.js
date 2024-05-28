@@ -16,6 +16,7 @@ export default class extends Controller {
     received(data) {
         this.updateStatus(data.status, data.message);
         if (data.status === "completed") {
+            this.updateProgressBar(100);
             window.location.reload(); // Refresh the page to show updated resume details
         } else if (data.status === "failed") {
             // TODO: improve me
@@ -25,5 +26,16 @@ export default class extends Controller {
 
     updateStatus(status, message) {
         this.statusTarget.innerText = message;
+    }
+
+    updateProgressBar(percentage) {
+        const progressBarController = this.application.getControllerForElementAndIdentifier(
+            document.querySelector('[data-controller="progress-bar"]'),
+            "progress-bar"
+        );
+
+        if (progressBarController) {
+            progressBarController.updateProgress(percentage);
+        }
     }
 }
