@@ -1,6 +1,8 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  get 'settings/edit'
+  get 'settings/update'
   get 'reports/weekly_growth'
   # Defines the root path route ("/")
   root 'homepage#index'
@@ -52,6 +54,8 @@ Rails.application.routes.draw do
       resources :chats, only: [:create]
     end
   end
+
+  resource :settings, only: [:create, :edit, :update]
 
   namespace :api do
     post '/chatgpt/inspirations', to: 'chat_gpt#inspirations'
