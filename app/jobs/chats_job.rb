@@ -23,7 +23,8 @@ class ChatsJob < ApplicationJob
              when ChatHistory::MESSAGE_TYPES[:ai]
                'assistant'
              end
-      { role: role, content: msg.message_content }
+      processed_message = msg.message_content.gsub('妈妈', '你')
+      { role: role, content: processed_message }
     end
 
     prompt_params = {
