@@ -1,6 +1,24 @@
 class Works::ProductsController < ApplicationController
   before_action :set_product, only: [:edit, :update]
 
+  def index
+    @products = current_user.products
+  end
+
+  def new
+    @product = current_user.products.build
+  end
+
+  def create
+    @product = current_user.products.build(product_params)
+    if @product.save
+      flash[:success] = '产品创建成功'
+      redirect_to works_products_path
+    else
+      render :new
+    end
+  end
+
   def edit
   end
 
