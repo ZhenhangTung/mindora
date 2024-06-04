@@ -50,6 +50,8 @@ Rails.application.routes.draw do
           post :create_prompt_form
         end
       end
+      resources :user_interview_questions, only: [:new, :create]
+      resources :analysis, only: [:index, :create]
     end
     resources :sessions, only: [] do
       resources :chats, only: [:create]
