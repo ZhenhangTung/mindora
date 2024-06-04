@@ -51,7 +51,7 @@ Rails.application.routes.draw do
         end
       end
       resources :user_interview_questions, only: [:new, :create]
-      resources :analysis, only: [:index, :create]
+      resources :discussions, only: [:index, :create]
     end
     resources :sessions, only: [] do
       resources :chats, only: [:create]

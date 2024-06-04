@@ -1,5 +1,5 @@
 class ChatController < ApplicationController
-  before_action :authenticate_user, only: [:index, :switch_view, :five_whys, :challenges]
+  before_action :authenticate_user, only: [:index, :create, :switch_view, :five_whys, :challenges]
 
   def index
 
@@ -16,7 +16,7 @@ class ChatController < ApplicationController
 
     messages = [{
                   "role": "system",
-                  "content": system_prompt
+                  "content": PromptManager.get_system_prompt(:default, current_user.setting.nickname)
                 }]
 
     chat_history.each do |chat|

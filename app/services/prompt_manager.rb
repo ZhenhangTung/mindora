@@ -62,8 +62,9 @@ Prompt：“豆子，我注意到你最近可能有点压力大，想要聊聊�
 ", # 用户旅程地图
     product_chat: "产品简介：%{description}\n目标用户：%{target_user}\n沟通内容：%{message}",
     user_interview_questions: "请结合《The Mom Test》中描述的原则，再基于需求假设和目标用户作为背景，生成贴合场景的 5 个用户访谈问题。\n
-需求假设：%{assumptions}\n
+产品简介：%{product_description}\n
 目标用户：%{target_user}\n
+需求假设：%{assumptions}\n
 
 问题例子：
 - 可以分享一下你在处理 x 时的具体步骤吗？
@@ -89,7 +90,13 @@ Prompt：“豆子，我注意到你最近可能有点压力大，想要聊聊�
 
 生成的问题格式要求：
 - [问题 1]
-- [问题 2]"
+- [问题 2]",
+    thinking_models: "请用下面的思维模型来拆解分析问题并给出解决方案思路，如果没有提供思维模型，汪汪会分析最适合你当前需求的适用于产品经理的思维模型。
+产品简介：%{product_description}\n
+目标用户：%{target_user}\n
+需分析的问题：%{topic}\n
+思维模型：%{thinking_models}
+"
   }.freeze
 
   def self.get_system_prompt(name, nickname = nil)

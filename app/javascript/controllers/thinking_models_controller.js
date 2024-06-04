@@ -1,9 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
 import { marked } from "marked"
 
-const localStorageKey = "PMWW_ChatHistory"
+const localStorageKey = "PMWW_ChatHistory_ProductID_"
 
 export default class extends Controller {
+    static values = { productId: Number }
     static targets = ["model", "input", "messages", "submitButton"]
 
     connect() {
@@ -19,7 +20,7 @@ export default class extends Controller {
     }
 
     getRecentChatHistory(count = 10) {
-        let chatHistory = JSON.parse(localStorage.getItem(localStorageKey)) || [];
+        let chatHistory = JSON.parse(localStorage.getItem(this.getLocalStorageKey())) || [];
 
         return count > 0 ? chatHistory.slice(-count) : chatHistory;
     }
@@ -45,7 +46,7 @@ export default class extends Controller {
         this.appendMessage("user", userInput)
         this.clearInput()
 
-        fetch("/chat/thinking_models", {
+        fetch(`/works/products/${this.productIdValue}/discussions`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -94,11 +95,11 @@ export default class extends Controller {
     }
 
     saveChatToLocalStorage(role, content) {
-        let chatHistory = JSON.parse(localStorage.getItem(localStorageKey)) || [];
+        let chatHistory = JSON.parse(localStorage.getItem(this.getLocalStorageKey())) || [];
 
         chatHistory.push({ role, content });
 
-        localStorage.setItem(localStorageKey, JSON.stringify(chatHistory));
+        localStorage.setItem(this.getLocalStorageKey(), JSON.stringify(chatHistory));
     }
 
     clearInput() {
@@ -126,5 +127,9 @@ export default class extends Controller {
       <path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"></path>
     </svg>`;
         this.submitButtonTarget.disabled = false;
+    }
+
+    getLocalStorageKey() {
+        return localStorageKey + this.productIdValue
     }
 }

@@ -1,13 +1,15 @@
 class Works::UserInterviewQuestionsController < ApplicationController
+  before_action :set_product, only: [:create]
+
   def new
 
   end
 
   def create
-    product = Product.find(params[:product_id])
     prompt_params = {
       assumptions: params[:assumptions],
-      target_user: product.target_user
+      target_user: @product.target_user,
+      product_description: @product.description
     }
 
     prompt = PromptManager.get_template_prompt(:user_interview_questions, prompt_params)
@@ -31,5 +33,11 @@ class Works::UserInterviewQuestionsController < ApplicationController
     )
     content = response.dig("choices", 0, "message", "content")
     render json: { content: content }
+  end
+
+  private
+
+  def set_product
+    @product = current_user.products.find(params[:product_id])
   end
 end

@@ -1,4 +1,5 @@
 class Works::ProductsController < ApplicationController
+  before_action :authenticate_user
   before_action :set_product, only: [:edit, :update]
 
   def index
