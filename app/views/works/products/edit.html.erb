@@ -1,4 +1,52 @@
 <div>
-  <h1 class="font-bold text-4xl">Works::Products#edit</h1>
-  <p>Find me in app/views/works/products/edit.html.erb</p>
+  <%= render 'works/parent_menu' %>
+
+  <main class="py-10 lg:pl-72">
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="px-4 py-5 sm:p-6">
+        <div class="px-4 sm:px-6 lg:px-8">
+
+          <div class="md:flex md:items-center md:justify-between">
+            <div class="min-w-0 flex-1">
+              <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">产品管理</h2>
+            </div>
+          </div>
+
+          <%= form_with model: @product, url: works_product_path(@product), local: true do |form| %>
+            <div class="space-y-6">
+              <div class="border-b border-gray-900/10 pb-12">
+                <h2 class="text-base font-semibold leading-7 text-gray-900 mt-4">产品信息</h2>
+
+                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                  <div class="col-span-full">
+                    <%= form.label :name, "产品名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                    <div class="mt-2">
+                      <%= form.text_area :name, required: true, rows: 1, placeholder: "请你填写产品名称", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                    </div>
+                  </div>
+                  <div class="col-span-full">
+                    <%= form.label :description, "产品简介", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                    <div class="mt-2">
+                      <%= form.text_area :description, required: true, rows: 2, placeholder: "这款产品的产品介绍", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                    </div>
+                  </div>
+                  <div class="col-span-full">
+                    <%= form.label :target_user, "目标用户", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                    <div class="mt-2">
+                      <%= form.text_area :target_user, required: true, rows: 2, placeholder: "你的产品是为谁服务的呢？", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-6 flex items-center justify-end gap-x-6">
+                <%= form.submit "更新", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+              </div>
+            </div>
+          <% end %>
+
+        </div>
+      </div>
+    </div>
+  </main>
 </div>
