@@ -19,7 +19,9 @@ class ChatController < ApplicationController
                   "content": PromptManager.get_system_prompt(:default, current_user.setting.nickname)
                 }]
 
+    nickname = current_user.setting&.nickname.presence || '你'
     chat_history.each do |chat|
+      chat["content"] = chat["content"].gsub('妈妈', nickname)
       messages << chat
     end
 
