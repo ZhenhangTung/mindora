@@ -23,7 +23,7 @@ class ChatHistory < ApplicationRecord
 
   def rendered_message_content
     renderer = Redcarpet::Render::HTML.new
-    markdown = Redcarpet::Markdown.new(renderer, extensions = {})
+    markdown = Redcarpet::Markdown.new(renderer, extensions = { tables: true })
     markdown.render(message_content).html_safe
   end
 
