@@ -1,5 +1,5 @@
 <div>
-  <%= render 'chat/sidebar_menu' %>
+  <%= render 'works/product_menu' %>
   <main class="py-10 lg:pl-72">
     <div class="overflow-hidden rounded-lg bg-white shadow">
       <div class="px-4 py-5 sm:p-6">
@@ -11,7 +11,7 @@
                 <p class="mt-2 text-sm text-gray-700">产品的用户视角分析列表</p>
               </div>
               <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                <%= link_to "新增分析", new_works_user_journey_map_path, class: "block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+                <%= link_to "新增分析", new_works_product_user_journey_map_path, class: "block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
               </div>
             </div>
             <div class="mt-8 flow-root">
@@ -33,7 +33,7 @@
                         <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0 overflow-hidden max-w-xs"><%= user_journey_map.product.description %></td>
                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= user_journey_map.product.target_user %></td>
                         <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                          <%= link_to '查看', works_user_journey_map_path(user_journey_map), class: 'text-indigo-600 hover:text-indigo-900' %>
+                          <%= link_to '查看', "#", class: 'text-indigo-600 hover:text-indigo-900' %>
                         </td>
                       </tr>
                     <% end %>

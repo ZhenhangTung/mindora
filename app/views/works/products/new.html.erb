@@ -1,0 +1,53 @@
+<div>
+  <%= render 'works/parent_menu' %>
+  <main class="py-10 lg:pl-72">
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="px-4 py-5 sm:p-6">
+        <div class="px-4 sm:px-6 lg:px-8">
+
+          <div class="md:flex md:items-center md:justify-between my-8">
+            <div class="min-w-0 flex-1">
+              <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">创建新产品</h2>
+              <p class="mt-1 text-sm leading-6 text-gray-600">请填写产品的详细信息。</p>
+            </div>
+          </div>
+
+          <%= form_with(model: @product, url: works_products_path, local: true) do |form| %>
+            <div class="space-y-12">
+              <div class="border-b border-gray-900/10 pb-12">
+
+                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                  <div class="sm:col-span-6">
+                    <%= form.label :name, "产品名称", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                    <div class="mt-2">
+                      <%= form.text_field :name, placeholder: "你的产品名称", required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                    </div>
+                  </div>
+
+                  <div class="sm:col-span-6">
+                    <%= form.label :description, "产品描述", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                    <div class="mt-2">
+                      <%= form.text_area :description, placeholder: "详细描述你的产品，包括其特点、优势、创造的价值等信息。", required: true, rows: 4, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                    </div>
+                  </div>
+
+                  <div class="sm:col-span-6">
+                    <%= form.label :target_user, "目标用户", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                    <div class="mt-2">
+                      <%= form.text_field :target_user, placeholder: "你的产品主要的目标群体是谁呢？", required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex items-center justify-end gap-x-6">
+              <%= link_to "取消", works_products_path, class: "text-sm font-semibold leading-6 text-gray-900" %>
+              <%= form.submit "新建", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
