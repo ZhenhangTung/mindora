@@ -1,21 +1,24 @@
 class Works::UserJourneyMapsController < ApplicationController
+  before_action :set_product
   before_action :set_user_journey_map, only: [:show, :create_prompt_form]
   before_action :authenticate_user, only: [:index, :new, :create, :show, :create_prompt_form]
 
   def index
-    @user_journey_maps = UserJourneyMap.joins(:product).where(products: { user_id: current_user.id }).includes(:product)
+    @user_journey_maps = @product.user_journey_maps
+    if @user_journey_maps.exists?
+      redirect_to works_product_user_journey_map_path(@product, @user_journey_maps.first)
+    else
+      redirect_to new_works_product_user_journey_map_path(@product)
+    end
   end
 
   def new
-    @user_journey_map = UserJourneyMap.new
-    @user_journey_map.build_product(user: current_user)
+    @user_journey_map = @product.user_journey_maps.build
     @user_journey_map.prompt_forms.build(type: PromptForm::UserJourneyMap.to_s)
   end
 
   def create
-    @user_journey_map = UserJourneyMap.new(user_journey_map_params)
-    @user_journey_map.build_product unless @user_journey_map.product
-    @user_journey_map.product.user = current_user
+    @user_journey_map = @product.user_journey_maps.build(user_journey_map_params)
     if @user_journey_map.save
       session = @user_journey_map.create_session(sessionable: @user_journey_map)
       prompt_form = @user_journey_map.prompt_forms.first
@@ -23,10 +26,10 @@ class Works::UserJourneyMapsController < ApplicationController
       session.store_human_message(content) if session.respond_to?(:store_human_message)
 
       UserJourneyMapConversationsJob.perform_later(@user_journey_map.id)
-      # TODO: flash message
-      redirect_to works_user_journey_map_path(@user_journey_map)
+      flash[:success] = '新的产品想法分析已提交。'
+      redirect_to works_product_user_journey_map_path(@product, @user_journey_map)
     else
-      # TODO: error message
+      flash[:error] = '新产品想法分析提交失败，请重试。'
       render :new
     end
   end
@@ -44,14 +47,19 @@ class Works::UserJourneyMapsController < ApplicationController
       store_human_message
 
       UserJourneyMapConversationsJob.perform_later(@user_journey_map.id)
-      redirect_to works_user_journey_map_path(@user_journey_map), notice: '新的产品想法分析已提交。'
+      flash[:success] = '新的产品想法分析已提交。'
+      redirect_to works_product_user_journey_map_path(@product, @user_journey_map)
     else
-      @product = @user_journey_map.product
+      flash[:error] = '新产品想法分析提交失败，请重试。'
       render :show
     end
   end
 
   private
+
+  def set_product
+    @product = current_user.products.find(params[:product_id])
+  end
 
   def user_journey_map_params
     params.require(:user_journey_map).permit(

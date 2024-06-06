@@ -2,7 +2,12 @@ import { Controller } from "@hotwired/stimulus"
 import { marked } from "marked"
 
 export default class extends Controller {
-    static targets = ["assumptions", "targetUser", "messages", "submitButton"]
+    static values = { productId: Number }
+    static targets = ["assumptions", "messages", "submitButton"]
+
+    connect() {
+        console.log(this.productIdValue)
+    }
 
     submit(event) {
         event.preventDefault()
@@ -10,17 +15,13 @@ export default class extends Controller {
         if (!this.assumptionsTarget.value) {
             alert("请填写需求假设")
         }
-        if (!this.targetUserTarget.value) {
-            alert("请填写采访对象")
-        }
 
         const data = {
             assumptions: this.assumptionsTarget.value,
-            target_user: this.targetUserTarget.value,
         }
         this.disableSubmitButton()
 
-        fetch("/chat/user_interview_questions", {
+        fetch(`/works/products/${this.productIdValue}/user_interview_questions`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

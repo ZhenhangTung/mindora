@@ -1,18 +1,13 @@
 import { Controller } from "@hotwired/stimulus"
 import { marked } from "marked"
 
-const localStorageKey = "PMWW_ChatHistory_Challenges"
+const localStorageKey = "PMWW_ChatHistory"
 
 export default class extends Controller {
   static targets = ["model", "input", "messages", "submitButton"]
 
   connect() {
     this.restoreChatFromLocalStorage()
-    document.addEventListener("chat-data-received", this.handleDataReceived);
-  }
-
-  disconnect() {
-    document.removeEventListener("chat-data-received", this.handleDataReceived);
   }
 
   restoreChatFromLocalStorage() {
@@ -127,11 +122,5 @@ export default class extends Controller {
       <path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"></path>
     </svg>`;
     this.submitButtonTarget.disabled = false;
-  }
-
-  handleDataReceived = (event)=> {
-    const { data } = event.detail;
-    this.appendMessage("assistant", data.content);
-    this.saveChatToLocalStorage("assistant", data.content);
   }
 }
