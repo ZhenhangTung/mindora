@@ -22,9 +22,7 @@ class ChatHistory < ApplicationRecord
   end
 
   def rendered_message_content
-    renderer = Redcarpet::Render::HTML.new
-    markdown = Redcarpet::Markdown.new(renderer, extensions = { tables: true })
-    markdown.render(message_content).html_safe
+    Kramdown::Document.new(message_content, input: 'GFM').to_html.html_safe
   end
 
   # Scope to filter messages by type
