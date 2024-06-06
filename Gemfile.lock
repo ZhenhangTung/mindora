@@ -169,6 +169,10 @@ GEM
     jmespath (1.6.2)
     json-schema (4.0.0)
       addressable (>= 2.8)
+    kramdown (2.4.0)
+      rexml
+    kramdown-parser-gfm (1.1.0)
+      kramdown (~> 2.0)
     langchainrb (0.8.1)
       baran (~> 0.1.9)
       colorize (~> 0.8.1)
@@ -271,7 +275,6 @@ GEM
       ffi (~> 1.0)
     rdoc (6.6.1)
       psych (>= 4.0.0)
-    redcarpet (3.6.0)
     redis (4.8.1)
     redis-actionpack (5.4.0)
       actionpack (>= 5, < 8)
@@ -388,13 +391,14 @@ DEPENDENCIES
   hotwire-livereload
   importmap-rails
   jbuilder
+  kramdown
+  kramdown-parser-gfm
   langchainrb
   pdf-reader
   pg (~> 1.1)
   puma (~> 5.0)
   rack-cors
   rails (~> 7.0.6)
-  redcarpet
   redis (~> 4.0)
   redis-rails
   ruby-openai (~> 6.3.0)
