@@ -1,6 +1,0 @@
-<% if @chat_session.chat_messages.count == 1 %>
-  <%= turbo_stream.remove 'start_conversation' %>
-<% end %>
-
-
-<%#= turbo_stream.append 'messages', partial: 'chat/message', locals: { message: @chat_message } %>
