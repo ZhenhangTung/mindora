@@ -1,9 +1,6 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  get 'settings/edit'
-  get 'settings/update'
-  get 'reports/weekly_growth'
   # Defines the root path route ("/")
   root 'homepage#index'
 
@@ -33,7 +30,6 @@ Rails.application.routes.draw do
   post 'interviews/potential_interview_questions', to: 'interviews#potential_interview_questions'
   post 'interviews/analyze_interview_questions', to: 'interviews#analyze_interview_questions'
 
-  resources :chat, only: [:index, :create]
   get 'chat/thinking_models/five_whys', to: 'chat#five_whys', as: 'five_whys'
   post 'chat/thinking_models/five_whys', to: 'chat#submit_five_whys'
   get 'chat/thinking_models/switch_view', to: 'chat#switch_view', as: 'switch_view'
@@ -51,11 +47,14 @@ Rails.application.routes.draw do
         end
       end
       resources :user_interview_questions, only: [:new, :create]
-      resources :discussions, only: [:index, :create]
+      resources :discussions, only: [:index, :show] do
+        post :chat, on: :member
+      end
     end
     resources :sessions, only: [] do
       resources :chats, only: [:create]
     end
+    resources :chats, only: [:index, :show]
   end
 
   resource :settings, only: [:create, :edit, :update]

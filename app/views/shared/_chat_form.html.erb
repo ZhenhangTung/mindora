@@ -1,4 +1,4 @@
-<form data-tabs-target="panel" data-controller="session" data-session-session-id-value="<%= @session.id %>" data-session-product-id-value="<%= @product.id %>">
+<%= form_with url: form_path, method: :post, local: true, data: { controller: 'session', session_session_id_value: session.id } do |form| %>
   <div class="space-y-6">
     <div class="border-b border-gray-900/10 pb-12">
       <p class="mt-2 text-sm text-gray-400">汪汪会努力为你分析的喔！若等的时候无聊🥱的话，可以丢根胡萝卜🥕逗我玩～</p>
@@ -12,7 +12,7 @@
                 data-session-target="messages"
               >
                 <!-- Prompt message list -->
-                <% @chat_histories.each do |chat_history| %>
+                <% chat_histories.each do |chat_history| %>
                   <% if chat_history.message_type == ChatHistory::MESSAGE_TYPES[:human] %>
                     <div class="flex items-start flex-row-reverse">
                       <img class="ml-2 h-8 w-8 rounded-full" src="https://dummyimage.com/128x128/354ea1/ffffff&text=我" />
@@ -70,4 +70,4 @@
       </button>
     </div>
   </div>
-</form>
+<% end %>

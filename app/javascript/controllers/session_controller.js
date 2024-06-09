@@ -4,7 +4,7 @@ import { marked } from "marked";
 import async from "async";
 
 export default class extends Controller {
-    static values = { sessionId: String, productId: Number }
+    static values = { sessionId: String }
     static targets = ["messages", "chatInput", "chatButton"]
 
     connect() {
@@ -109,14 +109,18 @@ export default class extends Controller {
             return;
         }
 
+        const formElement = event.target.closest("form");
+        const formData = new FormData(formElement);
+        const url = formElement.action;
+
         // Send the message via AJAX
-        fetch(`/works/sessions/${this.sessionIdValue}/chats`, {
+        fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").getAttribute("content")
             },
-            body: JSON.stringify({ message: { content: message, product_id: this.productIdValue } })
+            body: JSON.stringify({ message: { content: message } })
         })
             .then(response => response.json())
             .then(data => {
