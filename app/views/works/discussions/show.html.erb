@@ -1,0 +1,20 @@
+<div>
+  <%= render 'works/product_menu' %>
+  <main class="py-10 lg:pl-72" data-controller="thinking-models" data-thinking-models-product-id-value="<%= params[:product_id] %>">
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="px-4 py-5 sm:p-6">
+        <div class="px-4 sm:px-6 lg:px-8">
+          <div class="md:flex md:items-center md:justify-between">
+            <div class="min-w-0 flex-1">
+              <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">思维模型拆解问题</h2>
+            </div>
+          </div>
+
+          <div class="flex h-[97vh] w-full flex-col mt-8">
+            <%= render 'shared/chat_form', form_path: chat_works_product_discussion_path(@product, @session), session: @session, chat_histories: @chat_histories %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

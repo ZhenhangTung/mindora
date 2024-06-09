@@ -7,7 +7,7 @@
     <p class="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-600">无论是工作挑战还是职业发展，产品汪汪始终伴您左右，提供温暖的陪伴和专业的指导，助您取得成功。</p>
     <div class="mt-10 flex items-center justify-center gap-x-6">
       <% if logged_in? %>
-        <%= link_to "开始使用", switch_view_path, class: "rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+        <%= link_to "开始使用", works_products_path, class: "rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
       <% else %>
         <%= link_to "立即加入并开始您的旅程", signup_path, class: "rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
       <% end %>

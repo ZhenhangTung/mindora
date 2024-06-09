@@ -5,14 +5,12 @@ class ChatsJob < ApplicationJob
 
   queue_as :default
 
-  def perform(session_id, product_id, content)
-    return unless content
+  def perform(user_id, session_id, prompt)
+    return unless prompt
     session = Session.find(session_id)
     return unless session
-    product = Product.find(product_id)
-    return unless product
-
-    user = product.user
+    user = User.find(user_id)
+    return unless user
 
     recent_messages = session.chat_histories.order(created_at: :desc).limit(6).reverse
 
@@ -27,19 +25,10 @@ class ChatsJob < ApplicationJob
       { role: role, content: processed_message }
     end
 
-    prompt_params = {
-      description: product.description,
-      target_user: product.target_user,
-      message: content
-    }
-
-    prompt = PromptManager.get_template_prompt(:product_chat, prompt_params)
-
-
     response_uuid = SecureRandom.uuid
     complete_response = ""
 
-    ChatGptService.stream_response(prompt, user.id, :default, 0.7, nil, message_history) do |chunk|
+    ChatGptService.stream_response(prompt, user_id, :default, 0.7, nil, message_history) do |chunk|
       ai_response = chunk.dig("choices", 0, "delta", "content")
       next unless ai_response
 

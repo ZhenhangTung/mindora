@@ -36,7 +36,7 @@
               </div>
             </div>
 
-            <%= render 'shared/chat_form', session: @session, product: @product, chat_histories: @chat_histories %>
+            <%= render 'shared/chat_form', form_path: works_session_chats_path(@session), session: @session, chat_histories: @chat_histories %>
           </div>
 
         </div>
