@@ -125,7 +125,7 @@ export default class extends Controller {
             .then(response => response.json())
             .then(data => {
                 if (data.status === "Message received") {
-                    inputElement.value = ""; // Clear the input field
+                    this.resetInput()
                 }
             })
             .catch((error) => {
@@ -153,5 +153,10 @@ export default class extends Controller {
       <path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"></path>
     </svg>`;
         this.chatButtonTarget.disabled = false;
+    }
+
+    resetInput() {
+        this.chatInputTarget.style.height = 'auto';
+        this.chatInputTarget.value = '';
     }
 }
