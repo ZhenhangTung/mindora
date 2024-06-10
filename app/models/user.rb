@@ -3,6 +3,7 @@ class User < ApplicationRecord
   has_many :resumes, dependent: :destroy
   has_many :products, dependent: :destroy
   has_one :setting, dependent: :destroy
+  has_one :session, as: :sessionable, dependent: :destroy
 
   accepts_nested_attributes_for :setting
 

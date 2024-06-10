@@ -4,7 +4,7 @@ import { marked } from "marked";
 import async from "async";
 
 export default class extends Controller {
-    static values = { sessionId: String, productId: Number }
+    static values = { sessionId: String }
     static targets = ["messages", "chatInput", "chatButton"]
 
     connect() {
@@ -109,19 +109,23 @@ export default class extends Controller {
             return;
         }
 
+        const formElement = event.target.closest("form");
+        const formData = new FormData(formElement);
+        const url = formElement.action;
+
         // Send the message via AJAX
-        fetch(`/works/sessions/${this.sessionIdValue}/chats`, {
+        fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").getAttribute("content")
             },
-            body: JSON.stringify({ message: { content: message, product_id: this.productIdValue } })
+            body: JSON.stringify({ message: { content: message } })
         })
             .then(response => response.json())
             .then(data => {
                 if (data.status === "Message received") {
-                    inputElement.value = ""; // Clear the input field
+                    this.resetInput()
                 }
             })
             .catch((error) => {
@@ -149,5 +153,10 @@ export default class extends Controller {
       <path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"></path>
     </svg>`;
         this.chatButtonTarget.disabled = false;
+    }
+
+    resetInput() {
+        this.chatInputTarget.style.height = 'auto';
+        this.chatInputTarget.value = '';
     }
 }

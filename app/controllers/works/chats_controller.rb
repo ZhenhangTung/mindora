@@ -1,7 +1,19 @@
 # frozen_string_literal: true
 
 class Works::ChatsController < ApplicationController
-  before_action :set_session
+  include Works::ChatsHelper
+
+  before_action :authenticate_user
+  before_action :set_session, only: [:show, :create]
+
+  def index
+    @session = @current_user.session || @current_user.create_session
+    redirect_to works_chat_path(@session)
+  end
+
+  def show
+    @chat_histories = @session.chat_histories.order(:created_at)
+  end
 
   def create
     if chat_params[:content].blank?
@@ -13,7 +25,7 @@ class Works::ChatsController < ApplicationController
 
     broadcast_human_content(@session.id, chat_params[:content])
 
-    ChatsJob.perform_later(@session.id, chat_params[:product_id], chat_params[:content])
+    ChatsJob.perform_later(@current_user.id, @session.id, chat_params[:content])
 
     render json: { status: 'Message received', chat: @chat }, status: :ok
   end
@@ -21,24 +33,19 @@ class Works::ChatsController < ApplicationController
   private
 
   def set_session
-    @session = Session.find(params[:session_id])
+    if params[:session_id]
+      @session = Session.find(params[:session_id])
+    elsif params[:id]
+      @session = Session.find(params[:id])
+    end
+
+    unless @session
+      flash[:error] = "查找会话失败"
+      redirect_to works_products_path
+    end
   end
 
   def chat_params
     params.require(:message).permit(:content, :product_id)
-  end
-
-  def broadcast_human_content(session_id, content)
-    response_uuid = SecureRandom.uuid
-    response = {
-      type: ChatHistory::MESSAGE_TYPES[:human],
-      content: content,
-      uuid: response_uuid
-    }
-
-    ActionCable.server.broadcast(
-      "session_#{session_id}",
-      response
-    )
   end
 end

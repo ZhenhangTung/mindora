@@ -1,56 +1,59 @@
 class Works::DiscussionsController < ApplicationController
-  before_action :authenticate_user, only: [:index]
-  before_action :set_product, only: [:create]
+  include Works::ChatsHelper
+
+  before_action :authenticate_user, only: [:index, :show]
+  before_action :set_product, only: [:index, :show, :chat]
+  before_action :set_session, only: [:show, :chat]
   def index
+    @session = @product.session || @product.create_session
+    redirect_to works_product_discussion_path(@product, @session)
   end
 
-  def create
-    user_input = params[:user_input]
-    chat_history = params[:chat_history].map(&:to_unsafe_h)
-    if user_input.blank?
-      return render json: { error: "请输入内容" }, status: :unprocessable_entity
+  def chat
+    if chat_params[:content].blank?
+      render json: { status: 'error', message: 'Content cannot be blank' }, status: :unprocessable_entity
+      return
     end
 
-    selected_models = params[:models]
+    @chat = @session.store_human_message(chat_params[:content])
+
+    broadcast_human_content(@session.id, chat_params[:content])
 
     prompt_params = {
       target_user: @product.target_user,
       product_description: @product.description,
-      topic: user_input,
-      thinking_models: selected_models.join('、')
+      topic: chat_params[:content],
+      thinking_models: []
     }
 
     prompt = PromptManager.get_template_prompt(:thinking_models, prompt_params)
 
-    messages = [{
-                  "role": "system",
-                  "content": PromptManager.get_system_prompt(:default)
-                }]
+    ChatsJob.perform_later(@current_user.id, @session.id, prompt)
 
-    chat_history.each do |chat|
-      messages << chat
-    end
+    render json: { status: 'Message received', chat: @chat }, status: :ok
+  end
 
-    messages << { "role": "user", "content": prompt }
-
-    client = OpenAI::Client.new(
-      request_timeout: 600,
-      uri_base: gpt35_deployment_uri
-    )
-    response = client.chat(
-      parameters: {
-        temperature: 0.7,
-        messages: messages
-      }
-    )
-    content = response.dig("choices", 0, "message", "content")
-    render json: { content: content, "role": "assistant" }
+  def show
+    @chat_histories = @session.chat_histories
   end
 
   private
 
   def set_product
     @product = current_user.products.find(params[:product_id])
+  end
+
+  def set_session
+    @session = Session.find(params[:id])
+
+    unless @session
+      flash[:error] = "查找会话失败"
+      redirect_to works_products_path
+    end
+  end
+
+  def chat_params
+    params.require(:message).permit(:content)
   end
 
   def build_models_prompt(user_input, models, instructions = nil)

@@ -1,0 +1,29 @@
+<!--
+  This example requires updating your template:
+
+  ```
+  <html class="h-full bg-white">
+  <body class="h-full">
+  ```
+-->
+<div>
+  <%= render 'works/parent_menu' %>
+
+  <main class="py-10 lg:pl-72" data-controller="chat">
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="px-4 py-5 sm:p-6">
+        <div class="px-4 sm:px-6 lg:px-8">
+          <div class="md:flex md:items-center md:justify-between">
+            <div class="min-w-0 flex-1">
+              <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">汪汪随意聊</h2>
+            </div>
+          </div>
+          <!-- Prompt Messages Container - Modify the height according to your need -->
+          <div class="flex h-[97vh] w-full flex-col mt-8">
+            <%= render 'shared/chat_form', form_path: works_session_chats_path(@session), session: @session, chat_histories: @chat_histories %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
