@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_26_083237) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_12_040754) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -188,6 +188,25 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_26_083237) do
     t.index ["formable_type", "formable_id"], name: "index_prompt_forms_on_formable"
   end
 
+  create_table "questionnaires", force: :cascade do |t|
+    t.string "title"
+    t.string "target_user"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_questionnaires_on_user_id"
+  end
+
+  create_table "questions", force: :cascade do |t|
+    t.string "content"
+    t.string "type"
+    t.jsonb "options"
+    t.bigint "questionnaire_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["questionnaire_id"], name: "index_questions_on_questionnaire_id"
+  end
+
   create_table "resumes", force: :cascade do |t|
     t.string "name"
     t.string "gender"
@@ -223,6 +242,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_26_083237) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_settings_on_user_id"
+  end
+
+  create_table "user_interviews", force: :cascade do |t|
+    t.string "topic"
+    t.string "interviewee"
+    t.text "transcript"
+    t.text "summary"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "user_journey_maps", force: :cascade do |t|
@@ -261,6 +289,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_26_083237) do
   add_foreign_key "chat_sessions", "assistants"
   add_foreign_key "educations", "resumes"
   add_foreign_key "products", "users"
+  add_foreign_key "questionnaires", "users"
+  add_foreign_key "questions", "questionnaires"
   add_foreign_key "resumes", "users"
   add_foreign_key "service_sessions", "chat_sessions"
   add_foreign_key "settings", "users"

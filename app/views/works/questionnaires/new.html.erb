@@ -12,15 +12,15 @@
             </div>
           </div>
 
-          <%= form_with( url: works_questionnaires_path, local: true) do |form| %>
+          <%= form_with(model: @questionnaire, url: works_questionnaires_path, local: true) do |form| %>
             <div class="space-y-12">
               <div class="border-b border-gray-900/10 pb-12">
 
                 <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div class="sm:col-span-6">
-                    <%= form.label :name, "问卷目的", class: "block text-sm font-medium leading-6 text-gray-900" %>
+                    <%= form.label :title, "问卷目的", class: "block text-sm font-medium leading-6 text-gray-900" %>
                     <div class="mt-2">
-                      <%= form.text_area :name, placeholder: "请描述你的调研目的是什么？\n示例：评估用户对现有产品的满意度", required: true, rows: 2, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                      <%= form.text_area :title, placeholder: "请描述你的调研目的是什么？\n示例：评估用户对现有产品的满意度", required: true, rows: 2, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
                     </div>
                   </div>
 
