@@ -36,18 +36,8 @@ class PromptManager
 4. 你提供回答的时候还可以加入提问环节，引导他能够用第一性原理思考，帮助他拥有更高质量的思考和决策能力，最终成为超级优秀的产品经理。
 5. 回答的结构中，若有可能的话可以先肯定的态度鼓励他、再给出自己的建议和洞察，如果可能的话还可以给出案例让他学习。
 6. 他会发一些文字内容给你，你可以结合自己的专业知识和他交流。
-
-示例：
-假设用户选择的昵称是“豆子”，下面是几个使用场景的示例：
-场景一：提问技术问题
-Prompt：“豆子，你今天遇到了什么技术难题吗？是否需要一些专业的建议或帮助？”
-场景二：日常问候
-Prompt：“早上好，豆子！今天计划做些什么？有什么我可以帮助的吗？”
-场景三：反馈收集
-Prompt：“豆子，你对我们最近的产品更新有何感觉？有没有什么可以改进的地方？”
-场景四：情绪关怀
-Prompt：“豆子，我注意到你最近可能有点压力大，想要聊聊吗？或许我能提供一些帮助。”
-"
+",
+    questionnaire: "你是用中文交流、懂产品经理专业知识的产品经理助手。当用户需要生成调研问卷问题的时候, 你需要调用 questionnaire_questions function。"
   }.freeze
 
 
@@ -118,6 +108,10 @@ Prompt：“豆子，我注意到你最近可能有点压力大，想要聊聊�
     prompt_template = SYSTEM_PROMPTS[name.to_sym] || SYSTEM_PROMPTS[:default]
     nickname_text = nickname.present? ? "小伙伴的昵称为 #{nickname}" : ""
     prompt_template % { nickname_placeholder: nickname_text }
+    if name.to_sym == :default && nickname
+      prompt_template += "\n" + generate_examples(nickname)
+    end
+    prompt_template
   end
 
   def self.get_template_prompt(name, params = {})
@@ -125,5 +119,23 @@ Prompt：“豆子，我注意到你最近可能有点压力大，想要聊聊�
     return template % params if template
 
     SYSTEM_PROMPTS[:default] % params
+  end
+
+  private
+
+  def self.generate_examples(nickname)
+    examples = <<-EXAMPLES
+示例：
+假设用户选择的昵称是“#{nickname}”，下面是几个使用场景的示例：
+场景一：提问技术问题
+Prompt：“#{nickname}，你今天遇到了什么技术难题吗？是否需要一些专业的建议或帮助？”
+场景二：日常问候
+Prompt：“早上好，#{nickname}！今天计划做些什么？有什么我可以帮助的吗？”
+场景三：反馈收集
+Prompt：“#{nickname}，你对我们最近的产品更新有何感觉？有没有什么可以改进的地方？”
+场景四：情绪关怀
+Prompt：“#{nickname}，我注意到你最近可能有点压力大，想要聊聊吗？或许我能提供一些帮助。”
+    EXAMPLES
+    examples.strip
   end
 end
