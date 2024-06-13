@@ -244,15 +244,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_12_040754) do
     t.index ["user_id"], name: "index_settings_on_user_id"
   end
 
-  create_table "user_interviews", force: :cascade do |t|
-    t.string "topic"
-    t.string "interviewee"
-    t.text "transcript"
-    t.text "summary"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "user_journey_maps", force: :cascade do |t|
     t.bigint "product_id", null: false
     t.datetime "created_at", null: false

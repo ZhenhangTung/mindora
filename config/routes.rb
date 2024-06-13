@@ -31,7 +31,7 @@ Rails.application.routes.draw do
   post 'interviews/analyze_interview_questions', to: 'interviews#analyze_interview_questions'
 
   namespace :works do
-    resources :questionnaires, only: [:index, :new, :create, :show, :update] do
+    resources :questionnaires, only: [:index, :new, :create, :edit, :update] do
       post :chat, on: :member
     end
     resources :products, only: [:index, :new, :create, :edit, :update] do
