@@ -33,7 +33,7 @@
               <%= form.fields_for :questions do |q_form| %>
                 <div class="sm:col-span-2">
                   <div class="mt-1">
-                    <%= q_form.text_field :content, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+                    <%= q_form.text_area :content, rows: 2, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
                   </div>
                 </div>
               <% end %>
