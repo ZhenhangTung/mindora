@@ -30,13 +30,24 @@
 
             <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
 
-              <%= form.fields_for :questions do |q_form| %>
-                <div class="sm:col-span-2">
-                  <div class="mt-1">
+              <div class="space-y-4 sm:col-span-2" data-controller="radio">
+                <%= form.fields_for :questions do |q_form| %>
+                  <!-- Active: "border-indigo-600 ring-2 ring-indigo-600", Not Active: "border-gray-300" -->
+                  <label
+                    class="relative block cursor-pointer rounded-lg border bg-white px-6 py-4 shadow-sm focus:outline-none sm:flex sm:justify-between"
+                    data-action="click->radio#select"
+                    data-radio-target="label"
+                  >
+                    <input  data-radio-target="input" type="radio" name="server-size" value="Hobby" class="sr-only" aria-labelledby="server-size-0-label" aria-describedby="server-size-0-description-0 server-size-0-description-1">
                     <%= q_form.text_area :content, rows: 2, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
-                  </div>
-                </div>
-              <% end %>
+                    <!--
+                      Active: "border", Not Active: "border-2"
+                      Checked: "border-indigo-600", Not Checked: "border-transparent"
+                    -->
+                    <span class="pointer-events-none absolute -inset-px rounded-lg border-2" aria-hidden="true"></span>
+                  </label>
+                <% end %>
+              </div>
             </div>
           </div>
 
