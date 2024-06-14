@@ -5,7 +5,7 @@
       <h2 class="sr-only">Checkout</h2>
 
       <div class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
-        <%= form_with(model: @questionnaire, url: works_questionnaires_path, local: true) do |form| %>
+        <%= form_with(model: @questionnaire, url: works_questionnaire_path(@questionnaire), local: true) do |form| %>
           <h2 class="text-lg font-medium text-gray-900">设计调研问卷</h2>
 
           <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">

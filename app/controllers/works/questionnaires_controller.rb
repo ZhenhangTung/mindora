@@ -36,8 +36,11 @@ class Works::QuestionnairesController < ApplicationController
 
   def update
     if @questionnaire.update(questionnaire_params)
+      flash[:success] = '问卷更新成功'
+      redirect_to edit_works_questionnaire_path(@questionnaire)
     else
-      render :show
+      flash[:success] = '问卷更新失败'
+      render :edit
     end
   end
 
