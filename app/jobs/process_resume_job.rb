@@ -66,154 +66,142 @@ class ProcessResumeJob < ApplicationJob
     tempfile.unlink
   end
 
-  # TODO: implement me later
-  # def read_docx_resume(uploaded_file)
-  #   # Download the file and read its content
-  #   tempfile = Tempfile.new
-  #   tempfile.binmode
-  #   tempfile.write(uploaded_file.download)
-  #   tempfile.rewind
-  #
-  #   Docx::Document.open(tempfile.path) do |doc|
-  #     doc.paragraphs.map(&:text).join("\n")
-  #   end
-  # rescue StandardError => e
-  #   Rails.logger.error "Failed to read .docx file: #{e.message}"
-  #   "Failed to read .docx file: #{e.message}"
-  # ensure
-  #   tempfile.close
-  #   tempfile.unlink
-  # end
-
   def extract_resume_from_file(file_content)
     # improve me
     client = OpenAI::Client.new(
       request_timeout: 60
       )
-    response = client.chat(
-      parameters: {
-        temperature: 0.1,
-        messages: [
-          {
-            "role": "system",
-            "content": "请处理以下简历，将信息提取并分类为两个主要部分：工作经历和项目经历。对于工作经历，准确识别职位、公司、开始和结束日期，并描述任何具体的项目经历，确保使用项目符号清晰地格式化这些描述。对于项目经历，准确识别项目名称、开始和结束日期，并描述任何具体的项目经历，确保使用项目符号清晰地格式化这些描述。至关重要的是，尤其对于个人信息、教育、工作经历、项目经历等部分，必须逐字捕获所有细节。根据提供的JSON模式结构化输出，确保每一条信息的完整性和精确性，准确地将它们放置在JSON模式的相应字段中。如果任何细节与模式不完全对应，或者出现歧义，请清楚地标记这些实例以供人工审查，而不是省略或总结。目标是在将原始信息组织成提供的结构化JSON格式的同时，保持原始信息的完整性，确保详尽地提取每个模式键的具体信息，不遗漏任何细节。",
-          },
-          {
-            "role": "user",
-            "content": "Task: I have a resume document that I would like to extract information from and fill out the JSON schema.
+
+    messages = [
+      {
+        "role": "system",
+        "content": PromptManager.get_system_prompt(:extract_resume_content),
+      },
+      {
+        "role": "user",
+        "content": "Task: I have a resume document that I would like to extract information from and fill out the JSON schema.
 Document: #{file_content}",
-          },
-        ],
-        functions: [
-          {
-            name: "extract_resume_content",
-            description: "Extract information from a resume and fill out the JSON schema",
-            parameters: {
-              type: :object,
-              properties: {
-                name: { type: :string },
-                gender: {
-                  type: :string,
-                  enum: ["女", "男"],
-                },
-                phone_number: { type: :string },
-                email: { type: :string },
-                work_experiences: {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "position": {
-                        "type": "string",
-                        "description": "从工作经历中提取的职位名称"
-                      },
-                      "company": {
-                        "type": "string",
-                        "description": "从工作经历中提取的公司名称"
-                      },
-                      "start_date": {
-                        "type": "string",
-                        "format": "date",
-                        "description": "The start date in yyyy-mm-dd format (e.g. 2023-02-13)"
-                      },
-                      "end_date": {
-                        "type": "string",
-                        "format": "date",
-                        "description": "The end date in yyyy-mm-dd format (e.g. 2023-02-13)"
-                      },
-                      "project_experience": {
-                        "type": "string",
-                        "description": "Extract the project experiences listed under each work experience from the resume, and present them using bullet points (•) for clear distinction. "
-                      },
-                      "experience_type": {
-                        "type": "string",
-                        "description": "The type of experience, either 'work' or 'project'. 如果是工作经历将它定义为'work'，如果是项目经历将它定义为'project'。"
+      },
+    ]
+    response =
+      client.chat(
+        parameters: {
+          temperature: 0.1, # low temperature is super important here
+          messages: messages,
+          tools: [
+            {
+              type: "function",
+              function: {
+                name: "extract_resume_content",
+                description: "Extract information from a resume and fill out the JSON schema",
+                parameters: {
+                  type: :object,
+                  properties: {
+                    name: { type: :string },
+                    gender: {
+                      type: :string,
+                      enum: ["女", "男"],
+                    },
+                    phone_number: { type: :string },
+                    email: { type: :string },
+                    work_experiences: {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "position": {
+                            "type": "string",
+                            "description": "从工作经历中提取的职位名称"
+                          },
+                          "company": {
+                            "type": "string",
+                            "description": "从工作经历中提取的公司名称"
+                          },
+                          "start_date": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "The start date in yyyy-mm-dd format (e.g. 2023-02-13)"
+                          },
+                          "end_date": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "The end date in yyyy-mm-dd format (e.g. 2023-02-13)"
+                          },
+                          "project_experience": {
+                            "type": "string",
+                            "description": "Extract the project experiences listed under each work experience from the resume, and present them using bullet points (•) for clear distinction. "
+                          },
+                          "experience_type": {
+                            "type": "string",
+                            "description": "The type of experience, either 'work' or 'project'. 如果是工作经历将它定义为'work'，如果是项目经历将它定义为'project'。"
+                          }
+                        },
+                        "required": ["position", "company", "start_date", "end_date", "project_experience", "experience_type"]
                       }
                     },
-                    "required": ["position", "company", "start_date", "end_date", "project_experience", "experience_type"]
-                  }
-                },
-                project_experiences: {
-                  "type": "array",
-                  "description": "项目经历或者项目经验部分下的多条内容",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "start_date": {
-                        "type": "string",
-                        "format": "date",
-                        "description": "The start date in yyyy-mm-dd format (e.g. 2023-02-13)"
-                      },
-                      "end_date": {
-                        "type": "string",
-                        "format": "date",
-                        "description": "The end date in yyyy-mm-dd format (e.g. 2023-02-13)"
-                      },
-                      "project_experience": {
-                        "type": "string",
-                        "description": "详细描述项目经历，使用项目符号（•）进行清晰区分 "
-                      },
-                      "experience_type": {
-                        "type": "string",
-                        "description": "经历类型，'work'表示工作经历，'project'表示项目经历。"
-                      },
-                      "project_name": {
-                        "type": "string",
-                        "description": "项目名称"
+                    project_experiences: {
+                      "type": "array",
+                      "description": "项目经历或者项目经验部分下的多条内容",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "start_date": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "The start date in yyyy-mm-dd format (e.g. 2023-02-13)"
+                          },
+                          "end_date": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "The end date in yyyy-mm-dd format (e.g. 2023-02-13)"
+                          },
+                          "project_experience": {
+                            "type": "string",
+                            "description": "详细描述项目经历，使用项目符号（•）进行清晰区分 "
+                          },
+                          "experience_type": {
+                            "type": "string",
+                            "description": "经历类型，'work'表示工作经历，'project'表示项目经历。"
+                          },
+                          "project_name": {
+                            "type": "string",
+                            "description": "项目名称"
+                          }
+                        },
+                        "required": ["start_date", "end_date", "project_experience", "experience_type"]
                       }
                     },
-                    "required": ["start_date", "end_date", "project_experience", "experience_type"]
-                  }
-                },
-                educations: {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "school": { "type": "string" },
-                      "major": { "type": "string" },
-                      "start_date": {
-                        "type": "string",
-                        "format": "date",
-                        "description": "The start date in yyyy-mm-dd format (e.g. 2023-02-13)"
-                      },
-                      "end_date": {
-                        "type": "string",
-                        "format": "date",
-                        "description": "The end date in yyyy-mm-dd format (e.g. 2023-02-13)"
-                      },
-                      "degree": { "type": "string" }
+                    educations: {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "school": { "type": "string" },
+                          "major": { "type": "string" },
+                          "start_date": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "The start date in yyyy-mm-dd format (e.g. 2023-02-13)"
+                          },
+                          "end_date": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "The end date in yyyy-mm-dd format (e.g. 2023-02-13)"
+                          },
+                          "degree": { "type": "string" }
+                        },
+                        "required": ["school", "major", "start_date", "end_date", "degree"]
+                      }
                     },
-                    "required": ["school", "major", "start_date", "end_date", "degree"]
-                  }
+                  },
+                  required: ["name", "gender", "phone_number", "email", "work_experiences", "educations"],
                 },
               },
-              required: ["name", "gender", "phone_number", "email", "work_experiences", "educations"],
-            },
-          },
-        ]
-      }
-    )
+            }
+          ],
+          tool_choice: {"type": "function", "function": {"name": "extract_resume_content"}}
+        }
+      )
 
     message = response.dig("choices", 0, "message")
     resume = {}
@@ -228,6 +216,23 @@ Document: #{file_content}",
       case function_name
       when "extract_resume_content"
         resume = extract_resume_content(**args)
+      end
+    end
+
+    if message["role"] == "assistant" && message["tool_calls"]
+      message["tool_calls"].each do |tool_call|
+        tool_call_id = tool_call.dig("id")
+        function_name = tool_call.dig("function", "name")
+        function_args = JSON.parse(
+          tool_call.dig("function", "arguments"),
+          { symbolize_names: true },
+          )
+        resume = case function_name
+                            when "extract_resume_content"
+                              extract_resume_content(**function_args)
+                            else
+                              # decide how to handle
+                            end
       end
     end
     resume
