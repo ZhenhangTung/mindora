@@ -5,13 +5,11 @@ export default class extends Controller {
 
     connect() {
         this.updateRadioStyles();
-        this.currentInput = null; // Track the currently selected input
+        this.prevInput = null;
     }
 
     select(event) {
         const selectedInput = event.currentTarget;
-
-        console.log(selectedInput)
 
         // Uncheck all other radio buttons in the group
         this.inputTargets.forEach(input => {
@@ -20,10 +18,15 @@ export default class extends Controller {
             input.closest('label').classList.add("border-gray-300");
         });
 
-        // Check the clicked radio button
-        selectedInput.checked = true;
-        selectedInput.closest('label').classList.add("border-indigo-600", "ring-2", "ring-indigo-600");
-        selectedInput.closest('label').classList.remove("border-gray-300");
+        if (this.prevInput !== selectedInput) {
+            // Check the clicked radio button
+            selectedInput.checked = true;
+            selectedInput.closest('label').classList.add("border-indigo-600", "ring-2", "ring-indigo-600");
+            selectedInput.closest('label').classList.remove("border-gray-300");
+            this.prevInput = selectedInput;
+        } else {
+            this.prevInput = null;
+        }
     }
 
     updateRadioStyles() {
