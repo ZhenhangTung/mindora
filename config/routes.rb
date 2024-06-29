@@ -1,6 +1,9 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  get 'picasso/index'
+  get 'picasso/new'
+  get 'picasso/views/*view_name', to: 'picasso#show_view'
   # Defines the root path route ("/")
   root 'homepage#index'
 
