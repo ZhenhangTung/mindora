@@ -35,6 +35,7 @@ class ChatGptService
 
     response = client.chat(
       parameters: {
+        model: "gpt-4o",
         temperature: temperature,
         messages: messages
       }

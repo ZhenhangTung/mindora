@@ -20,6 +20,7 @@ class InterviewsController < ApplicationController
       )
     response = client.chat(
       parameters: {
+        model: "gpt-4o",
         temperature: 0.5,
         messages: [
           {
@@ -63,6 +64,7 @@ class InterviewsController < ApplicationController
       )
     response = client.chat(
       parameters: {
+        model: "gpt-4o",
         temperature: 0.5,
         messages: [
           {
@@ -95,6 +97,7 @@ class InterviewsController < ApplicationController
       )
     response = client.chat(
       parameters: {
+        model: "gpt-4o",
         temperature: 0.5,
         messages: [
           {

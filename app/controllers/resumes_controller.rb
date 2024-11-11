@@ -108,6 +108,7 @@ class ResumesController < ApplicationController
     client = OpenAI::Client.new
     response = client.chat(
       parameters: {
+        model: "gpt-4o",
         temperature: 0.2,
         # max_tokens: 200,
         # top_p: 0.9,
@@ -154,6 +155,7 @@ class ResumesController < ApplicationController
     client = OpenAI::Client.new
     response = client.chat(
       parameters: {
+        model: "gpt-4o",
         temperature: 0.2,
         # max_tokens: 200,
         # top_p: 0.9,
@@ -203,6 +205,7 @@ JD 内容：
     client = OpenAI::Client.new
     response = client.chat(
       parameters: {
+        model: "gpt-4o",
         temperature: 0.5,
         messages: [
           {

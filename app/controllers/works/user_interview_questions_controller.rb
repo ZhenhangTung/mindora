@@ -18,6 +18,7 @@ class Works::UserInterviewQuestionsController < ApplicationController
       )
     response = client.chat(
       parameters: {
+        model: "gpt-4o",
         temperature: 0.2,
         messages: [
           {
