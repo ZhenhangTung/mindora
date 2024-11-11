@@ -92,6 +92,7 @@ class ProcessResumeJob < ApplicationJob
       )
     response = client.chat(
       parameters: {
+        model: "gpt-4o",
         temperature: 0.1,
         messages: [
           {
